@@ -1,6 +1,6 @@
 - [PowerShell Samples](#powershell-samples)
 - [Modules](#modules)
-  - [BleakKitchenSink](#bleakkitchensink)
+    - [BleakKitchenSink](#bleakkitchensink)
 - [Custom Module Resource](#custom-module-resource)
 - [Docs](#docs)
 
@@ -9,7 +9,15 @@
 # PowerShell Samples
 
 I haven't shared any PowerShell samples on GitHub before, but there is no better time to start than the present. 
-The scripts, custom modules, or knowledge that is safe to share will be posted here. 
+The scripts, custom modules, or knowledge that is safe to share will be posted here.
+
+Keep in mind that I am 100% self-taught so the way I do things might be a little different from what you're used to. 
+I do welcome feedback or suggestions that would help to improve my craft. My goal is to get goooood, so I can assist other projects on GitHub.
+
+Development has always been a passion for me and when I am coding, I am in my happy place :)
+
+
+*"Failure is success in progress." – Albert Einstein*
 
 <br>
 
@@ -17,7 +25,8 @@ The scripts, custom modules, or knowledge that is safe to share will be posted h
 
 ### BleakKitchenSink
 
-Functions that I find cool or useful will be added here. 
+Functions that I find cool or useful will be added to this module.
+Read the [Documentation: BleakKitchenSink](BleakKitchenSink/README.MD)
 
 <br>
 
