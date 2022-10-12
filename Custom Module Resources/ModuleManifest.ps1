@@ -8,7 +8,7 @@ $Params = @{
     "CmdletsToExport" 		    = @('Get-AskUserYNQuestion','Get-FileName','Convert-CSVtoHTML') 
     "VariablesToExport" 		= '' 
     "AliasesToExport" 		    = @() 
-    "Description"               = 'Sample Custom Module' 
+    "Description"               = 'BleakKitchenSink' 
 } 
 New-ModuleManifest @Params
 
