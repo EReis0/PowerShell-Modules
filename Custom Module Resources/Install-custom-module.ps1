@@ -15,11 +15,11 @@ $InstallCustomModulePath = "$DownloadsPath\BleakKitchenSink\"
 
 $filecheck = test-path $ModulePath
 if ($filecheck) {
-    Remove-Item -LiteralPath $ModulePath -Force -Recurse
+    Remove-Item -Path $ModulePath -Force -Recurse
 }
 
 try{
-Copy-Item -LiteralPath $InstallCustomModulePath -Destination $ModulePath -PassThru -Recurse
+Copy-Item -Path $InstallCustomModulePath -Destination $ModulePath -PassThru -Recurse
 }catch{
     $_.Exception.Message
 }
