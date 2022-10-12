@@ -7,16 +7,19 @@ You don't really need this script, you can technically just copy the folder and 
 This will also avoid the issues with AV.
 
 #>
-
-$DownloadsPath = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path
 $WindowsPowerShellModulePath = $env:PSModulePath.Split(';')[0]
 $ModulePath = "$WindowsPowerShellModulePath\BleakKitchenSink"
 
-$InstallCustomModulePath = "$DownloadsPath\BleakKitchenSink\*"
+$DownloadsPath = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path
+$InstallCustomModulePath = "$DownloadsPath\BleakKitchenSink\"
 
 $filecheck = test-path $ModulePath
 if ($filecheck) {
     Remove-Item -LiteralPath $ModulePath -Force -Recurse
 }
 
-Copy-Item -Path $InstallCustomModulePath -Destination $ModulePath -PassThru -Recurse
+try{
+Copy-Item -LiteralPath $InstallCustomModulePath -Destination $ModulePath -PassThru -Recurse
+}catch{
+    $_.Exception.Message
+}
