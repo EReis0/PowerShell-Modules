@@ -1,4 +1,26 @@
+#requires -Module 'PSWriteHTML'
+
+#Importing required modules
+Import-module -Name 'PSWriteHTML'
+
 Function Get-AskUserYNQuestion {
+    <#
+    .SYNOPSIS
+        Get-AskUserYNQuestion -Question [string]
+    .DESCRIPTION
+        Asks the user a yes or no question and returns the answer.
+    .NOTES
+        N/A
+    .LINK
+        https://github.com/thebleak13/PowerShell-Samples/blob/main/BleakKitchenSink/README.md
+    .EXAMPLE
+        PS C:\> Get-AskUserYNQuestion -Question 'Are you ready?'
+
+        Are you ready?
+        Choices:
+        [Y] Yes  [N] No  [?] Help (default is "Y"): y
+        Yes
+    #>
     [CmdletBinding()]
     param (
         [parameter(Mandatory=$true)]
@@ -27,27 +49,23 @@ Function Get-AskUserYNQuestion {
          return $Answer
 } #Get-AskUserYNQuestion -Question 'Are you ready?'
 
-Import-module -Name 'PSWriteHTML'
+Function Get-FileName($initialDirectory){  
+    [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
 
-Function Get-FileName($initialDirectory)
-{  
- [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") |
- Out-Null
-
- $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
- $OpenFileDialog.initialDirectory = $initialDirectory
- $OpenFileDialog.filter = "CSV UTF-8 (Comma Delimited) (*.csv)| *.csv"
- $OpenFileDialog.ShowDialog() | Out-Null
- $OpenFileDialog.filename
+    $OpenFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+    $OpenFileDialog.InitialDirectory = $initialDirectory
+    $OpenFileDialog.Filter = "CSV UTF-8 (Comma Delimited) (*.csv)| *.csv"
+    $OpenFileDialog.ShowDialog() | Out-Null
+    $OpenFileDialog.filename
 }
 
 function Convert-CSVtoHTML {
-    [cmdletbinding()]
+    [CmdletBinding()]
     $DownloadsPath = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path
     $File = Get-FileName
-    $importFile = @(import-csv -path $File)
-    $FileNameRaw = (Get-childitem $file).name
-    $FileName = $FileNameRaw.replace(".csv",'')
+    $importFile = @(Import-CSV -path $File)
+    $FileNameRaw = (Get-ChildItem $file).Name
+    $FileName = $FileNameRaw.Replace(".csv",'')
     write-host "`n`r ---> Exported report to $DownloadsPath\$FileName.html" -foregroundcolor 'black' -backgroundcolor 'green'
     New-HTML {
         New-HTMLTable -DataTable $importFile -Title $FileName -HideFooter -PagingLength 10 -Buttons excelHtml5,searchPanes
