@@ -18,5 +18,5 @@ Coming soon...
 
 - Created Module "BleakKitchenSink"
   - Get-AskUserYNQuestion
-  - Get-FileName
+  - Get-CSVFilePath
   - Convert-CSVtoHTML
