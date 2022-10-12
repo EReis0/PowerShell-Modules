@@ -1,8 +1,10 @@
 - [BleakKitchenSink](#bleakkitchensink)
   - [Get-AskUserYNQuestion](#get-askuserynquestion)
+  - [Get-Folder](#get-folder)
   - [Get-CSVFilePath](#get-csvfilepath)
   - [Convert-CSVtoHTML](#convert-csvtohtml)
 - [Change Log](#change-log)
+  - [New Functions | 10/12/2022](#new-functions--10122022)
   - [New Repo | 10/11/2022](#new-repo--10112022)
 
 <br>
@@ -26,6 +28,17 @@ Are you ready?
 Choices:
 [Y] Yes  [N] No  [?] Help (default is "Y"): y
 Yes
+```
+
+## Get-Folder
+
+Purpose
+Prompt the user to select a folder in a file browser window
+
+usage
+
+```powershell
+Get-Folder
 ```
 
 ## Get-CSVFilePath
@@ -56,6 +69,10 @@ Convert-CSVtoHTML
 # Change Log
 
 <br>
+
+## New Functions | 10/12/2022
+
+- Get-Folder
 
 ## New Repo | 10/11/2022
 
