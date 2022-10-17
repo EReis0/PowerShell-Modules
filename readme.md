@@ -1,4 +1,5 @@
 - [PowerShell Samples](#powershell-samples)
+- [Modules](#modules)
 - [Custom Module Resource](#custom-module-resource)
 
 <br>
