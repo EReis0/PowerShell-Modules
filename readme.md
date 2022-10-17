@@ -30,9 +30,3 @@ Read the [Documentation: BleakKitchenSink](Modules/BleakKitchenSink/README.md)
 # Custom Module Resource
 
 Just a few resources to help with creating and installing custom modules.
-
-<br>
-
-# Docs
-
-Documented work done and lessons learned
