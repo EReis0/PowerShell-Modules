@@ -1,7 +1,6 @@
 - [PowerShell Samples](#powershell-samples)
-- [Module: BleakKitchenSink](#module-bleakkitchensink)
+- [Module: BleakKitchenSink](BleakKitchenSink-[[Docs]](Modules/BleakKitchenSink/README.md))
 - [Custom Module Resource](#custom-module-resource)
-- [Docs](#docs)
 
 <br>
 
@@ -20,10 +19,12 @@ Development has always been a passion for me and when I am coding, I am in my ha
 
 <br>
 
-# Module: BleakKitchenSink
+# Modules 
+
+### BleakKitchenSink [[Docs]](Modules/BleakKitchenSink/README.md)
 
 Functions that I find cool or useful will be added to this module.
-Read the [Documentation: BleakKitchenSink](Modules/BleakKitchenSink/README.md)
+
 
 <br>
 
