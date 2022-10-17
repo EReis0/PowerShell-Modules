@@ -1,5 +1,4 @@
 - [PowerShell Samples](#powershell-samples)
-- [Module: BleakKitchenSink](BleakKitchenSink-[[Docs]](Modules/BleakKitchenSink/README.md))
 - [Custom Module Resource](#custom-module-resource)
 
 <br>
