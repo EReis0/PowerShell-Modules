@@ -24,7 +24,7 @@ Function Join-SingleFunctionsToPSM {
         $FunctionFolderName = "Functions"
     )
 
-    $RootFolderName = Get-Item $RootFolder | select -ExpandProperty Name
+    $RootFolderName = Get-Item $RootFolder | Select-Object -ExpandProperty Name
     $FunctionFolder = $RootFolder + "\" + $FunctionFolderName
     $FullPSMPath = "$RootFolder\$RootFolderName.psm1"
 
