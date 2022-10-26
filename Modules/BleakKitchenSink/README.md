@@ -47,7 +47,7 @@ Get-Folder
 ## Get-CSVFilePath
 
 Purpose <br>
-Prompt the user to select a csv file in a file browser.
+Prompt the user to select a csv file in a file browser to obtain a path to a csv file
 
 Usage
 
