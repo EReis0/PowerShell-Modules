@@ -16,7 +16,7 @@
 
 ## Get-AskUserYNQuestion
 
-Purpose
+Purpose <br>
 Just a simple way to toss a system controlled yes/no question to the user.
 
 Usage
@@ -35,7 +35,7 @@ Yes
 
 ## Get-Folder
 
-Purpose
+Purpose <br>
 Prompt the user to select a folder in a file browser window
 
 usage
@@ -46,7 +46,7 @@ Get-Folder
 
 ## Get-CSVFilePath
 
-Purpose
+Purpose <br>
 Prompt the user to select a csv file in a file browser.
 
 Usage
@@ -57,7 +57,7 @@ Get-CSVFilePath
 
 ## Convert-CSVtoHTML
 
-Purpose
+Purpose <br>
 This function is a wrapper for PSWriteHTML. It will basically prompt the user with a file browser to select a CSV to convert into an HTML report.
 
 Usage
@@ -68,7 +68,7 @@ Convert-CSVtoHTML
 
 ## Install-CustomModule
 
-Purpose
+Purpose <br>
 Install custom modules automatically into the current users PowerShell module path.
 
 ```powershell
@@ -77,7 +77,7 @@ Install-CustomModule -ModuleName BleaksKitchenSink
 
 ## Join-SingleFunctionsToPSM
 
-Purpose
+Purpose <br>
 Takes a folder that contains .ps1 files for all module functions and automatically builds a single PSM1 file (Not dot sourced).
 Makes the process of updating and adding new functions to the module with ease and fewer steps to finish.
 
