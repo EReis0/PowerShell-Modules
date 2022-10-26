@@ -4,6 +4,7 @@
   - [Get-CSVFilePath](#get-csvfilepath)
   - [Convert-CSVtoHTML](#convert-csvtohtml)
 - [Change Log](#change-log)
+  - [Automated PSM Building | 10/25/2022](#automated-psm-building--10252022)
   - [New Functions | 10/12/2022](#new-functions--10122022)
   - [New Repo | 10/11/2022](#new-repo--10112022)
 
@@ -69,6 +70,14 @@ Convert-CSVtoHTML
 # Change Log
 
 <br>
+
+## Automated PSM Building | 10/25/2022
+
+- Created function `Join-SingleFunctionToPSM` which will import all single file functions into a single PSM file
+- Added `Functions` folder under module root
+- Added functions `Install-CustomModule` and `Join-SingleFunctionToPSM` into `BleakKitchenSink` Module
+- Regenerated PSM file using new function
+- Regenerated PSD to include new functions added
 
 ## New Functions | 10/12/2022
 
