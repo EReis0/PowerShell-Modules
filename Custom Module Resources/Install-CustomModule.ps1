@@ -1,9 +1,9 @@
 <#
-Purpose: Copy module folder from downloads to C:\Program Files\WindowsPowerShell\Modules
+Purpose: Copy module folder from downloads to C:\Users\<user>\Documents\WindowsPowerShell\Modules
 Warning: If you're running a Anti-Virus, it may flag this script as a virus. You will have to exclude powershell.exe from your AV during the installation.
          Just make sure to remove the AV exception because leaving it in place is very risky.
 
-You don't really need this script, you can technically just copy the folder and paste it to the module directory 'C:\Program Files\WindowsPowerShell\Modules'.
+You don't really need this script, you can technically just copy the folder and paste it to the module directory 'C:\Users\<user>\Documents\WindowsPowerShell\Modules'.
 This will also avoid the issues with AV.
 
 #>
