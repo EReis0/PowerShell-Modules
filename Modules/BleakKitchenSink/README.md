@@ -5,6 +5,7 @@
   - [Convert-CSVtoHTML](#convert-csvtohtml)
   - [Install-CustomModule](#install-custommodule)
   - [Join-SingleFunctionsToPSM](#join-singlefunctionstopsm)
+- [CheckSums (SHA256Sum)](#checksums-sha256sum)
 - [Change Log](#change-log)
   - [Automated PSM Building | 10/25/2022](#automated-psm-building--10252022)
   - [New Functions | 10/12/2022](#new-functions--10122022)
@@ -58,7 +59,7 @@ Get-CSVFilePath
 ## Convert-CSVtoHTML
 
 Purpose <br>
-This function is a wrapper for PSWriteHTML. It will basically prompt the user with a file browser to select a CSV to convert into an HTML report.
+This function is a wrapper for [PSWriteHTML](https://www.powershellgallery.com/packages/PSWriteHTML/0.0.158). It will basically prompt the user with a file browser to select a CSV to convert into an HTML report.
 
 Usage
 
@@ -84,6 +85,13 @@ Makes the process of updating and adding new functions to the module with ease a
 ```powershell
 Join-SingleFunctionsToPSM -RootFolder "C:\Github\ProjectSample" -FunctionFolderName "Functions"
 ```
+
+<br>
+
+# CheckSums (SHA256Sum)
+
+- BleakKitchenSink.psm1 `9fda5b6f6e67c394a1ac448c8fb1be488d2d75236d2656d0a42014cf1c0bd3b1`
+- BleakKitchenSink.psd1 `2b1ca2ed0a8775ee951874196e59efed22998f96472546235bdc3d9fca2a441e`
 
 <br>
 
