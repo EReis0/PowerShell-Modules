@@ -3,6 +3,8 @@
   - [Get-Folder](#get-folder)
   - [Get-CSVFilePath](#get-csvfilepath)
   - [Convert-CSVtoHTML](#convert-csvtohtml)
+  - [Install-CustomModule](#install-custommodule)
+  - [Join-SingleFunctionsToPSM](#join-singlefunctionstopsm)
 - [Change Log](#change-log)
   - [Automated PSM Building | 10/25/2022](#automated-psm-building--10252022)
   - [New Functions | 10/12/2022](#new-functions--10122022)
@@ -64,6 +66,24 @@ Usage
 Convert-CSVtoHTML
 ```
 
+## Install-CustomModule
+
+Purpose
+Install custom modules automatically into the current users PowerShell module path.
+
+```powershell
+Install-CustomModule -ModuleName BleaksKitchenSink
+```
+
+## Join-SingleFunctionsToPSM
+
+Purpose
+Takes a folder that contains .ps1 files for all module functions and automatically builds a single PSM1 file (Not dot sourced).
+Makes the process of updating and adding new functions to the module with ease and fewer steps to finish.
+
+```powershell
+Join-SingleFunctionsToPSM -RootFolder "C:\Github\ProjectSample" -FunctionFolderName "Functions"
+```
 
 <br>
 
