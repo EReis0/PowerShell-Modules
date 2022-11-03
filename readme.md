@@ -18,7 +18,7 @@ Each adventure I have written scripts, reusable functions, and created tons of d
 Keep in mind that I am 100% self-taught so the way I do things might be a little different from what you're used to. 
 I do welcome feedback or suggestions that would help to improve my craft. My goal is to get goooood, so I can assist other projects on GitHub.
 
-Development has always been a passion for me and when I am coding, I am in my happy place :)
+Development has always been a passion of mine and when I am coding, I am in my happy place :)
 
 
 *"Failure is success in progress." – Albert Einstein*
