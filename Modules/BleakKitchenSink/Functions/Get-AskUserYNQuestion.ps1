@@ -1,21 +1,21 @@
+<#
+.SYNOPSIS
+    Asks the user a yes or no question and returns the answer.
+.DESCRIPTION
+    This function asks the user a yes or no question and returns the answer. The function uses the PowerShell host's `PromptForChoice` method to display the question and choices. The question is specified using the `$Question` parameter.
+.PARAMETER Question
+    Specifies the question to ask the user.
+.EXAMPLE
+    Get-AskUserYNQuestion -Question 'Are you ready?'
+    This example asks the user the question "Are you ready?" and returns the user's answer.
+.NOTES
+    Author: Codeholics - TheBleak
+    Version: 1.0
+    Date: 8/2023
+.LINK
+    https://github.com/thebleak13/PowerShell-Samples/blob/main/BleakKitchenSink/README.md
+#>
 Function Get-AskUserYNQuestion {
-    <#
-    .SYNOPSIS
-        Get-AskUserYNQuestion -Question [string]
-    .DESCRIPTION
-        Asks the user a yes or no question and returns the answer.
-    .NOTES
-        N/A
-    .LINK
-        https://github.com/thebleak13/PowerShell-Samples/blob/main/BleakKitchenSink/README.md
-    .EXAMPLE
-        PS C:\> Get-AskUserYNQuestion -Question 'Are you ready?'
-
-        Are you ready?
-        Choices:
-        [Y] Yes  [N] No  [?] Help (default is "Y"): y
-        Yes
-    #>
     [CmdletBinding()]
     param (
         [parameter(Mandatory=$true)]

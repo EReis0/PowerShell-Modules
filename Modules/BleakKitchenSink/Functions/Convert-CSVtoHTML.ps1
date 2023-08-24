@@ -1,19 +1,21 @@
+<#
+.SYNOPSIS
+    Converts a CSV file to an HTML report using PSWriteHTML.
+.DESCRIPTION
+    This function converts a CSV file to an HTML report using PSWriteHTML and preferred parameters. The function is a wrapper for the `ConvertTo-HTMLTable` function in PSWriteHTML. When the function is executed, a file browser will open to select the CSV file to convert. In order to use this function, you must have PSWriteHTML installed.
+.PARAMETER None
+    This function does not accept any parameters.
+.EXAMPLE
+    Convert-CSVtoHTML
+    This example converts a CSV file to an HTML report using PSWriteHTML and preferred parameters.
+.NOTES
+    Author: Codeholics - TheBleak
+    Version: 1.0
+    Date: 8/2023
+.LINK
+    https://github.com/thebleak13/PowerShell-Samples/blob/main/BleakKitchenSink/README.md
+#>
 Function Convert-CSVtoHTML {
-    <#
-    .SYNOPSIS
-        Convert-CSVtoHTML
-    .DESCRIPTION
-        Convert a CSV file to an HTML report using PSWriteHTML and preferred params.
-
-        - This function is a wrapper for the ConvertTo-HTMLTable function in PSWriteHTML. 
-        When the function is executed, a file browser will open to select the CSV file to convert. 
-
-        In order to use this, you must have PSWriteHTML installed.
-    .NOTES
-        - Could include the code from Get-CSVFilePath to reduce the lines of code for this feature.
-    .LINK
-        https://github.com/thebleak13/PowerShell-Samples/blob/main/BleakKitchenSink/README.md
-    #>
     Import-Module -Name PSWriteHTML
     $DownloadsPath = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path
     $File = Get-CSVFilePath
