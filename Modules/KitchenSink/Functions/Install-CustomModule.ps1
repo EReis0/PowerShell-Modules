@@ -17,7 +17,7 @@
     You don't really need this script, you can technically just copy the folder and paste it to the module directory 'C:\Program Files\WindowsPowerShell\Modules'. This will also avoid the issues with AV.
     Installing the module is useful but you can also just import-module with the path to use it for a script.
 .LINK
-    https://github.com/thebleak13/PowerShell-Samples/blob/main/Modules/BleakKitchenSink/README.md
+    https://github.com/thebleak13/PowerShell-Samples/blob/main/Modules/KitchenSink/README.md
 #>
 Function Install-CustomModule {
     [CmdletBinding()]
