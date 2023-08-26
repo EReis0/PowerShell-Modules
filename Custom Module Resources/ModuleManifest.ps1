@@ -1,13 +1,28 @@
+$RootDir = "D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink"
+$FunctionDir = "$RootDir\Functions"
+
+# Get all functions in the Functions folder
+$Functions = @()
+Get-ChildItem -Path $FunctionDir -Filter *.ps1 -Recurse | ForEach-Object {
+    $content = Get-Content $_.FullName
+    foreach ($item in $content) {
+        if ($item -match "^function\s+([a-z]+\-[a-zA-Z]+)") {
+            $Functions += $matches[1]
+        }
+    }
+}
+
+# Create the module manifest
 $Params = @{ 
-    "Path" 				        = '.\BleakKitchenSink\BleakKitchenSink.psd1' 
-    "Author" 			        = 'TheBleak13' 
+    "Path" 				        = "$RootDir\KitchenSink.psd1"
+    "Author" 			        = 'https://github.com/thebleak13' 
     "CompanyName" 			    = 'Codeholics.com' 
-    "RootModule" 			    = 'BleakKitchenSink.psm1' 
+    "RootModule" 			    = 'KitchenSink.psm1' 
     "CompatiblePSEditions" 		= @('Desktop','Core') 
-    "FunctionsToExport" 		= @('Get-AskUserYNQuestion','Get-CSVFilePath','Convert-CSVtoHTML','Get-Folder','Install-CustomModule','Join-FunctionToPSM') 
-    "CmdletsToExport" 		    = @('Get-AskUserYNQuestion','Get-CSVFilePath','Convert-CSVtoHTML','Get-Folder','Install-CustomModule','Join-FunctionToPSM') 
+    "FunctionsToExport" 		= $Functions
+    "CmdletsToExport" 		    = $Functions
     "VariablesToExport" 		= '' 
     "AliasesToExport" 		    = @() 
-    "Description"               = 'BleakKitchenSink' 
+    "Description"               = 'KitchenSink' 
 } 
 New-ModuleManifest @Params
