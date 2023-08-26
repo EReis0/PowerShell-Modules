@@ -1,7 +1,7 @@
-$PSMFile = '.\PowerShell-Samples\Modules\BleakKitchenSink\BleakKitchenSink.psm1'
-$PSDFile = '.\PowerShell-Samples\Modules\BleakKitchenSink\BleakKitchenSink.psd1'
+$PSMFile = 'D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink\KitchenSink.psm1'
+$PSDFile = 'D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink\KitchenSink.psd1'
 $Date = Get-Date -format 'yyyy-MM-dd'
-$OutFile = ".\PowerShell-Samples\Checksums\$ModuleFolderName($Date).txt"
+$OutFile = "D:\Code\Repos\PowerShell-Modules\Checksums\$ModuleFolderName($Date).txt"
 $ModuleFolderName = (Get-Item $PSMFile).Directory.Name
 
 $PSMHash = (Get-FileHash -Path $PSMFile).Hash
