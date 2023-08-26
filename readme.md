@@ -1,6 +1,6 @@
 - [Introduction](#introduction)
 - [Modules](#modules)
-    - [BleakKitchenSink Docs](#bleakkitchensink-docs)
+    - [KitchenSink Docs](#kitchensink-docs)
 - [Custom Module Resource](#custom-module-resource)
 - [Codeholics](#codeholics)
 
@@ -27,7 +27,7 @@ Development has always been a passion of mine and when I am coding, I am in my h
 
 # Modules 
 
-### BleakKitchenSink [Docs](Modules/BleakKitchenSink/README.md)
+### KitchenSink [Docs](Modules/KitchenSink/README.md)
 
 Functions that I find cool or useful will be added to this module.
 
