@@ -51,4 +51,4 @@ function Join-FunctionsToPSM {
     }
 
     Set-Content -Value $ResultBuilder.ToString() -Path $FullPSMPath
-} # Join-FunctionsToPSM -RootFolder "D:\Code\Repos\PowerShell-Modules\Modules\BleakKitchenSink" -FunctionsDir "Functions"
+} # Join-FunctionsToPSM -RootFolder "D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink" -FunctionsDir "Functions"

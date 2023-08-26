@@ -1,4 +1,4 @@
-- [BleakKitchenSink](#bleakkitchensink)
+- [KitchenSink](#kitchensink)
   - [Get-AskUserYNQuestion](#get-askuserynquestion)
   - [Get-Folder](#get-folder)
   - [Get-CSVFilePath](#get-csvfilepath)
@@ -6,14 +6,14 @@
   - [Install-CustomModule](#install-custommodule)
   - [Join-FunctionsToPSM](#join-functionstopsm)
 - [Change Log](#change-log)
-  - [Updates | 08/24/2023](#updates--08242023)
+  - [Updates | 08/2023](#updates--082023)
   - [Automated PSM Building | 10/25/2022](#automated-psm-building--10252022)
   - [New Functions | 10/12/2022](#new-functions--10122022)
   - [New Repo | 10/11/2022](#new-repo--10112022)
 
 <br>
 
-# BleakKitchenSink
+# KitchenSink
 
 ## Get-AskUserYNQuestion
 
@@ -68,7 +68,7 @@ Convert-CSVtoHTML
 Install custom modules automatically into the current users PowerShell module path.
 
 ```powershell
-Install-CustomModule -ModuleName BleaksKitchenSink
+Install-CustomModule -ModuleName KitchenSink
 ```
 
 ## Join-FunctionsToPSM
@@ -86,19 +86,20 @@ Join-FunctionsToPSM -RootFolder "C:\Github\ProjectSample" -FunctionDir "Function
 
 <br>
 
-## Updates | 08/24/2023
+## Updates | 08/2023
 
 - Changed function name `Join-SingleFunctionToPSM` to `Join-FunctionToPSM`.
 - Updated `Join-FunctionToPSM` logic to 
   - Include get-help comments that are located above or within the function.
   - Add 2 new lines after each function added to the psm1 file.
 - Cleaned up Get-Help comments on almost all functions.
+- Renamed Module from `BleakKitchenSink` to `KitchenSink`
 
 ## Automated PSM Building | 10/25/2022
 
 - Created function `Join-SingleFunctionToPSM` which will import all single file functions into a single PSM file
 - Added `Functions` folder under module root
-- Added functions `Install-CustomModule` and `Join-SingleFunctionToPSM` into `BleakKitchenSink` Module
+- Added functions `Install-CustomModule` and `Join-SingleFunctionToPSM` into `KitchenSink` Module
 - Regenerated PSM file using new function
 - Regenerated PSD to include new functions added
 
@@ -108,7 +109,7 @@ Join-FunctionsToPSM -RootFolder "C:\Github\ProjectSample" -FunctionDir "Function
 
 ## New Repo | 10/11/2022
 
-- Created Module "BleakKitchenSink"
+- Created Module "KitchenSink"
   - Get-AskUserYNQuestion
   - Get-CSVFilePath
   - Convert-CSVtoHTML
