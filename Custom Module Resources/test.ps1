@@ -16,9 +16,6 @@ $ProfileContent = Get-Content -Path $ProfilePath
 $ImportModuleCommand = "Import-Module -Name KitchenSink"
 $CommandExists = $ProfileContent -like "*$ImportModuleCommand*"
 
-# Open the profile in notepad
-#notepad $Profile
-
 # If the command does not exist, add it to the profile
 if (-not $CommandExists) {
     Add-Content -Path $ProfilePath -Value "`n$ImportModuleCommand`n"
