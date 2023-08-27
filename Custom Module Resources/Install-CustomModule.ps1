@@ -3,11 +3,16 @@
     Installs a custom module from the downloads folder to the module directory.
 .DESCRIPTION
     This function installs a custom module from the downloads folder to the module directory. The function copies the module folder from the downloads folder to the module directory, and removes any existing module with the same name. If an Anti-Virus is running, it may flag this script as a virus. You will have to exclude powershell.exe from your AV during the installation.
-.PARAMETER ModuleName
-    Specifies the name of the module to install.
+.PARAMETER InputDir
+    Specifies the path of the module to install. This parameter is mandatory.
+.PARAMETER UserLevel
+    Specifies the level of the user for which the module should be installed. This parameter is optional and can be set to either 'Single' or 'All'. If not specified, the default value is 'All'.
 .EXAMPLE
-    Install-CustomModule -ModuleName "MyModule"
-    This example installs the "MyModule" module from the downloads folder to the module directory.
+    Install-CustomModule -InputDir "C:\Users\thebl\Downloads\BleakKitchenSink" -UserLevel "All"
+    This example installs the "BleakKitchenSink" module from the -InputDir  to the module directory for all users.
+
+    Install-CustomModule -InputDir "C:\Users\thebl\Downloads\BleakKitchenSink" -UserLevel "Single"
+    This example installs the "BleakKitchenSink" module from the -InputDir  to the module directory for the current user.
 .NOTES
     Author: Team Codeholics - TheBleak13 https://github.com/thebleak13
     Version: 1.0

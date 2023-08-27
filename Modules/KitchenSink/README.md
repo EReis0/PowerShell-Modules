@@ -94,6 +94,7 @@ Join-FunctionsToPSM -RootFolder "C:\Github\ProjectSample" -FunctionDir "Function
   - Add 2 new lines after each function added to the psm1 file.
 - Cleaned up Get-Help comments on almost all functions.
 - Renamed Module from `BleakKitchenSink` to `KitchenSink`
+- Update to `Install-CustomModule` to also create a PowerShell profile and include the custom module. This allows you to `Get-Module` and `Get-Command` and access the custom module. Still more testing and work need to be done on this one.
 
 ## Automated PSM Building | 10/25/2022
 
