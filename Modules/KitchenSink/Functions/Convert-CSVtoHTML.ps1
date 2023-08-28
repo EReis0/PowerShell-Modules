@@ -16,6 +16,9 @@
     https://github.com/thebleak13/PowerShell-Samples/blob/main/BleakKitchenSink/README.md
 #>
 Function Convert-CSVtoHTML {
+
+    #Requires -Module PSWriteHTML
+    
     Import-Module -Name PSWriteHTML
     $DownloadsPath = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path
     $File = Get-CSVFilePath
