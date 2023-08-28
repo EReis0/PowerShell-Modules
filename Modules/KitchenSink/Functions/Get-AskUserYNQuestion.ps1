@@ -26,17 +26,13 @@ Function Get-AskUserYNQuestion {
     $choices = @("&Yes","&No")
     
     $choicedesc = New-Object System.Collections.ObjectModel.Collection[System.Management.Automation.Host.ChoiceDescription] 
-    $choices | ForEach-Object  { $choicedesc.Add((New-Object "System.Management.Automation.Host.ChoiceDescription" -ArgumentList $_))} 
+    $choices | ForEach-Object  {$choicedesc.Add((New-Object "System.Management.Automation.Host.ChoiceDescription" -ArgumentList $_))} 
     
     $prompt = $Host.ui.PromptForChoice($caption, $message, $choicedesc, 0)
     
     $Answer = Switch ($prompt){
-           0 {
-            "Yes"
-            }
-           1 {
-            "No"
-            }
+           0 {"Yes"}
+           1 {"No"}
          }
          return $Answer
 } #Get-AskUserYNQuestion -Question 'Are you ready?'
