@@ -4,7 +4,7 @@
 .DESCRIPTION
     This function installs a custom module from the downloads folder to the module directory. The function copies the module folder from the downloads folder to the module directory, and removes any existing module with the same name. If an Anti-Virus is running, it may flag this script as a virus. You will have to exclude powershell.exe from your AV during the installation.
 .PARAMETER InputDir
-    Specifies the path of the module to install. This parameter is mandatory.
+    Specifies the path of the module to install. This parameter is mandatory. It should be the path to your module folder.
 .PARAMETER UserLevel
     Specifies the level of the user for which the module should be installed. This parameter is optional and can be set to either 'Single' or 'All'. If not specified, the default value is 'All'.
 .EXAMPLE
@@ -40,7 +40,7 @@ Function Install-CustomModule {
     if ($UserLevel -eq 'Single') {
         $WindowsPowerShellModulePath = $env:PSModulePath.Split(';')[0]
     } elseif ($UserLevel -eq 'ALL') {
-        $WindowsPowerShellModulePath = "C:\Program Files\WindowsPowerShell\Modules"
+        $WindowsPowerShellModulePath = $env:PSModulePath.Split(';')[1]
     } else {
         Write-Warning "UserLevel must be 'Single' or 'All'"
     }
@@ -54,6 +54,7 @@ Function Install-CustomModule {
     # Check if the module is already installed
     $filecheck = test-path $ModuleOutputPath
     if ($filecheck) {
+        Write-Host "Removing existing $ModuleName module from $WindowsPowerShellModulePath" -ForegroundColor Black -BackgroundColor Yellow
         Remove-Item -Path $ModuleOutputPath -Force -Recurse
     }
 
@@ -73,20 +74,25 @@ Function Install-CustomModule {
     $ProfilePath = "$HOME\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
     $CheckProfile = Test-Path -Path $ProfilePath
     if ($CheckProfile -eq $false) {
+        Write-Host "Creating profile at $ProfilePath" -ForegroundColor Black -BackgroundColor Yellow
         New-Item -ItemType File -Path $ProfilePath -Force
     }
 
     # Check if the Import-Module command already exists in the profile
+    Write-Host "Checking if $ModuleName is already imported in the profile" -ForegroundColor Black -BackgroundColor Yellow
     $ProfileContent = Get-Content -Path $ProfilePath
     $ImportModuleCommand = "Import-Module -Name $ModuleName"
     $CommandExists = $ProfileContent -like "*$ImportModuleCommand*"
 
     # If the command does not exist, add it to the profile
     if (-not $CommandExists) {
-    Add-Content -Path $ProfilePath -Value "`n$ImportModuleCommand`n"
+        Write-Host "Adding $ModuleName to the profile" -ForegroundColor Black -BackgroundColor Yellow
+        Add-Content -Path $ProfilePath -Value "`n$ImportModuleCommand`n"
     }
 
     Import-Module -Name $ModuleName
 
     Get-Module -Name $ModuleName
-} # Install-CustomModule -InputDir 'C:\Users\thebl\Downloads\BleakKitchenSink' -UserLevel 'All'
+
+    Get-Command -Module $ModuleName
+} # Install-CustomModule -InputDir 'D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink' -UserLevel 'All'
