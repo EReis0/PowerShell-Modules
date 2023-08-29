@@ -16,6 +16,9 @@
     https://github.com/thebleak13/PowerShell-Samples/blob/main/BleakKitchenSink/README.md
 #>
 Function Convert-CSVtoHTML {
+
+    #Requires -Module PSWriteHTML
+    
     Import-Module -Name PSWriteHTML
     $DownloadsPath = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path
     $File = Get-CSVFilePath
@@ -57,17 +60,13 @@ Function Get-AskUserYNQuestion {
     $choices = @("&Yes","&No")
     
     $choicedesc = New-Object System.Collections.ObjectModel.Collection[System.Management.Automation.Host.ChoiceDescription] 
-    $choices | ForEach-Object  { $choicedesc.Add((New-Object "System.Management.Automation.Host.ChoiceDescription" -ArgumentList $_))} 
+    $choices | ForEach-Object  {$choicedesc.Add((New-Object "System.Management.Automation.Host.ChoiceDescription" -ArgumentList $_))} 
     
     $prompt = $Host.ui.PromptForChoice($caption, $message, $choicedesc, 0)
     
     $Answer = Switch ($prompt){
-           0 {
-            "Yes"
-            }
-           1 {
-            "No"
-            }
+           0 {"Yes"}
+           1 {"No"}
          }
          return $Answer
 } #Get-AskUserYNQuestion -Question 'Are you ready?'
@@ -140,15 +139,15 @@ Function Get-Folder($initialDirectory){
 .DESCRIPTION
     This function installs a custom module from the downloads folder to the module directory. The function copies the module folder from the downloads folder to the module directory, and removes any existing module with the same name. If an Anti-Virus is running, it may flag this script as a virus. You will have to exclude powershell.exe from your AV during the installation.
 .PARAMETER InputDir
-    Specifies the path of the module to install. This parameter is mandatory.
+    Specifies the path of the module to install. This parameter is mandatory. It should be the path to your module folder.
 .PARAMETER UserLevel
     Specifies the level of the user for which the module should be installed. This parameter is optional and can be set to either 'Single' or 'All'. If not specified, the default value is 'All'.
 .EXAMPLE
-    Install-CustomModule -InputDir "C:\Users\thebl\Downloads\BleakKitchenSink" -UserLevel "All"
-    This example installs the "BleakKitchenSink" module from the -InputDir  to the module directory for all users.
+    Install-CustomModule -InputDir "C:\Users\thebl\Downloads\KitchenSink" -UserLevel "All"
+    This example installs the "KitchenSink" module from the -InputDir  to the module directory for all users.
 
-    Install-CustomModule -InputDir "C:\Users\thebl\Downloads\BleakKitchenSink" -UserLevel "Single"
-    This example installs the "BleakKitchenSink" module from the -InputDir  to the module directory for the current user.
+    Install-CustomModule -InputDir "C:\Users\thebl\Downloads\KitchenSink" -UserLevel "Single"
+    This example installs the "KitchenSink" module from the -InputDir  to the module directory for the current user.
 .NOTES
     Author: Team Codeholics - TheBleak13 https://github.com/thebleak13
     Version: 1.0
@@ -176,7 +175,7 @@ Function Install-CustomModule {
     if ($UserLevel -eq 'Single') {
         $WindowsPowerShellModulePath = $env:PSModulePath.Split(';')[0]
     } elseif ($UserLevel -eq 'ALL') {
-        $WindowsPowerShellModulePath = "C:\Program Files\WindowsPowerShell\Modules"
+        $WindowsPowerShellModulePath = $env:PSModulePath.Split(';')[1]
     } else {
         Write-Warning "UserLevel must be 'Single' or 'All'"
     }
@@ -190,6 +189,7 @@ Function Install-CustomModule {
     # Check if the module is already installed
     $filecheck = test-path $ModuleOutputPath
     if ($filecheck) {
+        Write-Host "Removing existing $ModuleName module from $WindowsPowerShellModulePath" -ForegroundColor Black -BackgroundColor Yellow
         Remove-Item -Path $ModuleOutputPath -Force -Recurse
     }
 
@@ -209,23 +209,41 @@ Function Install-CustomModule {
     $ProfilePath = "$HOME\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
     $CheckProfile = Test-Path -Path $ProfilePath
     if ($CheckProfile -eq $false) {
+        Write-Host "Creating profile at $ProfilePath" -ForegroundColor Black -BackgroundColor Yellow
         New-Item -ItemType File -Path $ProfilePath -Force
     }
 
     # Check if the Import-Module command already exists in the profile
+    Write-Host "Checking if $ModuleName is already imported in the profile" -ForegroundColor Black -BackgroundColor Yellow
     $ProfileContent = Get-Content -Path $ProfilePath
     $ImportModuleCommand = "Import-Module -Name $ModuleName"
     $CommandExists = $ProfileContent -like "*$ImportModuleCommand*"
 
     # If the command does not exist, add it to the profile
     if (-not $CommandExists) {
-    Add-Content -Path $ProfilePath -Value "`n$ImportModuleCommand`n"
+        Write-Host "Adding $ModuleName to the profile" -ForegroundColor Black -BackgroundColor Yellow
+        Add-Content -Path $ProfilePath -Value "`n$ImportModuleCommand`n"
     }
 
+    clear-host
+    Start-Sleep 2
+
+    Write-host "Validating Installation..." -ForegroundColor Yellow
     Import-Module -Name $ModuleName
 
-    Get-Module -Name $ModuleName
-} # Install-CustomModule -InputDir 'C:\Users\thebl\Downloads\BleakKitchenSink' -UserLevel 'All'
+    $check1 = Get-Module -Name $ModuleName
+
+    $check2 = Get-Command -Module $ModuleName | format-table -AutoSize
+
+    if ($check1 -and $check2) {
+        Write-Host "Installation was successful!" -ForegroundColor Green
+        $check2
+    } else {
+        Write-Host "Installation failed!" -ForegroundColor Red
+    }
+}  
+
+Install-CustomModule -InputDir 'D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink' -UserLevel 'All'
 
 
 <#
@@ -282,6 +300,70 @@ function Join-FunctionsToPSM {
 
     Set-Content -Value $ResultBuilder.ToString() -Path $FullPSMPath
 } # Join-FunctionsToPSM -RootFolder "D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink" -FunctionsDir "Functions"
+
+
+<#
+.SYNOPSIS
+    Exports a password to a file in UTF8 encoding and validates the file.
+.DESCRIPTION
+    Exports a password to a file in UTF8 encoding and validates the file. The function converts the password to a secure string and then to an encrypted standard string using the ConvertTo-SecureString and ConvertFrom-SecureString cmdlets. The encrypted string is then written to a file using the Out-File cmdlet. The function also validates the file by comparing the decrypted password to the original password.
+.PARAMETER Filepath
+    Specifies the path and filename of the file to export the password to.
+.PARAMETER Password
+    Specifies the password to export.
+.PARAMETER ValidateOnly
+    Specifies whether to validate the password file. If this parameter is specified, the password will not be exported.
+.EXAMPLE
+    PS C:\> New-CredsTxtFile -Filepath "C:\Temp\password.txt" -Password "MyPassword123"
+    Exports the password "MyPassword123" to the file "C:\Temp\password.txt" in UTF8 encoding and validates the file.
+.EXAMPLE
+    PS C:\> New-CredsTxtFile -Filepath "C:\Temp\password.txt" -Password "MyPassword123" -ValidateOnly
+    Validates the file "C:\Temp\password.txt" by comparing the decrypted password to the original password.
+.NOTES
+    This function exports a password to a file in UTF8 encoding and validates the file. The function converts the password to a secure string and then to an encrypted standard string using the ConvertTo-SecureString and ConvertFrom-SecureString cmdlets. The encrypted string is then written to a file using the Out-File cmdlet. The function also validates the file by comparing the decrypted password to the original password.
+    
+    Author: Codeholics - TheBleak
+    Version: 1.0
+    Date: 8/24/2023
+
+    This function is not really needed but a good way to create and validate a password file in a consistent manner.
+
+#>
+function New-CredsTxtFile {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$Filepath,
+        [Parameter(Mandatory=$true)]
+        [string]$Password,
+        [Parameter(Mandatory=$false)]
+        [bool]$ValidateOnly
+    )
+    
+    if (!$ValidateOnly) {
+    # Save the password
+    Write-Host "Exporting Password to $Filepath"
+    ConvertTo-SecureString -String $Password -AsPlainText -Force | ConvertFrom-SecureString | Out-File $Filepath -Encoding UTF8
+    }
+
+    # Verify password file
+    $SecureString = ConvertTo-SecureString -String (Get-Content $Filepath)
+    $Pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecureString)
+    $SecretContent = [Runtime.InteropServices.Marshal]::PtrToStringAuto($Pointer)
+
+    # Display the password in plain text
+    # $SecretContent
+
+    # Compare the password for a match
+    if ($SecretContent -eq $Password) {
+        Write-Host "Password MATCHED decrypted password." - foregroundcolor green
+    } else {
+        Write-Warning "Password DID NOT MATCH decrypted password."
+    }
+}  # New-CredsTxtFile -Filepath "C:\creds\creds.txt" -Password "P@ssw0rd"
+
+
+
 
 
 
