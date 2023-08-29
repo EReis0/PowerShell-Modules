@@ -26,4 +26,5 @@ $Params = @{
     "AliasesToExport" 		    = @() 
     "Description"               = "$ModuleName is a custom built module."
 } 
+
 New-ModuleManifest @Params
