@@ -8,11 +8,11 @@
 .PARAMETER UserLevel
     Specifies the level of the user for which the module should be installed. This parameter is optional and can be set to either 'Single' or 'All'. If not specified, the default value is 'All'.
 .EXAMPLE
-    Install-CustomModule -InputDir "C:\Users\thebl\Downloads\BleakKitchenSink" -UserLevel "All"
-    This example installs the "BleakKitchenSink" module from the -InputDir  to the module directory for all users.
+    Install-CustomModule -InputDir "C:\Users\thebl\Downloads\KitchenSink" -UserLevel "All"
+    This example installs the "KitchenSink" module from the -InputDir  to the module directory for all users.
 
-    Install-CustomModule -InputDir "C:\Users\thebl\Downloads\BleakKitchenSink" -UserLevel "Single"
-    This example installs the "BleakKitchenSink" module from the -InputDir  to the module directory for the current user.
+    Install-CustomModule -InputDir "C:\Users\thebl\Downloads\KitchenSink" -UserLevel "Single"
+    This example installs the "KitchenSink" module from the -InputDir  to the module directory for the current user.
 .NOTES
     Author: Team Codeholics - TheBleak13 https://github.com/thebleak13
     Version: 1.0
@@ -90,9 +90,22 @@ Function Install-CustomModule {
         Add-Content -Path $ProfilePath -Value "`n$ImportModuleCommand`n"
     }
 
+    clear-host
+    Start-Sleep 2
+
+    Write-host "Validating Installation..." -ForegroundColor Yellow
     Import-Module -Name $ModuleName
 
-    Get-Module -Name $ModuleName
+    $check1 = Get-Module -Name $ModuleName
 
-    Get-Command -Module $ModuleName
-} # Install-CustomModule -InputDir 'D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink' -UserLevel 'All'
+    $check2 = Get-Command -Module $ModuleName | format-table -AutoSize
+
+    if ($check1 -and $check2) {
+        Write-Host "Installation was successful!" -ForegroundColor Green
+        $check2
+    } else {
+        Write-Host "Installation failed!" -ForegroundColor Red
+    }
+}  
+
+Install-CustomModule -InputDir 'D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink' -UserLevel 'All'
