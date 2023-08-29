@@ -1,10 +1,19 @@
 - [KitchenSink](#kitchensink)
   - [Get-AskUserYNQuestion](#get-askuserynquestion)
+    - [Usage](#usage)
+    - [Example Output](#example-output)
   - [Get-Folder](#get-folder)
+    - [usage](#usage-1)
   - [Get-CSVFilePath](#get-csvfilepath)
+    - [Usage](#usage-2)
   - [Convert-CSVtoHTML](#convert-csvtohtml)
+    - [Usage](#usage-3)
   - [Install-CustomModule](#install-custommodule)
+    - [Usage](#usage-4)
   - [Join-FunctionsToPSM](#join-functionstopsm)
+    - [Usage](#usage-5)
+  - [New-CredsTxtFile](#new-credstxtfile)
+    - [Usage](#usage-6)
 - [Change Log](#change-log)
   - [Updates | 08/2023](#updates--082023)
   - [Automated PSM Building | 10/25/2022](#automated-psm-building--10252022)
@@ -19,13 +28,14 @@
 
 Just a simple way to toss a system controlled yes/no question to the user.
 
-Usage
+### Usage
 
 ```powershell
 Get-AskUserYNQuestion -Question 'Are you ready?
 ```
 
-Example Output
+### Example Output
+
 ```
 Are you ready?
 Choices:
@@ -37,7 +47,7 @@ Yes
 
 Prompt the user to select a folder in a file browser window
 
-usage
+### usage
 
 ```powershell
 Get-Folder
@@ -45,9 +55,9 @@ Get-Folder
 
 ## Get-CSVFilePath
 
-Prompt the user to select a csv file in a file browser to obtain a path to a csv file
+Prompt the user to select a CSV file in a file browser to obtain a path to a csv file
 
-Usage
+### Usage
 
 ```powershell
 Get-CSVFilePath
@@ -57,7 +67,7 @@ Get-CSVFilePath
 
 This function is a wrapper for [PSWriteHTML](https://www.powershellgallery.com/packages/PSWriteHTML/0.0.158). It will basically prompt the user with a file browser to select a CSV to convert into an HTML report.
 
-Usage
+### Usage
 
 ```powershell
 Convert-CSVtoHTML
@@ -65,7 +75,13 @@ Convert-CSVtoHTML
 
 ## Install-CustomModule
 
-Install custom modules automatically into the current users PowerShell module path.
+> Must be executed in PowerShell administrator mode.
+
+Installing custom modules can be a little tricky, so this function was created to assist. It takes the module and copies it to the PowerShell module directory. Then it creates a PowerShell profile if one does not already exist. Next it will check the PowerShell profile for the specific module and updates the profile if it's missing. 
+
+Once it is completed you can use commands like `get-module` and `get-command` without needing to import the module in a script first.
+
+### Usage
 
 ```powershell
 Install-CustomModule -ModuleName KitchenSink
@@ -76,8 +92,28 @@ Install-CustomModule -ModuleName KitchenSink
 Takes a folder that contains .ps1 files for all module functions and automatically builds a single PSM1 file (Not dot sourced).
 Makes the process of updating and adding new functions to the module with ease and fewer steps to finish.
 
+### Usage
+
 ```powershell
 Join-FunctionsToPSM -RootFolder "C:\Github\ProjectSample" -FunctionDir "Functions"
+```
+
+## New-CredsTxtFile
+
+Use this to generate a new secure credential file but also verify the file was generated correctly. You can also use this to verify the password that is in the file. 
+
+### Usage
+
+This will create a new creds file and verify it once it's created
+
+```powershell
+New-CredsTxtFile -Filepath "C:\creds\creds.txt" -Password "P@ssw0rd"
+```
+
+This will not create a new creds file. It only validates the current file.
+
+```powershell
+New-CredsTxtFile -Filepath "C:\Temp\password.txt" -Password "MyPassword123" -ValidateOnly
 ```
 
 <br>
@@ -88,13 +124,14 @@ Join-FunctionsToPSM -RootFolder "C:\Github\ProjectSample" -FunctionDir "Function
 
 ## Updates | 08/2023
 
-- Changed function name `Join-SingleFunctionToPSM` to `Join-FunctionToPSM`.
-- Updated `Join-FunctionToPSM` logic to 
+- Changed function name `Join-SingleFunctionToPSM` to `Join-FunctionsToPSM`.
+- Updated `Join-FunctionsToPSM` logic to 
   - Include get-help comments that are located above or within the function.
   - Add 2 new lines after each function added to the psm1 file.
 - Cleaned up Get-Help comments on almost all functions.
 - Renamed Module from `BleakKitchenSink` to `KitchenSink`
-- Update to `Install-CustomModule` to also create a PowerShell profile and include the custom module. This allows you to `Get-Module` and `Get-Command` and access the custom module. Still more testing and work need to be done on this one.
+- Update to `Install-CustomModule` to also create a PowerShell profile and include the custom module. This allows you to `Get-Module` and `Get-Command` and access the custom module. Works well, just need to suppress some console messages.
+- Created `New-CredsTxtFile` to help with creating and validating secured credentials.
 
 ## Automated PSM Building | 10/25/2022
 
