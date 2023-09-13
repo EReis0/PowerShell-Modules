@@ -26,8 +26,8 @@ function Join-FunctionsToPSM {
     )
 
     $RootFolderName = Get-Item $RootFolder | Select-Object -ExpandProperty Name
-    $FunctionFolder = $RootFolder + "\" + $FunctionsDir
-    $FullPSMPath = "$RootFolder\$RootFolderName.psm1"
+    $FunctionFolder = Join-Path -Path $RootFolder -ChildPath $FunctionsDir
+    $FullPSMPath = Join-Path -Path $RootFolder -ChildPath "$RootFolderName.psm1"
 
     $Validation_root = Test-Path $RootFolder
     if ($validation_root -eq $false) {
