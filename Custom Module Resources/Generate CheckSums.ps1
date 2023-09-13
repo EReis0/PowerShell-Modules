@@ -1,8 +1,14 @@
-$PSMFile = 'D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink\KitchenSink.psm1'
-$PSDFile = 'D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink\KitchenSink.psd1'
+$CPSScriptRoot = 'D:\Code\Repos\PowerShell-Modules\Modules'
+$CheckSums = 'D:\Code\Repos\PowerShell-Modules\Checksums'
+$ModuleName = 'KitchenSink'
+
+$PSMFile = Join-Path -Path $CPSScriptRoot -ChildPath $ModuleName | Join-Path -ChildPath "$ModuleName.psm1"
+$PSDFile = Join-Path -Path $CPSScriptRoot -ChildPath $ModuleName | Join-Path -ChildPath "$ModuleName.psd1"
 $Date = Get-Date -format 'yyyy-MM-dd'
-$ModuleFolderName = (Get-Item $PSMFile).Directory.Name
-$OutFile = "D:\Code\Repos\PowerShell-Modules\Checksums\$ModuleFolderName($Date).txt"
+
+# D:\Code\Repos\PowerShell-Modules\Checksums
+# D:\Code\Repos\PowerShell-Modules\Modules\Checksums\
+$OutFile = Join-Path -Path $CheckSums -ChildPath "$ModuleName($Date).txt"
 
 $PSMHash = (Get-FileHash -Path $PSMFile).Hash
 $PSDHash = (Get-FileHash -Path $PSDFile).Hash
@@ -26,3 +32,4 @@ $PSD = $PSDPath.split('\')[-1];
 
 $ResultsPSM = "$($Results.PSM.Name) : $($Results.PSM.Checksum)" | Out-File -FilePath $OutFile -Append
 $ResultsPSD = "$($Results.PSD.Name) : $($Results.PSD.Checksum)" | Out-File -FilePath $OutFile -Append
+
