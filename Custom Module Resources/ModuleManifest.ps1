@@ -1,5 +1,5 @@
 $RootDir = "D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink"
-$FunctionDir = "$RootDir\Functions"
+$FunctionDir = Join-Path -Path $RootDir -ChildPath "Functions"
 
 # Get all functions in the Functions folder
 $Functions = Get-ChildItem -Path $FunctionDir -Filter *.ps1 -Recurse | ForEach-Object {

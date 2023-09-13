@@ -16,19 +16,17 @@
     https://github.com/thebleak13/PowerShell-Samples/blob/main/BleakKitchenSink/README.md
 #>
 Function Convert-CSVtoHTML {
-
-    #Requires -Module PSWriteHTML
-    
     Import-Module -Name PSWriteHTML
     $DownloadsPath = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.Path
     $File = Get-CSVFilePath
     $importFile = @(Import-CSV -path $File)
     $FileNameRaw = (Get-ChildItem $file).Name
     $FileName = $FileNameRaw.Replace(".csv",'')
-    Write-Host "`n`r ---> Exported report to $DownloadsPath\$FileName.html" -foregroundcolor 'black' -backgroundcolor 'green'
+    $OutputPath = Join-Path -Path $DownloadsPath -ChildPath "$FileName.html"
+    Write-Host "`n`r ---> Exported report to $OutputPath" -foregroundcolor 'black' -backgroundcolor 'green'
     New-HTML {
         New-HTMLTable -DataTable $importFile -Title $FileName -HideFooter -PagingLength 10 -Buttons excelHtml5,searchPanes
-    } -ShowHTML -FilePath "$DownloadsPath\$FileName.html" -Online
+    } -ShowHTML -FilePath $OutputPath -Online
 } #Convert-CSVtoHTML
 
 
@@ -274,8 +272,8 @@ function Join-FunctionsToPSM {
     )
 
     $RootFolderName = Get-Item $RootFolder | Select-Object -ExpandProperty Name
-    $FunctionFolder = $RootFolder + "\" + $FunctionsDir
-    $FullPSMPath = "$RootFolder\$RootFolderName.psm1"
+    $FunctionFolder = Join-Path -Path $RootFolder -ChildPath $FunctionsDir
+    $FullPSMPath = Join-Path -Path $RootFolder -ChildPath "$RootFolderName.psm1"
 
     $Validation_root = Test-Path $RootFolder
     if ($validation_root -eq $false) {
