@@ -133,6 +133,84 @@ Function Get-Folder($initialDirectory){
 
 <#
 .SYNOPSIS
+Checks for updates to PowerShell modules installed from the PowerShell Gallery.
+
+.DESCRIPTION
+The Get-ModuleUpdates function checks for updates to PowerShell modules installed from the PowerShell Gallery. 
+It compares the installed version of each module to the latest version available in the gallery and reports any modules
+that have updates available.
+
+.PARAMETER None
+This function does not accept any parameters.
+
+.EXAMPLE
+PS C:\> Get-ModuleUpdates
+Checks for updates to PowerShell modules installed from the PowerShell Gallery and reports any modules that have updates available.
+
+.EXAMPLE
+$test = Get-ModuleUpdates
+clear-host
+Write-Host $test -ForegroundColor Green
+
+.NOTES
+This function requires PowerShell 5.0 or later and an internet connection to access the PowerShell Gallery.
+
+- Author: TheBleak13@2023
+- Version: 1.0
+
+#>
+function Get-ModuleUpdates {
+    $InstalledModules = Get-InstalledModule
+    $BaseUri = "https://www.powershellgallery.com/packages/"
+
+    $Data = @()
+    foreach ($item in $InstalledModules) {
+        Try{
+        $PSGallery = Find-Module -Name $item.Name -Repository PSGallery | 
+            Select-Object -Property Name, Version, PublishedDate, @{Name = "InstalledVersion"; Expression = {$item.Version}}
+        } Catch {
+            
+        }
+        $Row = New-Object -TypeName PSObject -Property @{
+            Name = $PSGallery.Name
+            Version = $PSGallery.Version
+            PublishedDate = $PSGallery.PublishedDate
+            InstalledVersion = $PSGallery.InstalledVersion
+            UpdateAvailable = $PSGallery.Version -gt $PSGallery.InstalledVersion
+            Link = $BaseUri + $PSGallery.Name
+        }
+        $Data += $Row
+    }
+
+    $UpdateAvailable = $Data | Where-Object -Property UpdateAvailable -eq $true
+    $CurrentVersion = $Data | Where-Object -Property UpdateAvailable -eq $false
+
+    $Msg = @"
+
+############################################################################################################
+
+-- Installed-Module Version Check --
+
+NOTICE: Only modules installed from the PowerShell Gallery will be checked for updates.
+
+You have [$($CurrentVersion.Count)] module(s) up to date.
+You have [$($UpdateAvailable.Count)] module(s) with updates available.
+
+$($UpdateAvailable | Select-Object Name,UpdateAvailable,InstalledVersion,Version,PublishedDate,Link| Format-Table -AutoSize | Out-String)
+
+############################################################################################################
+
+"@
+
+    Return $Msg
+}
+
+
+
+
+
+<#
+.SYNOPSIS
     Installs a custom module from the downloads folder to the module directory.
 .DESCRIPTION
     This function installs a custom module from the downloads folder to the module directory. The function copies the module folder from the downloads folder to the module directory, and removes any existing module with the same name. If an Anti-Virus is running, it may flag this script as a virus. You will have to exclude powershell.exe from your AV during the installation.
@@ -223,7 +301,7 @@ Function Install-CustomModule {
         Add-Content -Path $ProfilePath -Value "`n$ImportModuleCommand`n"
     }
 
-    clear-host
+    #clear-host
     Start-Sleep 2
 
     Write-host "Validating Installation..." -ForegroundColor Yellow
@@ -239,9 +317,7 @@ Function Install-CustomModule {
     } else {
         Write-Host "Installation failed!" -ForegroundColor Red
     }
-}  
-
-Install-CustomModule -InputDir 'D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink' -UserLevel 'All'
+}  # Install-CustomModule -InputDir 'D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink' -UserLevel 'All'
 
 
 <#

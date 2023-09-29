@@ -90,7 +90,7 @@ Function Install-CustomModule {
         Add-Content -Path $ProfilePath -Value "`n$ImportModuleCommand`n"
     }
 
-    clear-host
+    #clear-host
     Start-Sleep 2
 
     Write-host "Validating Installation..." -ForegroundColor Yellow
@@ -106,6 +106,4 @@ Function Install-CustomModule {
     } else {
         Write-Host "Installation failed!" -ForegroundColor Red
     }
-}  
-
-Install-CustomModule -InputDir 'D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink' -UserLevel 'All'
+}  # Install-CustomModule -InputDir 'D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink' -UserLevel 'All'

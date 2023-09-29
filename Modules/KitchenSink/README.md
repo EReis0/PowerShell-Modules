@@ -14,7 +14,11 @@
     - [Usage](#usage-5)
   - [New-CredsTxtFile](#new-credstxtfile)
     - [Usage](#usage-6)
+  - [Get-ModuleUpdates](#get-moduleupdates)
+    - [Usage](#usage-7)
+    - [Example Output](#example-output-1)
 - [Change Log](#change-log)
+  - [New function: Get-ModuleUpdates (9/2023)](#new-function-get-moduleupdates-92023)
   - [Updates | 08/2023](#updates--082023)
   - [Automated PSM Building | 10/25/2022](#automated-psm-building--10252022)
   - [New Functions | 10/12/2022](#new-functions--10122022)
@@ -116,11 +120,46 @@ This will not create a new creds file. It only validates the current file.
 New-CredsTxtFile -Filepath "C:\Temp\password.txt" -Password "MyPassword123" -ValidateOnly
 ```
 
+## Get-ModuleUpdates
+
+Check your PSGallery Installed-Modules for updates. Return modules that are outdated with links.
+
+### Usage
+
+```powershell
+Get-ModuleUpdates
+```
+
+### Example Output
+
+```
+Name             : Carbon
+UpdateAvailable  : True
+InstalledVersion : 2.13.0
+Version          : 2.15.1
+PublishedDate    : 8/18/2023 6:53:24 PM
+Link             : https://www.powershellgallery.com/packages/Carbon       
+
+Name             : PSSharedGoods
+UpdateAvailable  : True
+InstalledVersion : 0.0.264
+Version          : 0.0.266
+PublishedDate    : 9/18/2023 6:20:41 AM
+Link             : https://www.powershellgallery.com/packages/PSSharedGoods
+```
+
 <br>
 
 # Change Log
 
 <br>
+
+## New function: Get-ModuleUpdates (9/2023)
+
+- Created a new function `Get-ModuleUpdates` that will check PSGallery Modules for updates available.
+- Generated new PSM, PSD, Checksum.
+- Updated Readme.md to include the new function
+
 
 ## Updates | 08/2023
 
