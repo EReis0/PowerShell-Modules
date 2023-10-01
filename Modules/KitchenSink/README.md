@@ -17,8 +17,11 @@
   - [Get-ModuleUpdates](#get-moduleupdates)
     - [Usage](#usage-7)
     - [Example Output](#example-output-1)
+  - [Convert-UTCTimeStamp](#convert-utctimestamp)
+    - [Usage](#usage-8)
+    - [Example Output](#example-output-2)
 - [Change Log](#change-log)
-  - [New function: Get-ModuleUpdates (9/2023)](#new-function-get-moduleupdates-92023)
+  - [Updates | 9/2023](#updates--92023)
   - [Updates | 08/2023](#updates--082023)
   - [Automated PSM Building | 10/25/2022](#automated-psm-building--10252022)
   - [New Functions | 10/12/2022](#new-functions--10122022)
@@ -148,18 +151,33 @@ PublishedDate    : 9/18/2023 6:20:41 AM
 Link             : https://www.powershellgallery.com/packages/PSSharedGoods
 ```
 
+## Convert-UTCTimeStamp
+
+Convert a UTC timestamp into a normal readable format.
+
+### Usage
+
+```powershell
+Convert-UTCTimeStamp -timestamp 128271382742968750
+```
+
+### Example Output
+
+```
+6/23/2007 10:57:54 PM
+```
+
 <br>
 
 # Change Log
 
 <br>
 
-## New function: Get-ModuleUpdates (9/2023)
+## Updates | 9/2023
 
 - Created a new function `Get-ModuleUpdates` that will check PSGallery Modules for updates available.
-- Generated new PSM, PSD, Checksum.
-- Updated Readme.md to include the new function
-
+- Created a new function `Convert-UTCTimeStamp` that converts UTC time into a readable format.
+- Generated new PSM, PSD, Checksum. Updated Readme.md to include the new functions
 
 ## Updates | 08/2023
 
