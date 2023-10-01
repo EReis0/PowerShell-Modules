@@ -32,6 +32,37 @@ Function Convert-CSVtoHTML {
 
 <#
 .SYNOPSIS
+Converts a UTC timestamp to a readable format.
+
+.DESCRIPTION
+The Convert-UTCTimeStamp function converts a UTC timestamp to a readable format. It uses the Windows Time service (w32tm.exe) to convert the timestamp to a string, and then extracts the last part of the string to get the readable timestamp.
+
+.PARAMETER timestamp
+The UTC timestamp to convert.
+
+.EXAMPLE
+PS C:\> Convert-UTCTimeStamp -timestamp 128271382742968750
+Converts the UTC timestamp 128271382742968750 to a readable format.
+
+.NOTES
+This function requires the Windows Time service (w32tm.exe) to be installed and running on the local computer.
+#>
+Function Convert-UTCTimeStamp {
+    [CmdletBinding()]
+    param (
+        [Parameter(Position = 0, Mandatory = $true)]
+        [string]$timestamp
+    )
+    $string = (w32tm /ntte $timestamp)
+    $newstring = $string.split('-')[-1]
+    $newstring
+} # Convert-UTCTimeStamp -timestamp 128271382742968750
+
+
+
+
+<#
+.SYNOPSIS
     Asks the user a yes or no question and returns the answer.
 .DESCRIPTION
     This function asks the user a yes or no question and returns the answer. The function uses the PowerShell host's `PromptForChoice` method to display the question and choices. The question is specified using the `$Question` parameter.
@@ -183,30 +214,9 @@ function Get-ModuleUpdates {
     }
 
     $UpdateAvailable = $Data | Where-Object -Property UpdateAvailable -eq $true
-    $CurrentVersion = $Data | Where-Object -Property UpdateAvailable -eq $false
 
-    $Msg = @"
-
-############################################################################################################
-
--- Installed-Module Version Check --
-
-NOTICE: Only modules installed from the PowerShell Gallery will be checked for updates.
-
-You have [$($CurrentVersion.Count)] module(s) up to date.
-You have [$($UpdateAvailable.Count)] module(s) with updates available.
-
-$($UpdateAvailable | Select-Object Name,UpdateAvailable,InstalledVersion,Version,PublishedDate,Link| Format-Table -AutoSize | Out-String)
-
-############################################################################################################
-
-"@
-
-    Return $Msg
+    return $UpdateAvailable | Select-Object Name,UpdateAvailable,InstalledVersion,Version,PublishedDate,Link | Sort-Object -Property Name
 }
-
-
-
 
 
 <#

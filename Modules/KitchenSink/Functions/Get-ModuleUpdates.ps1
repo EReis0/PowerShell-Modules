@@ -53,5 +53,3 @@ function Get-ModuleUpdates {
 
     return $UpdateAvailable | Select-Object Name,UpdateAvailable,InstalledVersion,Version,PublishedDate,Link | Sort-Object -Property Name
 }
-
-
