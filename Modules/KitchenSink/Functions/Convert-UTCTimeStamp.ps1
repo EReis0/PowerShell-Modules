@@ -23,6 +23,6 @@ Function Convert-UTCTimeStamp {
     )
     $string = (w32tm /ntte $timestamp)
     $newstring = $string.split('-')[-1]
-    $newstring
+    return $newstring
 } # Convert-UTCTimeStamp -timestamp 128271382742968750
 
