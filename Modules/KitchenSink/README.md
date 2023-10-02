@@ -20,7 +20,14 @@
   - [Convert-UTCTimeStamp](#convert-utctimestamp)
     - [Usage](#usage-8)
     - [Example Output](#example-output-2)
+  - [New-SecuredJSON](#new-securedjson)
+  - [New-SecuredJSONDynamic](#new-securedjsondynamic)
+  - [Read-SecuredJSON](#read-securedjson)
+    - [Usage](#usage-9)
+      - [Plain text values](#plain-text-values)
+      - [Convert plain text values to secure strings](#convert-plain-text-values-to-secure-strings)
 - [Change Log](#change-log)
+  - [Updates | 10/2023](#updates--102023)
   - [Updates | 9/2023](#updates--92023)
   - [Updates | 08/2023](#updates--082023)
   - [Automated PSM Building | 10/25/2022](#automated-psm-building--10252022)
@@ -167,11 +174,63 @@ Convert-UTCTimeStamp -timestamp 128271382742968750
 6/23/2007 10:57:54 PM
 ```
 
+## New-SecuredJSON
+
+This function will take each parameter value and encrypt it and export the key, value pairs into a JSON file to the `-FilePath` location.
+It also has static parameter values that can be selected. If custom values are needed, use the [New-SecuredJSONDynamic](#new-securedjsondynamic) version. 
+
+```powershell
+New-SecuredJSON -Filepath "D:\Code\test4.json" -Password "P@ssw0rd" -Username "MyUsername" -Email "jdoe@sample.com"
+```
+
+## New-SecuredJSONDynamic
+
+This function has dynamic parameters, in order to execute this function you need to pass it the `-FilePath` and at least one `-Params`.
+It will then encrypt the values to the parameters defined and output the results into a JSON file. 
+
+```powershell
+$params = @{
+    "Password" = "P@ssw0rd"
+    "Username" = "MyUsername"
+    "StudentID" = "568566"
+}
+
+New-SecuredJSONDynamic -Filepath "D:\Code\test4.json" -Params $params
+```
+
+## Read-SecuredJSON
+
+Reads the Secured JSON file which was created with [New-SecuredJSON](#new-securedjson) or [New-SecuredJSONDynamic](#new-securedjsondynamic)
+and converts the encrypted values into plan text. 
+
+### Usage
+
+#### Plain text values
+
+```powershell
+$data = Read-SecuredJSON -Path "D:\Code\test4.json"
+$Password = $data.Password
+```
+
+#### Convert plain text values to secure strings
+
+```powershell
+$Data = Read-SecuredJSON -Path "D:\Code\test4.json"
+$Password = $data.Password | ConvertTo-SecureString -AsPlainText -Force
+```
+
 <br>
 
 # Change Log
 
 <br>
+
+## Updates | 10/2023
+
+- Created a new function `New-SecuredJSON` that takes static parameters, encrypts the values and exports a secured JSON File.
+- Created a new function `New-SecuredJSONDynamic` that takes Dynamic parameters, encrypts the values and exports a secured JSON File.
+- Created a new function `Read-SecuredJSON` that reads the JSON file from `New-SecuredJSON` or `New-SecuredJSONDynamic` and converts values into plain text.
+- Generated new PSM, PSD, Checksum. Updated Readme.md to include the new functions
 
 ## Updates | 9/2023
 

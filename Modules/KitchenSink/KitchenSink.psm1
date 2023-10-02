@@ -55,7 +55,7 @@ Function Convert-UTCTimeStamp {
     )
     $string = (w32tm /ntte $timestamp)
     $newstring = $string.split('-')[-1]
-    $newstring
+    return $newstring
 } # Convert-UTCTimeStamp -timestamp 128271382742968750
 
 
@@ -445,6 +445,205 @@ function New-CredsTxtFile {
         Write-Warning "Password DID NOT MATCH decrypted password."
     }
 }  # New-CredsTxtFile -Filepath "C:\creds\creds.txt" -Password "P@ssw0rd"
+
+
+
+
+
+<#
+.SYNOPSIS
+Creates a new JSON file containing secure data.
+
+.DESCRIPTION
+The New-SecuredJSON function creates a new JSON file containing secure data. The function encrypts the secure data and saves it to the specified file path.
+
+.PARAMETER Filepath
+Specifies the path to the JSON file to create.
+
+.PARAMETER Password
+Specifies the password to include in the JSON object.
+
+.PARAMETER Username
+Specifies the username to include in the JSON object.
+
+.PARAMETER URL
+Specifies the URL to include in the JSON object.
+
+.PARAMETER IP
+Specifies the IP address to include in the JSON object.
+
+.PARAMETER Email
+Specifies the email address to include in the JSON object.
+
+.PARAMETER Token
+Specifies the token to include in the JSON object.
+
+.PARAMETER ClientID
+Specifies the client ID to include in the JSON object.
+
+.PARAMETER ClientSecret
+Specifies the client secret to include in the JSON object.
+
+.EXAMPLE
+PS C:\> New-SecuredJSON -Filepath "D:\Code\test4.json" -Password "P@ssw0rd" -Username "MyUsername" -Email "jdoe@sample.com"
+
+This example creates a new JSON file at the specified file path with the specified key-value pairs.
+
+.NOTES
+Author: thebleak13@2023
+Version: 1.0
+#>
+function New-SecuredJSON {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$Filepath,
+        [Parameter(Mandatory=$true)]
+        [string]$Password,
+        [Parameter(Mandatory=$false)]
+        [string]$Username,
+        [Parameter(Mandatory=$false)]
+        [string]$URL,
+        [Parameter(Mandatory=$false)]
+        [string]$IP,
+        [Parameter(Mandatory=$false)]
+        [string]$Email,
+        [Parameter(Mandatory=$false)]
+        [string]$Token,
+        [Parameter(Mandatory=$false)]
+        [string]$ClientID,
+        [Parameter(Mandatory=$false)]
+        [string]$ClientSecret
+    )
+    
+    # Create JSON object
+    $Json = @{}
+    foreach ($param in "Password", "Username", "URL", "IP", "Email", "Token", "ClientID", "ClientSecret") {
+        if ($PSBoundParameters.$param) {
+            $Json.$param = (ConvertTo-SecureString -String $PSBoundParameters.$param -AsPlainText -Force) | ConvertFrom-SecureString
+        }
+    }
+
+    # Convert the JSON object to a string
+    $JsonString = $Json | ConvertTo-Json
+
+    # Write JSON object to file
+    $JsonString | Out-File -FilePath $Filepath
+    Write-Host "Exported JSON to $Filepath" -ForegroundColor Green
+} # New-SecuredJSON -Filepath "D:\Code\Repos\LD\PowerShell LD\WolfPack\Dev\test4.json" -Password "P@ssw0rd" -Username "MyUsername" -Email "EReis@loandepot.com"
+
+
+<#
+.SYNOPSIS
+Creates a new JSON file containing secure data.
+
+.DESCRIPTION
+The New-SecuredJSONDynamic function creates a new JSON file containing secure data. 
+The function encrypts the secure data and saves it to the specified file path.
+
+.PARAMETER Filepath
+Specifies the path to the JSON file to create.
+
+.PARAMETER Params
+Specifies a hashtable of key-value pairs to include in the JSON object. 
+The keys in the hashtable will be used as the property names in the JSON object.
+
+.EXAMPLE
+PS C:\> $params = @{
+    "Password" = "P@ssw0rd"
+    "Username" = "MyUsername"
+    "StudentID" = "568566"
+}
+PS C:\> New-SecuredJSONDynamic -Filepath "D:\Code\Repos\LD\PowerShell LD\WolfPack\Dev\test4.json" -Params $params
+
+This example creates a new JSON file at the specified file path with the specified key-value pairs.
+
+.NOTES
+Author: thebleak@2023
+Version: 1.0
+#>
+function New-SecuredJSONDynamic {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$Filepath,
+        [Parameter(Mandatory=$true)]
+        [hashtable]$Params
+    )
+    
+    # Create JSON object
+    $Json = @{}
+    foreach ($key in $Params.Keys) {
+        if ($Params[$key]) {
+            $Json.$key = (ConvertTo-SecureString -String $Params[$key] -AsPlainText -Force) | ConvertFrom-SecureString
+        }
+    }
+
+    # Convert the JSON object to a string
+    $JsonString = $Json | ConvertTo-Json
+
+    # Write JSON object to file
+    $JsonString | Out-File -FilePath $Filepath
+    Write-Host "Exported JSON to $Filepath"
+}
+
+$params = @{
+    "Password" = "P@ssw0rd"
+    "Username" = "MyUsername"
+    "StudentID" = "568566"
+}
+
+
+# $params = @{"Password" = "P@ssw0rd"}
+
+New-SecuredJSONDynamic -Filepath "D:\Code\Repos\LD\PowerShell LD\WolfPack\Dev\test4.json" -Params $params
+
+
+<#
+.SYNOPSIS
+Reads a JSON file containing secure data and returns an object with decrypted properties.
+
+.DESCRIPTION
+The Read-SecuredJSON function reads a JSON file containing secure data and returns an object with decrypted properties. 
+The function decrypts the secure data in the JSON file and returns the decrypted values as plain text.
+
+.PARAMETER Path
+Specifies the path to the JSON file containing the secure data. The file must have a .json extension.
+
+.EXAMPLE
+Plain text values
+PS C:\> $data = Read-SecuredJSON -Path "D:\Code\test4.json"
+PS C:\> $Password = $data.Password
+
+Convert plain text values to secure strings
+$Data = Read-SecuredJSON -Path "D:\Code\test4.json"
+$Password = $data.Password | ConvertTo-SecureString -AsPlainText -Force
+
+This example reads the secure data from the "test4.json" file and sets the `$Password` variable to the decrypted value of the "Password" property.
+
+.NOTES
+Author: thebleak@2023
+Version: 1.0
+#>
+function Read-SecuredJSON {
+    [cmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ Test-Path $_ -PathType Leaf -Include "*.json" })]
+        [string]$Path
+    )
+
+    $json = get-content $Path | ConvertFrom-Json
+
+    $SecuredData = [PSCustomObject]@{}
+    foreach ($property in $json.PSObject.Properties) {
+        if ([string]::IsNullOrWhiteSpace($property.Value) -eq $false) {
+            $SecuredData | Add-Member -MemberType NoteProperty -Name $property.Name -Value ([Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR(($property.Value | ConvertTo-SecureString))))
+        }
+    }
+    return $SecuredData
+} # $Data = Read-SecuredJSON -Path "D:\Code\test4.json"
+
 
 
 
