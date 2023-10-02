@@ -16,7 +16,7 @@ $ModuleName = $RootDir.Split("\")[-1]
 # Create the module manifest
 $Params = @{ 
     "Path" 				        = "$RootDir\$ModuleName.psd1"
-    "Author" 			        = 'https://github.com/thebleak13' 
+    "Author" 			        = 'https://github.com/EReis0' 
     "CompanyName" 			    = 'Codeholics.com' 
     "RootModule" 			    = "$ModuleName.psm1"
     "CompatiblePSEditions" 		= @('Desktop','Core') 

@@ -9,11 +9,11 @@
     Convert-CSVtoHTML
     This example converts a CSV file to an HTML report using PSWriteHTML and preferred parameters.
 .NOTES
-    Author: Codeholics - TheBleak
+    Author: Codeholics - Eric Reis
     Version: 1.0
     Date: 8/2023
 .LINK
-    https://github.com/thebleak13/PowerShell-Samples/blob/main/BleakKitchenSink/README.md
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 Function Convert-CSVtoHTML {
     Import-Module -Name PSWriteHTML

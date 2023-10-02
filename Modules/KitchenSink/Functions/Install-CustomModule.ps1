@@ -14,7 +14,7 @@
     Install-CustomModule -InputDir "C:\Users\thebl\Downloads\KitchenSink" -UserLevel "Single"
     This example installs the "KitchenSink" module from the -InputDir  to the module directory for the current user.
 .NOTES
-    Author: Team Codeholics - TheBleak13 https://github.com/thebleak13
+    Author: Codeholics - Eric Reis
     Version: 1.0
     Date: 8/2023
     Warning: If you're running an Anti-Virus, it may flag this script as a virus. You will have to exclude powershell.exe from your AV during the installation. Just make sure to remove the AV exception because leaving it in place is very risky.
@@ -22,7 +22,7 @@
     You don't really need this script, you can technically just copy the folder and paste it to the module directory 'C:\Program Files\WindowsPowerShell\Modules'. This will also avoid the issues with AV.
     Installing the module is useful but you can also just import-module with the path to use it for a script.
 .LINK
-    https://github.com/thebleak13/PowerShell-Samples/blob/main/Modules/KitchenSink/README.md
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 Function Install-CustomModule {
     [CmdletBinding()]

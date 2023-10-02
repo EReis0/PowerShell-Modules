@@ -9,11 +9,11 @@
     Get-Folder -initialDirectory "C:\Users\UserName\Documents"
     This example displays the folder browser dialog with the initial directory set to "C:\Users\UserName\Documents".
 .NOTES
-    Author: Codeholics - TheBleak
+    Author: Codeholics - Eric Reis
     Version: 1.0
     Date: 8/2023
 .LINK
-    https://github.com/thebleak13/PowerShell-Samples/blob/main/BleakKitchenSink/README.md
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 Function Get-Folder($initialDirectory){
 

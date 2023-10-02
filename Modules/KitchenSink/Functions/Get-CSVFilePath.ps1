@@ -9,11 +9,11 @@
     Get-CSVFilePath -initialDirectory "C:\Users\UserName\Documents"
     This example displays the file browser dialog with the initial directory set to "C:\Users\UserName\Documents", and only allows CSV files to be selected.
 .NOTES
-    Author: Codeholics - TheBleak
+    Author: Codeholics - Eric Reis
     Version: 1.0
     Date: 8/2023
 .LINK
-    https://github.com/thebleak13/PowerShell-Samples/blob/main/BleakKitchenSink/README.md
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 Function Get-CSVFilePath($initialDirectory) {
     [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
