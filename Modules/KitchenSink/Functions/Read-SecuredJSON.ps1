@@ -21,8 +21,11 @@ $Password = $data.Password | ConvertTo-SecureString -AsPlainText -Force
 This example reads the secure data from the "test4.json" file and sets the `$Password` variable to the decrypted value of the "Password" property.
 
 .NOTES
-Author: thebleak@2023
+Author: Codeholics - Eric Reis
 Version: 1.0
+
+.LINK
+https://github.com/EReis0/PowerShell-Samples/
 #>
 function Read-SecuredJSON {
     [cmdletBinding()]

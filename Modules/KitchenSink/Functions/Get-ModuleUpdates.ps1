@@ -22,9 +22,11 @@ Write-Host $test -ForegroundColor Green
 .NOTES
 This function requires PowerShell 5.0 or later and an internet connection to access the PowerShell Gallery.
 
-- Author: TheBleak13@2023
+- Author: Codeholics - Eric Reis
 - Version: 1.0
 
+.Link
+https://github.com/EReis0/PowerShell-Samples/
 #>
 function Get-ModuleUpdates {
     $InstalledModules = Get-InstalledModule

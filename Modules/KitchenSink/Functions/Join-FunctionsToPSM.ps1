@@ -11,9 +11,11 @@
     Join-FunctionsToPSM -RootFolder "C:\Github\ProjectSample" -FunctionsDir "Functions"
     This example creates a PSM file with all of the functions in the root folder. The resulting PSM file will have the same name as the root folder.
 .NOTES
-    Author: Codeholics - TheBleak
+    Author: Codeholics - Eric Reis
     Version: 1.1
     Date: 8/24/2023
+.LINK
+https://github.com/EReis0/PowerShell-Samples/
 #>
 function Join-FunctionsToPSM {
     [CmdletBinding()]

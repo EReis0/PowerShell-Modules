@@ -14,6 +14,13 @@ Converts the UTC timestamp 128271382742968750 to a readable format.
 
 .NOTES
 This function requires the Windows Time service (w32tm.exe) to be installed and running on the local computer.
+
+- Author: Codeholics - Eric Reis
+- Version: 1.0
+
+.LINK
+https://github.com/EReis0/PowerShell-Samples/
+
 #>
 Function Convert-UTCTimeStamp {
     [CmdletBinding()]

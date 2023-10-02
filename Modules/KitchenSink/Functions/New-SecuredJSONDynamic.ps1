@@ -30,8 +30,11 @@ PS C:\> New-SecuredJSONDynamic -Filepath "D:\Code\test4.json" -Params @{"Passwor
 This example creates a new JSON file at the specified file path with the specified key-value pairs.
 
 .NOTES
-Author: thebleak@2023
+Author: Codeholics - Eric Reis
 Version: 1.0
+
+.LINK
+https://github.com/EReis0/PowerShell-Samples/
 #>
 function New-SecuredJSONDynamic {
     [CmdletBinding()]

@@ -9,11 +9,11 @@
     Convert-CSVtoHTML
     This example converts a CSV file to an HTML report using PSWriteHTML and preferred parameters.
 .NOTES
-    Author: Codeholics - TheBleak
+    Author: Codeholics - Eric Reis
     Version: 1.0
     Date: 8/2023
 .LINK
-    https://github.com/thebleak13/PowerShell-Samples/blob/main/BleakKitchenSink/README.md
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 Function Convert-CSVtoHTML {
     Import-Module -Name PSWriteHTML
@@ -46,6 +46,13 @@ Converts the UTC timestamp 128271382742968750 to a readable format.
 
 .NOTES
 This function requires the Windows Time service (w32tm.exe) to be installed and running on the local computer.
+
+- Author: Codeholics - Eric Reis
+- Version: 1.0
+
+.LINK
+https://github.com/EReis0/PowerShell-Samples/
+
 #>
 Function Convert-UTCTimeStamp {
     [CmdletBinding()]
@@ -72,11 +79,11 @@ Function Convert-UTCTimeStamp {
     Get-AskUserYNQuestion -Question 'Are you ready?'
     This example asks the user the question "Are you ready?" and returns the user's answer.
 .NOTES
-    Author: Codeholics - TheBleak
+    Author: Codeholics - Eric Reis
     Version: 1.0
     Date: 8/2023
 .LINK
-    https://github.com/thebleak13/PowerShell-Samples/blob/main/BleakKitchenSink/README.md
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 Function Get-AskUserYNQuestion {
     [CmdletBinding()]
@@ -112,11 +119,11 @@ Function Get-AskUserYNQuestion {
     Get-CSVFilePath -initialDirectory "C:\Users\UserName\Documents"
     This example displays the file browser dialog with the initial directory set to "C:\Users\UserName\Documents", and only allows CSV files to be selected.
 .NOTES
-    Author: Codeholics - TheBleak
+    Author: Codeholics - Eric Reis
     Version: 1.0
     Date: 8/2023
 .LINK
-    https://github.com/thebleak13/PowerShell-Samples/blob/main/BleakKitchenSink/README.md
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 Function Get-CSVFilePath($initialDirectory) {
     [System.Reflection.Assembly]::LoadWithPartialName("System.windows.forms") | Out-Null
@@ -139,11 +146,11 @@ Function Get-CSVFilePath($initialDirectory) {
     Get-Folder -initialDirectory "C:\Users\UserName\Documents"
     This example displays the folder browser dialog with the initial directory set to "C:\Users\UserName\Documents".
 .NOTES
-    Author: Codeholics - TheBleak
+    Author: Codeholics - Eric Reis
     Version: 1.0
     Date: 8/2023
 .LINK
-    https://github.com/thebleak13/PowerShell-Samples/blob/main/BleakKitchenSink/README.md
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 Function Get-Folder($initialDirectory){
 
@@ -186,9 +193,11 @@ Write-Host $test -ForegroundColor Green
 .NOTES
 This function requires PowerShell 5.0 or later and an internet connection to access the PowerShell Gallery.
 
-- Author: TheBleak13@2023
+- Author: Codeholics - Eric Reis
 - Version: 1.0
 
+.Link
+https://github.com/EReis0/PowerShell-Samples/
 #>
 function Get-ModuleUpdates {
     $InstalledModules = Get-InstalledModule
@@ -235,7 +244,7 @@ function Get-ModuleUpdates {
     Install-CustomModule -InputDir "C:\Users\thebl\Downloads\KitchenSink" -UserLevel "Single"
     This example installs the "KitchenSink" module from the -InputDir  to the module directory for the current user.
 .NOTES
-    Author: Team Codeholics - TheBleak13 https://github.com/thebleak13
+    Author: Codeholics - Eric Reis
     Version: 1.0
     Date: 8/2023
     Warning: If you're running an Anti-Virus, it may flag this script as a virus. You will have to exclude powershell.exe from your AV during the installation. Just make sure to remove the AV exception because leaving it in place is very risky.
@@ -243,7 +252,7 @@ function Get-ModuleUpdates {
     You don't really need this script, you can technically just copy the folder and paste it to the module directory 'C:\Program Files\WindowsPowerShell\Modules'. This will also avoid the issues with AV.
     Installing the module is useful but you can also just import-module with the path to use it for a script.
 .LINK
-    https://github.com/thebleak13/PowerShell-Samples/blob/main/Modules/KitchenSink/README.md
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 Function Install-CustomModule {
     [CmdletBinding()]
@@ -343,9 +352,11 @@ Function Install-CustomModule {
     Join-FunctionsToPSM -RootFolder "C:\Github\ProjectSample" -FunctionsDir "Functions"
     This example creates a PSM file with all of the functions in the root folder. The resulting PSM file will have the same name as the root folder.
 .NOTES
-    Author: Codeholics - TheBleak
+    Author: Codeholics - Eric Reis
     Version: 1.1
     Date: 8/24/2023
+.LINK
+https://github.com/EReis0/PowerShell-Samples/
 #>
 function Join-FunctionsToPSM {
     [CmdletBinding()]
@@ -406,12 +417,13 @@ function Join-FunctionsToPSM {
 .NOTES
     This function exports a password to a file in UTF8 encoding and validates the file. The function converts the password to a secure string and then to an encrypted standard string using the ConvertTo-SecureString and ConvertFrom-SecureString cmdlets. The encrypted string is then written to a file using the Out-File cmdlet. The function also validates the file by comparing the decrypted password to the original password.
     
-    Author: Codeholics - TheBleak
+    Author: Codeholics - Eric Reis
     Version: 1.0
     Date: 8/24/2023
 
     This function is not really needed but a good way to create and validate a password file in a consistent manner.
-
+.LINK
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 function New-CredsTxtFile {
     [CmdletBinding()]
@@ -490,8 +502,11 @@ PS C:\> New-SecuredJSON -Filepath "D:\Code\test4.json" -Password "P@ssw0rd" -Use
 This example creates a new JSON file at the specified file path with the specified key-value pairs.
 
 .NOTES
-Author: thebleak13@2023
+Author: Codeholics - Eric Reis
 Version: 1.0
+
+.LINK
+https://github.com/EReis0/PowerShell-Samples/
 #>
 function New-SecuredJSON {
     [CmdletBinding()]
@@ -565,8 +580,11 @@ PS C:\> New-SecuredJSONDynamic -Filepath "D:\Code\test4.json" -Params @{"Passwor
 This example creates a new JSON file at the specified file path with the specified key-value pairs.
 
 .NOTES
-Author: thebleak@2023
+Author: Codeholics - Eric Reis
 Version: 1.0
+
+.LINK
+https://github.com/EReis0/PowerShell-Samples/
 #>
 function New-SecuredJSONDynamic {
     [CmdletBinding()]
@@ -617,8 +635,11 @@ $Password = $data.Password | ConvertTo-SecureString -AsPlainText -Force
 This example reads the secure data from the "test4.json" file and sets the `$Password` variable to the decrypted value of the "Password" property.
 
 .NOTES
-Author: thebleak@2023
+Author: Codeholics - Eric Reis
 Version: 1.0
+
+.LINK
+https://github.com/EReis0/PowerShell-Samples/
 #>
 function Read-SecuredJSON {
     [cmdletBinding()]

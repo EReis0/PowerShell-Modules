@@ -9,11 +9,11 @@
     Get-AskUserYNQuestion -Question 'Are you ready?'
     This example asks the user the question "Are you ready?" and returns the user's answer.
 .NOTES
-    Author: Codeholics - TheBleak
+    Author: Codeholics - Eric Reis
     Version: 1.0
     Date: 8/2023
 .LINK
-    https://github.com/thebleak13/PowerShell-Samples/blob/main/BleakKitchenSink/README.md
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 Function Get-AskUserYNQuestion {
     [CmdletBinding()]
