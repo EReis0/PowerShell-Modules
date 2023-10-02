@@ -19,7 +19,13 @@ PS C:\> $params = @{
     "Username" = "MyUsername"
     "StudentID" = "568566"
 }
-PS C:\> New-SecuredJSONDynamic -Filepath "D:\Code\Repos\LD\PowerShell LD\WolfPack\Dev\test4.json" -Params $params
+PS C:\> New-SecuredJSONDynamic -Filepath "D:\Code\test4.json" -Params $params
+
+This example creates a new JSON file at the specified file path with the specified key-value pairs.
+
+.EXAMPLE
+Another way to pass the parameters.
+PS C:\> New-SecuredJSONDynamic -Filepath "D:\Code\test4.json" -Params @{"Password" = "P@$sW0rD"; "Username" = "MTestco"}
 
 This example creates a new JSON file at the specified file path with the specified key-value pairs.
 
@@ -50,15 +56,4 @@ function New-SecuredJSONDynamic {
     # Write JSON object to file
     $JsonString | Out-File -FilePath $Filepath
     Write-Host "Exported JSON to $Filepath"
-}
-
-$params = @{
-    "Password" = "P@ssw0rd"
-    "Username" = "MyUsername"
-    "StudentID" = "568566"
-}
-
-
-# $params = @{"Password" = "P@ssw0rd"}
-
-New-SecuredJSONDynamic -Filepath "D:\Code\Repos\LD\PowerShell LD\WolfPack\Dev\test4.json" -Params $params
+} # New-SecuredJSONDynamic -Filepath "D:\downloads\test4.json" -Params @{"Password" = "P@$sW0rD"; "Username" = "MTestco"}
