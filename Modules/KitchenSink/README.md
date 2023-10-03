@@ -26,6 +26,8 @@
     - [Usage](#usage-9)
       - [Plain text values](#plain-text-values)
       - [Convert plain text values to secure strings](#convert-plain-text-values-to-secure-strings)
+  - [Invoke-Speech](#invoke-speech)
+    - [Usage](#usage-10)
 - [Change Log](#change-log)
   - [Updates | 10/2023](#updates--102023)
   - [Updates | 9/2023](#updates--92023)
@@ -217,6 +219,32 @@ $Password = $data.Password
 ```powershell
 $Data = Read-SecuredJSON -Path "D:\Code\test4.json"
 $Password = $data.Password | ConvertTo-SecureString -AsPlainText -Force
+```
+
+## Invoke-Speech
+
+The Invoke-Speech function speaks the specified text using the default system settings. You can specify the speed, volume, and voice of the speech, and you can generate a PowerShell script that reproduces the speech settings.
+
+### Usage
+
+```powershell
+# This example speaks the text "Hello, world!" using the default system settings.
+Invoke-Speech -Text "Hello, world!"
+```
+
+```powershell
+# This example speaks the text "Hello, world!" using the Microsoft David Desktop voice, at a speed of 200 words per minute and a volume of 50%.
+Invoke-Speech -Text "Hello, world!" -Speed 200 -Volume 50 -Voice "Microsoft David Desktop"
+```
+
+```powershell
+# This example speaks the text "Hello, world!" and generates a PowerShell script that reproduces the speech settings.
+Invoke-Speech -Text "Hello, world!" -Generate
+```
+
+```powershell
+# This example speaks the text "Hello, world!" and returns a hash table of the speech settings.
+Invoke-Speech -Text "Hello, world!" -Resume
 ```
 
 <br>

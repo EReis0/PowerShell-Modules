@@ -22,9 +22,10 @@ $Params = @{
     "CompatiblePSEditions" 		= @('Desktop','Core') 
     "FunctionsToExport" 		= $Functions
     "CmdletsToExport" 		    = $Functions
-    "VariablesToExport" 		= '' 
+    "VariablesToExport" 		= @() 
     "AliasesToExport" 		    = @() 
     "Description"               = "$ModuleName is a custom built module."
+    "ModuleVersion"             = "1.0"
 } 
 
 New-ModuleManifest @Params
