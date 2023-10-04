@@ -1,31 +1,28 @@
 <#
 .SYNOPSIS
-Reads a JSON file containing secure data and returns an object with decrypted properties.
-
+    Reads a JSON file containing secure data and returns an object with decrypted properties.
 .DESCRIPTION
-The Read-SecuredJSON function reads a JSON file containing secure data and returns an object with decrypted properties. 
-The function decrypts the secure data in the JSON file and returns the decrypted values as plain text.
-
+    The Read-SecuredJSON function reads a JSON file containing secure data and returns an object with decrypted properties. 
+    The function decrypts the secure data in the JSON file and returns the decrypted values as plain text.
 .PARAMETER Path
-Specifies the path to the JSON file containing the secure data. The file must have a .json extension.
-
+    Specifies the path to the JSON file containing the secure data. The file must have a .json extension.
 .EXAMPLE
-Plain text values
-PS C:\> $data = Read-SecuredJSON -Path "D:\Code\test4.json"
-PS C:\> $Password = $data.Password
+    Plain text values
+    PS C:\> $data = Read-SecuredJSON -Path "D:\Code\test4.json"
+    PS C:\> $Password = $data.Password
 
-Convert plain text values to secure strings
-$Data = Read-SecuredJSON -Path "D:\Code\test4.json"
-$Password = $data.Password | ConvertTo-SecureString -AsPlainText -Force
+    Convert plain text values to secure strings
+    $Data = Read-SecuredJSON -Path "D:\Code\test4.json"
+    $Password = $data.Password | ConvertTo-SecureString -AsPlainText -Force
 
-This example reads the secure data from the "test4.json" file and sets the `$Password` variable to the decrypted value of the "Password" property.
-
+    This example reads the secure data from the "test4.json" file and 
+    sets the `$Password` variable to the decrypted value of the "Password" property.
 .NOTES
-Author: Codeholics - Eric Reis
-Version: 1.0
-
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
+    Version: 1.0
+    Date: 10/2023
 .LINK
-https://github.com/EReis0/PowerShell-Samples/
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 function Read-SecuredJSON {
     [cmdletBinding()]
