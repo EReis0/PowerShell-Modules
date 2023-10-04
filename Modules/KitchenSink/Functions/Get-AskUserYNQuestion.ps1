@@ -9,7 +9,7 @@
     Get-AskUserYNQuestion -Question 'Are you ready?'
     This example asks the user the question "Are you ready?" and returns the user's answer.
 .NOTES
-    Author: Codeholics - Eric Reis
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
     Version: 1.0
     Date: 8/2023
 .LINK

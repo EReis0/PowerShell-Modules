@@ -9,7 +9,7 @@
     Convert-CSVtoHTML
     This example converts a CSV file to an HTML report using PSWriteHTML and preferred parameters.
 .NOTES
-    Author: Codeholics - Eric Reis
+    Author: Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
     Version: 1.0
     Date: 8/2023
 .LINK

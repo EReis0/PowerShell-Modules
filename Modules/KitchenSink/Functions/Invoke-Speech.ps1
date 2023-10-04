@@ -1,52 +1,43 @@
 <#
 .SYNOPSIS
     Speaks the specified text using the default system settings.
-
 .DESCRIPTION
     The Invoke-Speech function speaks the specified text using the default system settings. 
     You can specify the speed, volume, and voice of the speech, and you can generate a PowerShell script that reproduces the speech settings.
-
 .PARAMETER Text
     The text to speak.
-
 .PARAMETER Speed
     The speed of the speech, in words per minute.
-
 .PARAMETER Volume
     The volume of the speech, as a percentage of the maximum volume.
-
 .PARAMETER Voice
     The name of the voice to use for the speech.
-
 .PARAMETER Generate
     Generates a PowerShell script that reproduces the speech settings.
-
 .PARAMETER Resume
     Returns a hash table of the speech settings.
-
 .EXAMPLE
     Invoke-Speech -Text "Hello, world!"
 
     This example speaks the text "Hello, world!" using the default system settings.
-
 .EXAMPLE
     Invoke-Speech -Text "Hello, world!" -Speed 200 -Volume 50 -Voice "Microsoft David Desktop"
 
     This example speaks the text "Hello, world!" using the Microsoft David Desktop voice, at a speed of 200 words per minute and a volume of 50%.
-
 .EXAMPLE
     Invoke-Speech -Text "Hello, world!" -Generate
 
     This example speaks the text "Hello, world!" and generates a PowerShell script that reproduces the speech settings.
-
 .EXAMPLE
     Invoke-Speech -Text "Hello, world!" -Resume
 
     This example speaks the text "Hello, world!" and returns a hash table of the speech settings.
-
 .NOTES
-    Author: Codeholics - Eric Reis
-    Version: 1.0.0
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
+    Version: 1.0
+    Date: 10/2023
+.LINK
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 function Invoke-Speech {
     [CmdletBinding()]

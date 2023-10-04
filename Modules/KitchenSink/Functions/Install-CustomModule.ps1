@@ -2,11 +2,15 @@
 .SYNOPSIS
     Installs a custom module from the downloads folder to the module directory.
 .DESCRIPTION
-    This function installs a custom module from the downloads folder to the module directory. The function copies the module folder from the downloads folder to the module directory, and removes any existing module with the same name. If an Anti-Virus is running, it may flag this script as a virus. You will have to exclude powershell.exe from your AV during the installation.
+    This function installs a custom module from the downloads folder to the module directory. 
+    The function copies the module folder from the downloads folder to the module directory, 
+    and removes any existing module with the same name. If an Anti-Virus is running, it may flag this script as a virus. 
+    You will have to exclude powershell.exe from your AV during the installation.
 .PARAMETER InputDir
     Specifies the path of the module to install. This parameter is mandatory. It should be the path to your module folder.
 .PARAMETER UserLevel
-    Specifies the level of the user for which the module should be installed. This parameter is optional and can be set to either 'Single' or 'All'. If not specified, the default value is 'All'.
+    Specifies the level of the user for which the module should be installed. 
+    This parameter is optional and can be set to either 'Single' or 'All'. If not specified, the default value is 'All'.
 .EXAMPLE
     Install-CustomModule -InputDir "C:\Users\thebl\Downloads\KitchenSink" -UserLevel "All"
     This example installs the "KitchenSink" module from the -InputDir  to the module directory for all users.
@@ -14,12 +18,13 @@
     Install-CustomModule -InputDir "C:\Users\thebl\Downloads\KitchenSink" -UserLevel "Single"
     This example installs the "KitchenSink" module from the -InputDir  to the module directory for the current user.
 .NOTES
-    Author: Codeholics - Eric Reis
-    Version: 1.0
-    Date: 8/2023
-    Warning: If you're running an Anti-Virus, it may flag this script as a virus. You will have to exclude powershell.exe from your AV during the installation. Just make sure to remove the AV exception because leaving it in place is very risky.
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
+    Version: 1.1
+    Date: 10/2023
 
-    You don't really need this script, you can technically just copy the folder and paste it to the module directory 'C:\Program Files\WindowsPowerShell\Modules'. This will also avoid the issues with AV.
+    You don't really need this script, you can technically just copy the folder and paste it to the module directory 
+    'C:\Program Files\WindowsPowerShell\Modules'. Then you will need to add the import-module command to your profile.
+    
     Installing the module is useful but you can also just import-module with the path to use it for a script.
 .LINK
     https://github.com/EReis0/PowerShell-Samples/
@@ -45,11 +50,10 @@ Function Install-CustomModule {
         Write-Warning "UserLevel must be 'Single' or 'All'"
     }
 
-    $ModuleOutputPath = "$WindowsPowerShellModulePath\$ModuleName"
+    $ModuleOutputPath = Join-Path -Path $WindowsPowerShellModulePath -ChildPath $ModuleName
     
     Write-Host "This script will install the $ModuleName module to the module directory." -ForegroundColor Black -BackgroundColor white
     Write-Host "Copy module from $InputDir to $WindowsPowerShellModulePath" -ForegroundColor Black -BackgroundColor white
-    Write-Host "If you have an Anti-Virus, it may flag this script as a virus. You will have to exclude powershell.exe from your AV during the installation." -ForegroundColor Black -BackgroundColor Yellow
 
     # Check if the module is already installed
     $filecheck = test-path $ModuleOutputPath
@@ -68,7 +72,6 @@ Function Install-CustomModule {
         Write-Host $CatchError -ForegroundColor Black -BackgroundColor Red
         Write-Host $ErrorType -ForegroundColor Black -BackgroundColor Red
     }
-
 
     # Run this to create the profile
     $ProfilePath = "$HOME\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
@@ -89,9 +92,6 @@ Function Install-CustomModule {
         Write-Host "Adding $ModuleName to the profile" -ForegroundColor Black -BackgroundColor Yellow
         Add-Content -Path $ProfilePath -Value "`n$ImportModuleCommand`n"
     }
-
-    #clear-host
-    Start-Sleep 2
 
     Write-host "Validating Installation..." -ForegroundColor Yellow
     Import-Module -Name $ModuleName

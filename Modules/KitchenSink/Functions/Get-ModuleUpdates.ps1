@@ -1,32 +1,27 @@
 <#
 .SYNOPSIS
-Checks for updates to PowerShell modules installed from the PowerShell Gallery.
-
+    Checks for updates to PowerShell modules installed from the PowerShell Gallery.
 .DESCRIPTION
-The Get-ModuleUpdates function checks for updates to PowerShell modules installed from the PowerShell Gallery. 
-It compares the installed version of each module to the latest version available in the gallery and reports any modules
-that have updates available.
-
+    The Get-ModuleUpdates function checks for updates to PowerShell modules installed from the PowerShell Gallery. 
+    It compares the installed version of each module to the latest version available in the gallery and reports any modules
+    that have updates available.
 .PARAMETER None
-This function does not accept any parameters.
-
+    This function does not accept any parameters.
 .EXAMPLE
-PS C:\> Get-ModuleUpdates
-Checks for updates to PowerShell modules installed from the PowerShell Gallery and reports any modules that have updates available.
-
+    PS C:\> Get-ModuleUpdates
+    Checks for updates to PowerShell modules installed from the PowerShell Gallery and reports any modules that have updates available.
 .EXAMPLE
-$test = Get-ModuleUpdates
-clear-host
-Write-Host $test -ForegroundColor Green
-
+    $test = Get-ModuleUpdates
+    clear-host
+    Write-Host $test -ForegroundColor Green
 .NOTES
-This function requires PowerShell 5.0 or later and an internet connection to access the PowerShell Gallery.
+    This function requires PowerShell 5.0 or later and an internet connection to access the PowerShell Gallery.
 
-- Author: Codeholics - Eric Reis
-- Version: 1.0
-
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
+    Version: 1.0
+    Date: 10/2023
 .Link
-https://github.com/EReis0/PowerShell-Samples/
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 function Get-ModuleUpdates {
     $InstalledModules = Get-InstalledModule

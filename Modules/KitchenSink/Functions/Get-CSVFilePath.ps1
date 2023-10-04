@@ -9,7 +9,7 @@
     Get-CSVFilePath -initialDirectory "C:\Users\UserName\Documents"
     This example displays the file browser dialog with the initial directory set to "C:\Users\UserName\Documents", and only allows CSV files to be selected.
 .NOTES
-    Author: Codeholics - Eric Reis
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
     Version: 1.0
     Date: 8/2023
 .LINK

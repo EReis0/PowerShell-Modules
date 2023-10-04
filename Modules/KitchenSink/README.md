@@ -20,8 +20,8 @@
   - [Convert-UTCTimeStamp](#convert-utctimestamp)
     - [Usage](#usage-8)
     - [Example Output](#example-output-2)
+  - [New-SecuredJSONStatic](#new-securedjsonstatic)
   - [New-SecuredJSON](#new-securedjson)
-  - [New-SecuredJSONDynamic](#new-securedjsondynamic)
   - [Read-SecuredJSON](#read-securedjson)
     - [Usage](#usage-9)
       - [Plain text values](#plain-text-values)
@@ -176,16 +176,16 @@ Convert-UTCTimeStamp -timestamp 128271382742968750
 6/23/2007 10:57:54 PM
 ```
 
-## New-SecuredJSON
+## New-SecuredJSONStatic
 
 This function will take each parameter value and encrypt it and export the key, value pairs into a JSON file to the `-FilePath` location.
-It also has static parameter values that can be selected. If custom values are needed, use the [New-SecuredJSONDynamic](#new-securedjsondynamic) version. 
+It also has static parameter values that can be selected. If custom values are needed, use the [New-SecuredJSONDynamic](#new-securedjson) version. 
 
 ```powershell
 New-SecuredJSON -Filepath "D:\Code\test4.json" -Password "P@ssw0rd" -Username "MyUsername" -Email "jdoe@sample.com"
 ```
 
-## New-SecuredJSONDynamic
+## New-SecuredJSON
 
 This function has dynamic parameters, in order to execute this function you need to pass it the `-FilePath` and at least one `-Params`.
 It will then encrypt the values to the parameters defined and output the results into a JSON file. 
@@ -202,7 +202,7 @@ New-SecuredJSONDynamic -Filepath "D:\Code\test4.json" -Params $params
 
 ## Read-SecuredJSON
 
-Reads the Secured JSON file which was created with [New-SecuredJSON](#new-securedjson) or [New-SecuredJSONDynamic](#new-securedjsondynamic)
+Reads the Secured JSON file which was created with [New-SecuredJSONStatic](#new-securedjsonstatic) or [New-SecuredJSON](#new-securedjsondynamic)
 and converts the encrypted values into plan text. 
 
 ### Usage
