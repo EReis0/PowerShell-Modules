@@ -19,7 +19,7 @@
     This example installs the "KitchenSink" module from the -InputDir  to the module directory for the current user.
 .NOTES
     Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
-    Version: 1.1
+    Version: 1.2
     Date: 10/2023
 
     You don't really need this script, you can technically just copy the folder and paste it to the module directory 
@@ -62,6 +62,9 @@ Function Install-CustomModule {
         Remove-Item -Path $ModuleOutputPath -Force -Recurse
     }
 
+    # Add the directory containing the module to the PSModulePath environment variable
+    $env:PSModulePath += ";$InputDir"
+
     # Copy the module to the module directory
     try{
     Copy-Item -Path $InputDir -Destination $ModuleOutputPath -PassThru -Recurse -ErrorAction Stop
@@ -83,27 +86,79 @@ Function Install-CustomModule {
 
     # Check if the Import-Module command already exists in the profile
     Write-Host "Checking if $ModuleName is already imported in the profile" -ForegroundColor Black -BackgroundColor Yellow
+
     $ProfileContent = Get-Content -Path $ProfilePath
+
+    # If the command (for main module) does not exist, add it to the profile
     $ImportModuleCommand = "Import-Module -Name $ModuleName"
     $CommandExists = $ProfileContent -like "*$ImportModuleCommand*"
-
-    # If the command does not exist, add it to the profile
     if (-not $CommandExists) {
         Write-Host "Adding $ModuleName to the profile" -ForegroundColor Black -BackgroundColor Yellow
-        Add-Content -Path $ProfilePath -Value "`n$ImportModuleCommand`n"
+        Add-Content -Path $ProfilePath -Value "$ImportModuleCommand"
     }
+
+    # Find Submodules
+    $SubModules = @(Get-ChildItem -Path $ModuleOutputPath -Recurse -Filter '*.psm1' |
+    Where-Object {$_.BaseName -ne $ModuleName} | Select-Object Name,BaseName,FullName)
+
+    if ($SubModules) {
+        # Add each submodule to the profile
+        foreach ($SubModule in $SubModules) {
+            $Name = $SubModule.Name
+            $FullName = $SubModule.FullName
+            $BaseName = $SubModule.BaseName
+            $ImportSubModuleCommand = "Import-Module ""$FullName"""
+            $ImportSubModuleCommand2 = Join-path -path $WindowsPowerShellModulePath -ChildPath $modulename | Join-Path -ChildPath "$($modulename).psm1"  
+            $CommandExists = $ProfileContent -like "*$ImportSubModuleCommand*" -or $ProfileContent -like "*$ImportSubModuleCommand2*"
+
+            # If the command (for submodules) does not exist, add it to the profile
+            if (-not $CommandExists) {
+                Write-Host "Adding $SubModule to the profile" -ForegroundColor Black -BackgroundColor Yellow
+                Add-Content -Path $ProfilePath -Value "$ImportSubModuleCommand"
+            }
+        }
+}
+
 
     Write-host "Validating Installation..." -ForegroundColor Yellow
+
+    # Import the main module
     Import-Module -Name $ModuleName
 
+    # main module installation verification
     $check1 = Get-Module -Name $ModuleName
-
     $check2 = Get-Command -Module $ModuleName | format-table -AutoSize
 
+    # based on the checks, was installation successful?
     if ($check1 -and $check2) {
-        Write-Host "Installation was successful!" -ForegroundColor Green
+        Write-Host "Module Installation was successful!" -ForegroundColor Green
         $check2
     } else {
-        Write-Host "Installation failed!" -ForegroundColor Red
+        Write-Host "Module Installation failed!" -ForegroundColor Red
     }
-}  # Install-CustomModule -InputDir 'D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink' -UserLevel 'All'
+
+
+    if ($SubModules){
+        # Import the submodules
+        foreach ($item in $SubModules) {
+            Import-Module -Name $($item.BaseName)
+            $check3 = Get-Module -Name $($item.BaseName)
+            $check4 = Get-Command -Module $($item.BaseName) | format-table -AutoSize
+            $AllCommands = Get-Command -Module $($item.BaseName), $ModuleName
+
+            if ($check3 -and $check4) {
+                Write-Host "SubModule [$($item.BaseName)] was successfully installed!" -ForegroundColor Green
+                $AllCommands
+            } else {
+                Write-Host "SubModule [$($item.BaseName)] was not installed!" -ForegroundColor Red
+            }
+        }
+
+        if ($SubModules){
+            $AllCommands
+        } else {
+            $check2
+        }
+    }
+}  # Install-CustomModule -InputDir 'D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink' -UserLevel 'All' 
+# Install-CustomModule -InputDir 'D:\Code\Repos\LD\PowerShell LD\WolfPack2' -UserLevel 'All'
