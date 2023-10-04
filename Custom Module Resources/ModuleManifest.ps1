@@ -14,10 +14,11 @@ $Functions = Get-ChildItem -Path $FunctionDir -Filter *.ps1 -Recurse | ForEach-O
 $ModuleName = $RootDir.Split("\")[-1]
 
 # Create the module manifest
+$ParmsModulePath = Join-Path -Path $RootDir -ChildPath "$ModuleName.psd1"
 $Params = @{ 
-    "Path" 				        = "$RootDir\$ModuleName.psd1"
+    "Path" 				        = $ParmsModulePath
     "Author" 			        = 'https://github.com/EReis0' 
-    "CompanyName" 			    = 'Codeholics.com' 
+    "CompanyName" 			    = 'Codeholics.com (https://codeholics.com)' 
     "RootModule" 			    = "$ModuleName.psm1"
     "CompatiblePSEditions" 		= @('Desktop','Core') 
     "FunctionsToExport" 		= $Functions
