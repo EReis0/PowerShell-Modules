@@ -9,7 +9,7 @@
     Convert-CSVtoHTML
     This example converts a CSV file to an HTML report using PSWriteHTML and preferred parameters.
 .NOTES
-    Author: Codeholics - Eric Reis
+    Author: Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
     Version: 1.0
     Date: 8/2023
 .LINK
@@ -32,26 +32,24 @@ Function Convert-CSVtoHTML {
 
 <#
 .SYNOPSIS
-Converts a UTC timestamp to a readable format.
-
+    Converts a UTC timestamp to a readable format.
 .DESCRIPTION
-The Convert-UTCTimeStamp function converts a UTC timestamp to a readable format. It uses the Windows Time service (w32tm.exe) to convert the timestamp to a string, and then extracts the last part of the string to get the readable timestamp.
-
+    The Convert-UTCTimeStamp function converts a UTC timestamp to a readable format. 
+    It uses the Windows Time service (w32tm.exe) to convert the timestamp to a string, 
+    and then extracts the last part of the string to get the readable timestamp.
 .PARAMETER timestamp
-The UTC timestamp to convert.
-
+    The UTC timestamp to convert.
 .EXAMPLE
-PS C:\> Convert-UTCTimeStamp -timestamp 128271382742968750
-Converts the UTC timestamp 128271382742968750 to a readable format.
-
+    PS C:\> Convert-UTCTimeStamp -timestamp 128271382742968750
+    Converts the UTC timestamp 128271382742968750 to a readable format.
 .NOTES
-This function requires the Windows Time service (w32tm.exe) to be installed and running on the local computer.
+    This function requires the Windows Time service (w32tm.exe) to be installed and running on the local computer.
 
-- Author: Codeholics - Eric Reis
-- Version: 1.0
-
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
+    Version: 1.0
+    Date: 10/2023
 .LINK
-https://github.com/EReis0/PowerShell-Samples/
+    https://github.com/EReis0/PowerShell-Samples/
 
 #>
 Function Convert-UTCTimeStamp {
@@ -79,7 +77,7 @@ Function Convert-UTCTimeStamp {
     Get-AskUserYNQuestion -Question 'Are you ready?'
     This example asks the user the question "Are you ready?" and returns the user's answer.
 .NOTES
-    Author: Codeholics - Eric Reis
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
     Version: 1.0
     Date: 8/2023
 .LINK
@@ -119,7 +117,7 @@ Function Get-AskUserYNQuestion {
     Get-CSVFilePath -initialDirectory "C:\Users\UserName\Documents"
     This example displays the file browser dialog with the initial directory set to "C:\Users\UserName\Documents", and only allows CSV files to be selected.
 .NOTES
-    Author: Codeholics - Eric Reis
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
     Version: 1.0
     Date: 8/2023
 .LINK
@@ -146,7 +144,7 @@ Function Get-CSVFilePath($initialDirectory) {
     Get-Folder -initialDirectory "C:\Users\UserName\Documents"
     This example displays the folder browser dialog with the initial directory set to "C:\Users\UserName\Documents".
 .NOTES
-    Author: Codeholics - Eric Reis
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
     Version: 1.0
     Date: 8/2023
 .LINK
@@ -171,33 +169,28 @@ Function Get-Folder($initialDirectory){
 
 <#
 .SYNOPSIS
-Checks for updates to PowerShell modules installed from the PowerShell Gallery.
-
+    Checks for updates to PowerShell modules installed from the PowerShell Gallery.
 .DESCRIPTION
-The Get-ModuleUpdates function checks for updates to PowerShell modules installed from the PowerShell Gallery. 
-It compares the installed version of each module to the latest version available in the gallery and reports any modules
-that have updates available.
-
+    The Get-ModuleUpdates function checks for updates to PowerShell modules installed from the PowerShell Gallery. 
+    It compares the installed version of each module to the latest version available in the gallery and reports any modules
+    that have updates available.
 .PARAMETER None
-This function does not accept any parameters.
-
+    This function does not accept any parameters.
 .EXAMPLE
-PS C:\> Get-ModuleUpdates
-Checks for updates to PowerShell modules installed from the PowerShell Gallery and reports any modules that have updates available.
-
+    PS C:\> Get-ModuleUpdates
+    Checks for updates to PowerShell modules installed from the PowerShell Gallery and reports any modules that have updates available.
 .EXAMPLE
-$test = Get-ModuleUpdates
-clear-host
-Write-Host $test -ForegroundColor Green
-
+    $test = Get-ModuleUpdates
+    clear-host
+    Write-Host $test -ForegroundColor Green
 .NOTES
-This function requires PowerShell 5.0 or later and an internet connection to access the PowerShell Gallery.
+    This function requires PowerShell 5.0 or later and an internet connection to access the PowerShell Gallery.
 
-- Author: Codeholics - Eric Reis
-- Version: 1.0
-
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
+    Version: 1.0
+    Date: 10/2023
 .Link
-https://github.com/EReis0/PowerShell-Samples/
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 function Get-ModuleUpdates {
     $InstalledModules = Get-InstalledModule
@@ -228,15 +221,81 @@ function Get-ModuleUpdates {
 }
 
 
+
+<#
+.SYNOPSIS
+    Checks if a service is running and starts it if it's not.
+.DESCRIPTION
+    The Get-ServiceCheck function checks if a service is running and starts it if it's not. 
+    It takes an array of service names as input and checks each service in the array.
+.PARAMETER ServiceName
+    Specifies an array of service names to check.
+.EXAMPLE
+    Get-ServiceCheck -ServiceName @('PlexUpdateService', 'Spooler')
+    This example checks if the 'PlexUpdateService' and 'Spooler' services are running and starts them if they're not
+.NOTES
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
+    Version: 1.0
+    Date: 10/2023
+.LINK
+    https://github.com/EReis0/PowerShell-Samples/
+#>
+function Get-ServiceCheck {
+    [cmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [string[]]$ServiceName
+    )
+
+    foreach ($Service in $ServiceName) {
+        # Check if service is running
+        try{
+            $ServiceCheck = Get-Service -Name $Service -ErrorAction SilentlyContinue
+        } catch {
+            Write-Warning "[$(Get-Date)] Ran into an unexpected error trying to locate $Service. Failed running Get-Service. "
+            $_.Exception.Message
+        }
+
+        if ($null -eq $ServiceCheck) {
+            Write-Warning "[$(Get-Date)]  $Service service not found."
+        } else {
+            if ($ServiceCheck.Status -ne 'Running') {
+
+                try {
+                    Start-Service $Service -ErrorAction SilentlyContinue
+                } catch {
+                    Write-Warning "[$(Get-Date)] Ran into an unexpected error when trying to start $Service. Failed running Start-Service. "
+                    $_.Exception.Message
+                }
+
+                Start-Sleep -Seconds 5
+                $ServiceCheck.Refresh()
+                if ($ServiceCheck.Status -ne 'Running') {
+                    Write-Warning "[$(Get-Date)] $Service service failed to start."
+                } else {
+                    Write-Host "[$(Get-Date)] $Service service started."
+                }
+            } else {
+                Write-Host "[$(Get-Date)] $Service service is already running."
+            }
+        }
+    }
+} # Get-ServiceCheck -ServiceName @('PlexUpdateService')
+
+
 <#
 .SYNOPSIS
     Installs a custom module from the downloads folder to the module directory.
 .DESCRIPTION
-    This function installs a custom module from the downloads folder to the module directory. The function copies the module folder from the downloads folder to the module directory, and removes any existing module with the same name. If an Anti-Virus is running, it may flag this script as a virus. You will have to exclude powershell.exe from your AV during the installation.
+    This function installs a custom module from the downloads folder to the module directory. 
+    The function copies the module folder from the downloads folder to the module directory, 
+    and removes any existing module with the same name. If an Anti-Virus is running, it may flag this script as a virus. 
+    You will have to exclude powershell.exe from your AV during the installation.
 .PARAMETER InputDir
     Specifies the path of the module to install. This parameter is mandatory. It should be the path to your module folder.
 .PARAMETER UserLevel
-    Specifies the level of the user for which the module should be installed. This parameter is optional and can be set to either 'Single' or 'All'. If not specified, the default value is 'All'.
+    Specifies the level of the user for which the module should be installed. 
+    This parameter is optional and can be set to either 'Single' or 'All'. If not specified, the default value is 'All'.
 .EXAMPLE
     Install-CustomModule -InputDir "C:\Users\thebl\Downloads\KitchenSink" -UserLevel "All"
     This example installs the "KitchenSink" module from the -InputDir  to the module directory for all users.
@@ -244,12 +303,13 @@ function Get-ModuleUpdates {
     Install-CustomModule -InputDir "C:\Users\thebl\Downloads\KitchenSink" -UserLevel "Single"
     This example installs the "KitchenSink" module from the -InputDir  to the module directory for the current user.
 .NOTES
-    Author: Codeholics - Eric Reis
-    Version: 1.0
-    Date: 8/2023
-    Warning: If you're running an Anti-Virus, it may flag this script as a virus. You will have to exclude powershell.exe from your AV during the installation. Just make sure to remove the AV exception because leaving it in place is very risky.
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
+    Version: 1.1
+    Date: 10/2023
 
-    You don't really need this script, you can technically just copy the folder and paste it to the module directory 'C:\Program Files\WindowsPowerShell\Modules'. This will also avoid the issues with AV.
+    You don't really need this script, you can technically just copy the folder and paste it to the module directory 
+    'C:\Program Files\WindowsPowerShell\Modules'. Then you will need to add the import-module command to your profile.
+    
     Installing the module is useful but you can also just import-module with the path to use it for a script.
 .LINK
     https://github.com/EReis0/PowerShell-Samples/
@@ -275,11 +335,10 @@ Function Install-CustomModule {
         Write-Warning "UserLevel must be 'Single' or 'All'"
     }
 
-    $ModuleOutputPath = "$WindowsPowerShellModulePath\$ModuleName"
+    $ModuleOutputPath = Join-Path -Path $WindowsPowerShellModulePath -ChildPath $ModuleName
     
     Write-Host "This script will install the $ModuleName module to the module directory." -ForegroundColor Black -BackgroundColor white
     Write-Host "Copy module from $InputDir to $WindowsPowerShellModulePath" -ForegroundColor Black -BackgroundColor white
-    Write-Host "If you have an Anti-Virus, it may flag this script as a virus. You will have to exclude powershell.exe from your AV during the installation." -ForegroundColor Black -BackgroundColor Yellow
 
     # Check if the module is already installed
     $filecheck = test-path $ModuleOutputPath
@@ -342,52 +401,43 @@ Function Install-CustomModule {
 <#
 .SYNOPSIS
     Speaks the specified text using the default system settings.
-
 .DESCRIPTION
     The Invoke-Speech function speaks the specified text using the default system settings. 
     You can specify the speed, volume, and voice of the speech, and you can generate a PowerShell script that reproduces the speech settings.
-
 .PARAMETER Text
     The text to speak.
-
 .PARAMETER Speed
     The speed of the speech, in words per minute.
-
 .PARAMETER Volume
     The volume of the speech, as a percentage of the maximum volume.
-
 .PARAMETER Voice
     The name of the voice to use for the speech.
-
 .PARAMETER Generate
     Generates a PowerShell script that reproduces the speech settings.
-
 .PARAMETER Resume
     Returns a hash table of the speech settings.
-
 .EXAMPLE
     Invoke-Speech -Text "Hello, world!"
 
     This example speaks the text "Hello, world!" using the default system settings.
-
 .EXAMPLE
     Invoke-Speech -Text "Hello, world!" -Speed 200 -Volume 50 -Voice "Microsoft David Desktop"
 
     This example speaks the text "Hello, world!" using the Microsoft David Desktop voice, at a speed of 200 words per minute and a volume of 50%.
-
 .EXAMPLE
     Invoke-Speech -Text "Hello, world!" -Generate
 
     This example speaks the text "Hello, world!" and generates a PowerShell script that reproduces the speech settings.
-
 .EXAMPLE
     Invoke-Speech -Text "Hello, world!" -Resume
 
     This example speaks the text "Hello, world!" and returns a hash table of the speech settings.
-
 .NOTES
-    Author: Codeholics - Eric Reis
-    Version: 1.0.0
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
+    Version: 1.0
+    Date: 10/2023
+.LINK
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 function Invoke-Speech {
     [CmdletBinding()]
@@ -498,11 +548,11 @@ function Invoke-Speech {
     Join-FunctionsToPSM -RootFolder "C:\Github\ProjectSample" -FunctionsDir "Functions"
     This example creates a PSM file with all of the functions in the root folder. The resulting PSM file will have the same name as the root folder.
 .NOTES
-    Author: Codeholics - Eric Reis
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
     Version: 1.1
     Date: 8/24/2023
 .LINK
-https://github.com/EReis0/PowerShell-Samples/
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 function Join-FunctionsToPSM {
     [CmdletBinding()]
@@ -563,7 +613,7 @@ function Join-FunctionsToPSM {
 .NOTES
     This function exports a password to a file in UTF8 encoding and validates the file. The function converts the password to a secure string and then to an encrypted standard string using the ConvertTo-SecureString and ConvertFrom-SecureString cmdlets. The encrypted string is then written to a file using the Out-File cmdlet. The function also validates the file by comparing the decrypted password to the original password.
     
-    Author: Codeholics - Eric Reis
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
     Version: 1.0
     Date: 8/24/2023
 
@@ -610,10 +660,68 @@ function New-CredsTxtFile {
 
 <#
 .SYNOPSIS
+    Creates a new JSON file containing secure data.
+.DESCRIPTION
+    The New-SecuredJSON function creates a new JSON file containing secure data. 
+    The function encrypts the secure data and saves it to the specified file path.
+.PARAMETER Filepath
+    Specifies the path to the JSON file to create.
+.PARAMETER Params
+    Specifies a hashtable of key-value pairs to include in the JSON object. 
+    The keys in the hashtable will be used as the property names in the JSON object.
+.EXAMPLE
+    PS C:\> $params = @{
+        "Password" = "P@ssw0rd"
+        "Username" = "MyUsername"
+        "StudentID" = "568566"
+    }
+    PS C:\> New-SecuredJSON -Filepath "D:\Code\test4.json" -Params $params
+
+    This example creates a new JSON file at the specified file path with the specified key-value pairs.
+.EXAMPLE
+    Another way to pass the parameters.
+    PS C:\> New-SecuredJSON -Filepath "D:\Code\test4.json" -Params @{"Password" = "P@$sW0rD"; "Username" = "MTestco"}
+
+    This example creates a new JSON file at the specified file path with the specified key-value pairs.
+.NOTES
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
+    Version: 1.0
+    Date: 10/2023
+.LINK
+    https://github.com/EReis0/PowerShell-Samples/
+#>
+function New-SecuredJSON {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$Filepath,
+        [Parameter(Mandatory=$true)]
+        [hashtable]$Params
+    )
+    
+    # Create JSON object
+    $Json = @{}
+    foreach ($key in $Params.Keys) {
+        if ($Params[$key]) {
+            $Json.$key = (ConvertTo-SecureString -String $Params[$key] -AsPlainText -Force) | ConvertFrom-SecureString
+        }
+    }
+
+    # Convert the JSON object to a string
+    $JsonString = $Json | ConvertTo-Json
+
+    # Write JSON object to file
+    $JsonString | Out-File -FilePath $Filepath
+    Write-Host "Exported JSON to $Filepath"
+} # New-SecuredJSON -Filepath "D:\downloads\test4.json" -Params @{"Password" = "P@$sW0rD"; "Username" = "MTestco"}
+
+
+<#
+.SYNOPSIS
 Creates a new JSON file containing secure data.
 
 .DESCRIPTION
-The New-SecuredJSON function creates a new JSON file containing secure data. The function encrypts the secure data and saves it to the specified file path.
+The New-SecuredJSONStatic function creates a new JSON file containing secure data. The function encrypts the secure data and saves it to the specified file path.
 
 .PARAMETER Filepath
 Specifies the path to the JSON file to create.
@@ -643,18 +751,18 @@ Specifies the client ID to include in the JSON object.
 Specifies the client secret to include in the JSON object.
 
 .EXAMPLE
-PS C:\> New-SecuredJSON -Filepath "D:\Code\test4.json" -Password "P@ssw0rd" -Username "MyUsername" -Email "jdoe@sample.com"
+PS C:\> New-SecuredJSONStatic -Filepath "D:\Code\test4.json" -Password "P@ssw0rd" -Username "MyUsername" -Email "jdoe@sample.com"
 
 This example creates a new JSON file at the specified file path with the specified key-value pairs.
 
 .NOTES
-Author: Codeholics - Eric Reis
+Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
 Version: 1.0
 
 .LINK
 https://github.com/EReis0/PowerShell-Samples/
 #>
-function New-SecuredJSON {
+function New-SecuredJSONStatic {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory=$true)]
@@ -691,101 +799,34 @@ function New-SecuredJSON {
     # Write JSON object to file
     $JsonString | Out-File -FilePath $Filepath
     Write-Host "Exported JSON to $Filepath" -ForegroundColor Green
-} # New-SecuredJSON -Filepath "D:\Code\test4.json" -Password "P@ssw0rd" -Username "MyUsername" -Email "EReis@loandepot.com"
+} # New-SecuredJSONStatic -Filepath "D:\Code\test4.json" -Password "P@ssw0rd" -Username "MyUsername" -Email "EReis@loandepot.com"
 
 
 <#
 .SYNOPSIS
-Creates a new JSON file containing secure data.
-
+    Reads a JSON file containing secure data and returns an object with decrypted properties.
 .DESCRIPTION
-The New-SecuredJSONDynamic function creates a new JSON file containing secure data. 
-The function encrypts the secure data and saves it to the specified file path.
-
-.PARAMETER Filepath
-Specifies the path to the JSON file to create.
-
-.PARAMETER Params
-Specifies a hashtable of key-value pairs to include in the JSON object. 
-The keys in the hashtable will be used as the property names in the JSON object.
-
-.EXAMPLE
-PS C:\> $params = @{
-    "Password" = "P@ssw0rd"
-    "Username" = "MyUsername"
-    "StudentID" = "568566"
-}
-PS C:\> New-SecuredJSONDynamic -Filepath "D:\Code\test4.json" -Params $params
-
-This example creates a new JSON file at the specified file path with the specified key-value pairs.
-
-.EXAMPLE
-Another way to pass the parameters.
-PS C:\> New-SecuredJSONDynamic -Filepath "D:\Code\test4.json" -Params @{"Password" = "P@$sW0rD"; "Username" = "MTestco"}
-
-This example creates a new JSON file at the specified file path with the specified key-value pairs.
-
-.NOTES
-Author: Codeholics - Eric Reis
-Version: 1.0
-
-.LINK
-https://github.com/EReis0/PowerShell-Samples/
-#>
-function New-SecuredJSONDynamic {
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory=$true)]
-        [string]$Filepath,
-        [Parameter(Mandatory=$true)]
-        [hashtable]$Params
-    )
-    
-    # Create JSON object
-    $Json = @{}
-    foreach ($key in $Params.Keys) {
-        if ($Params[$key]) {
-            $Json.$key = (ConvertTo-SecureString -String $Params[$key] -AsPlainText -Force) | ConvertFrom-SecureString
-        }
-    }
-
-    # Convert the JSON object to a string
-    $JsonString = $Json | ConvertTo-Json
-
-    # Write JSON object to file
-    $JsonString | Out-File -FilePath $Filepath
-    Write-Host "Exported JSON to $Filepath"
-} # New-SecuredJSONDynamic -Filepath "D:\downloads\test4.json" -Params @{"Password" = "P@$sW0rD"; "Username" = "MTestco"}
-
-
-<#
-.SYNOPSIS
-Reads a JSON file containing secure data and returns an object with decrypted properties.
-
-.DESCRIPTION
-The Read-SecuredJSON function reads a JSON file containing secure data and returns an object with decrypted properties. 
-The function decrypts the secure data in the JSON file and returns the decrypted values as plain text.
-
+    The Read-SecuredJSON function reads a JSON file containing secure data and returns an object with decrypted properties. 
+    The function decrypts the secure data in the JSON file and returns the decrypted values as plain text.
 .PARAMETER Path
-Specifies the path to the JSON file containing the secure data. The file must have a .json extension.
-
+    Specifies the path to the JSON file containing the secure data. The file must have a .json extension.
 .EXAMPLE
-Plain text values
-PS C:\> $data = Read-SecuredJSON -Path "D:\Code\test4.json"
-PS C:\> $Password = $data.Password
+    Plain text values
+    PS C:\> $data = Read-SecuredJSON -Path "D:\Code\test4.json"
+    PS C:\> $Password = $data.Password
 
-Convert plain text values to secure strings
-$Data = Read-SecuredJSON -Path "D:\Code\test4.json"
-$Password = $data.Password | ConvertTo-SecureString -AsPlainText -Force
+    Convert plain text values to secure strings
+    $Data = Read-SecuredJSON -Path "D:\Code\test4.json"
+    $Password = $data.Password | ConvertTo-SecureString -AsPlainText -Force
 
-This example reads the secure data from the "test4.json" file and sets the `$Password` variable to the decrypted value of the "Password" property.
-
+    This example reads the secure data from the "test4.json" file and 
+    sets the `$Password` variable to the decrypted value of the "Password" property.
 .NOTES
-Author: Codeholics - Eric Reis
-Version: 1.0
-
+    Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
+    Version: 1.0
+    Date: 10/2023
 .LINK
-https://github.com/EReis0/PowerShell-Samples/
+    https://github.com/EReis0/PowerShell-Samples/
 #>
 function Read-SecuredJSON {
     [cmdletBinding()]
