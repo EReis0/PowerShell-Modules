@@ -1,3 +1,12 @@
+<#
+.SYNOPSIS
+    Generates a PSD1 file for a custom module
+.DESCRIPTION
+    Generates a PSD1 file for a custom module with dynamic package.
+.NOTES
+    Author: Codeholics - Eric Reis (https://github.com/EReis0)
+    Version: 1.0
+#>
 $RootDir = "D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink"
 $FunctionDir = Join-Path -Path $RootDir -ChildPath "Functions"
 
