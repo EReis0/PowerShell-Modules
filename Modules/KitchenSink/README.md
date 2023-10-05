@@ -267,9 +267,11 @@ Get-GithubProject -url "https://github.com/EReis0/PowerShell-Modules/archive/ref
 
 ## Updates | 10/2023
 
-- Created a new function `New-SecuredJSON` that takes static parameters, encrypts the values and exports a secured JSON File.
-- Created a new function `New-SecuredJSONDynamic` that takes Dynamic parameters, encrypts the values and exports a secured JSON File.
-- Created a new function `Read-SecuredJSON` that reads the JSON file from `New-SecuredJSON` or `New-SecuredJSONDynamic` and converts values into plain text.
+- New Functions
+  - `New-SecuredJSON` that takes static parameters, encrypts the values and exports a secured JSON File.
+  - `New-SecuredJSONDynamic` that takes Dynamic parameters, encrypts the values and exports a secured JSON File.
+  - `Read-SecuredJSON` that reads the JSON file from `New-SecuredJSON` or `New-SecuredJSONDynamic` and converts values into plain text.
+  - `Get-GitHubProject` Download a GitHub project as a .zip and compress it to a specified directory.
 - Generated new PSM, PSD, Checksum. Updated Readme.md to include the new functions
 
 ## Updates | 9/2023
