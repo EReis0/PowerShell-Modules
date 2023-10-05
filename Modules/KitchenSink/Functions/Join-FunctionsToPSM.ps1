@@ -45,7 +45,7 @@ function Join-FunctionsToPSM {
 
     $ResultBuilder = [System.Text.StringBuilder]::new()
 
-    foreach ($File in Get-ChildItem -Path $FunctionFolder -Filter *.ps1 -File) {
+    foreach ($File in Get-ChildItem -Path $FunctionFolder -Recurse -Filter *.ps1 -File) {
         $FileContent = Get-Content $File.FullName -Raw
         $null = $ResultBuilder.AppendLine($FileContent)
         $null = $ResultBuilder.AppendLine()

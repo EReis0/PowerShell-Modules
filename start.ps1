@@ -1,0 +1,18 @@
+#Requires -RunAsAdministrator
+Import-Module -Name KitchenSink
+
+$CPSScriptRoot = "D:\Code\Repos\PowerShell-Modules"
+
+# psd1
+& Join-Path -Path $CPSScriptRoot -ChildPath "Custom Module Resources" | Join-Path -ChildPath "Generate ModuleManifest.ps1"
+
+# psm1
+$RootFolder = Join-Path -Path $CPSScriptRoot -ChildPath "Modules" | Join-Path -ChildPath "KitchenSink"
+Join-FunctionsToPSM -RootFolder $RootFolder
+
+# Install
+$InputDir = Join-Path -Path $CPSScriptRoot -ChildPath "Modules" | Join-Path -ChildPath "KitchenSink"
+Install-CustomModule -InputDir $InputDir
+
+# Checksums
+& Join-Path -Path $CPSScriptRoot -ChildPath "Custom Module Resources" | Join-Path -ChildPath "Generate CheckSums.ps1"
