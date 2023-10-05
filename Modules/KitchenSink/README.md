@@ -28,6 +28,8 @@
       - [Convert plain text values to secure strings](#convert-plain-text-values-to-secure-strings)
   - [Invoke-Speech](#invoke-speech)
     - [Usage](#usage-10)
+  - [Get-GithubProject](#get-githubproject)
+    - [Usage](#usage-11)
 - [Change Log](#change-log)
   - [Updates | 10/2023](#updates--102023)
   - [Updates | 9/2023](#updates--92023)
@@ -245,6 +247,16 @@ Invoke-Speech -Text "Hello, world!" -Generate
 ```powershell
 # This example speaks the text "Hello, world!" and returns a hash table of the speech settings.
 Invoke-Speech -Text "Hello, world!" -Resume
+```
+
+## Get-GithubProject
+
+Download a GitHub project as a .zip and compress the files to a specific path.
+
+### Usage
+
+```powershell
+Get-GithubProject -url "https://github.com/EReis0/PowerShell-Modules/archive/refs/heads/main.zip" -output "C:\Users\jdoe\Documents\"
 ```
 
 <br>
