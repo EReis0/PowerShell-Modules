@@ -32,6 +32,75 @@ Function Convert-CSVtoHTML {
 
 <#
 .SYNOPSIS
+Converts between hexadecimal and plain text formats.
+
+.DESCRIPTION
+The Convert-HexText function converts between hexadecimal and plain text formats. If the 'text' parameter is used, the provided text is returned in a hexadecimal format. If the 'hex' parameter is used, the provided hexadecimal value is read and returned in plain text format.
+
+.PARAMETER hex
+The hexadecimal value to convert to plain text format.
+
+.PARAMETER text
+The text value to convert to hexadecimal format.
+Does not accept lists of values.
+
+.EXAMPLE
+Convert-HexText -text "Hello, world!"
+
+This example converts the text "Hello, world!" to a hexadecimal format.
+
+.EXAMPLE
+Convert-HexText -hex "48656C6C6F2C20776F726C6421"
+
+This example converts the hexadecimal value "48656C6C6F2C20776F726C6421" to plain text format.
+
+.NOTES
+Author: Codeholics - Eric Reis (https://github.com/EReis0/)
+Date: 10/12/2023
+Version: 1.0
+#>
+function Convert-HexText {
+    [cmdletbinding()]
+    param(
+        [Parameter(Mandatory=$false)]
+        [string]$hex,
+        [Parameter(Mandatory=$false)]
+        [string]$text
+    )
+
+    if ($hex -and $text) {
+        Write-Error "Only one of the 'hex' and 'text' parameters can be specified."
+        return
+    }
+
+    if ($hex) {
+        # Convert the hexadecimal string to a byte array
+        $bytes = [System.Text.RegularExpressions.Regex]::Matches($hex, '..').ForEach({[byte]::Parse($_.Value, 'HexNumber')})
+
+        # Convert the byte array to a string using the UTF8 encoding
+        $string = [System.Text.Encoding]::UTF8.GetString($bytes)
+
+        # Output the string
+        Write-Output $string
+    }
+    elseif ($text) {
+        # Convert the text to a byte array using the UTF8 encoding
+        $bytes = [System.Text.Encoding]::UTF8.GetBytes($text)
+
+        # Convert the byte array to a hexadecimal string
+        $hex = [BitConverter]::ToString($bytes) -replace '-'
+
+        # Output the hexadecimal string
+        Write-Output $hex
+    }
+    else {
+        Write-Error "One of the 'hex' and 'text' parameters must be specified."
+    }
+}  # Convert-HexText -text "Hello World!"
+
+
+<#
+.SYNOPSIS
     Converts a UTC timestamp to a readable format.
 .DESCRIPTION
     The Convert-UTCTimeStamp function converts a UTC timestamp to a readable format. 
@@ -165,6 +234,47 @@ Function Get-Folder($initialDirectory){
         
         return $folder
 } 
+
+
+<#
+.SYNOPSIS
+    Downloads and extracts a zip file from a specified URL to a specified output folder.
+.DESCRIPTION
+    The Get-GithubProject function downloads a zip file from a specified URL and extracts it to a specified output folder. The function creates a temporary file with a .zip extension, downloads the file from the URL using Invoke-WebRequest, extracts the contents of the file to the output folder using Expand-Archive, and then removes the temporary file.
+.PARAMETER url
+    Specifies the URL of the zip file to download.
+.PARAMETER output
+    Specifies the output folder where the contents of the zip file will be extracted.
+.EXAMPLE
+    Get-GithubProject -url "https://github.com/EReis0/PowerShell-Modules/archive/refs/heads/main.zip" -output "C:\Users\thebl\Documents\New folder"
+    Downloads the zip file from the specified URL and extracts its contents to the specified output folder.
+    **Copy the URL for the zip file from the GitHub repository.**
+.NOTES
+    Author: Codeholics - Eric Reis (https://github.com/EReis0)
+    Date: 5/25/2022
+#>
+function Get-GithubProject {
+    [CmdletBinding()]
+    Param (
+        [parameter(Mandatory = $true)]
+        [string]$url,
+
+        [parameter(Mandatory = $true)]
+        [string]$output
+    )
+    try {
+        # create temp with zip extension (or Expand will complain)
+        $tmp = New-TemporaryFile | Rename-Item -NewName {$_ -replace 'tmp$', 'zip' } -PassThru
+        #download
+        Invoke-WebRequest -outFile $tmp $url
+        #exract to same folder
+        $tmp | Expand-Archive -DestinationPath $output -force
+        # remove temporary file
+        $tmp | remove-item
+    }catch {
+        $_.Error
+    }
+}
 
 
 <#
@@ -1012,6 +1122,84 @@ function Read-SecuredJSON {
 
 
 
+
+
+<#
+.SYNOPSIS
+    Tests the status of a website by checking if it is reachable and if specific text is present on the page.
+
+.DESCRIPTION
+    The Test-WebsiteStatus function tests the status of a website by checking if it is reachable and if specific text is present on the
+    page. If the website is reachable and the expected text is present, the function returns a message indicating that the website is
+    online and functioning correctly. If the website is reachable but the expected text is not present, the function returns a message
+    indicating that the website is online but may not be functioning correctly. If the website is not reachable, the function returns
+    a message indicating that the website is offline.
+
+.PARAMETER Url
+    The URL of the website to test.
+
+.PARAMETER ExpectedText
+    The text that should be present on the website.
+
+.EXAMPLE
+    Test-WebsiteStatus -Url "www.google.com" -ExpectedText "Google"
+
+    This example tests the status of the website "www.google.com" and checks if the text "Google" is present on the page.
+
+    Url            ExpectedText Online ExpectedTextPresent
+    ---            ------------ ------ -------------------
+    www.google.com Google         True                True
+
+
+.NOTES
+    Author: Codeholics - Eric Reis (https://github.com/EReis0/)
+    Date: 10/12/2023
+    Version: 1.0
+#>
+function Test-WebsiteStatus {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$Url,
+        [Parameter(Mandatory=$false)]
+        [string]$ExpectedText
+    )
+
+    # Test the reachability of the website using Test-NetConnection
+    try {
+    $result = Test-NetConnection -ComputerName $Url -Port 80 -ErrorAction SilentlyContinue | out-null
+    } catch {
+            $_.Exception.Message
+        return
+    }
+
+    # Check if the website is reachable
+    if ($result.TcpTestSucceeded) {
+        # Retrieve the content of the website using Invoke-WebRequest
+        $response = Invoke-WebRequest -Uri $Url
+
+        # Check if the expected text is present on the page
+        if ($ExpectedText -and $response.Content -like "*$ExpectedText*") {
+            # The expected text is present on the page and the website is reachable
+            $Online = $true
+            $ExpectedTextPresent = $true
+        } else {
+            # The expected text is not present on the page
+            $Online = $true
+            $ExpectedTextPresent = $false
+        }
+    } else {
+        # The website is not reachable
+        $Online = $false
+        $ExpectedTextPresent = $false
+    }
+    # Return the results
+    return [PSCustomObject]@{
+        Url = $Url
+        ExpectedText = $ExpectedText
+        Online = $Online
+        ExpectedTextPresent = $ExpectedTextPresent
+    }
+}   # Test-WebsiteStatus -Url "codeholics.com" -ExpectedText "2022 Codeholics"
 
 
 
