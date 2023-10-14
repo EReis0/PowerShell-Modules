@@ -251,7 +251,7 @@ Invoke-Speech -Text "Hello, world!" -Resume
 
 ## Get-GithubProject
 
-Download a GitHub project as a .zip and compress the files to a specific path.
+Download a GitHub project as a .zip and uncompress the files to a specific path.
 
 ### Usage
 
@@ -271,7 +271,7 @@ Get-GithubProject -url "https://github.com/EReis0/PowerShell-Modules/archive/ref
   - `New-SecuredJSON` that takes static parameters, encrypts the values and exports a secured JSON File.
   - `New-SecuredJSONDynamic` that takes Dynamic parameters, encrypts the values and exports a secured JSON File.
   - `Read-SecuredJSON` that reads the JSON file from `New-SecuredJSON` or `New-SecuredJSONDynamic` and converts values into plain text.
-  - `Get-GitHubProject` Download a GitHub project as a .zip and compress it to a specified directory.
+  - `Get-GitHubProject` Download a GitHub project as a .zip and uncompress it to a specified directory.
 - Generated new PSM, PSD, Checksum. Updated Readme.md to include the new functions
 
 ## Updates | 9/2023
