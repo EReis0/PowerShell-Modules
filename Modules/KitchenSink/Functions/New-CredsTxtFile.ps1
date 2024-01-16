@@ -8,7 +8,9 @@
 .PARAMETER Password
     Specifies the password to export.
 .PARAMETER ValidateOnly
-    Specifies whether to validate the password file. If this parameter is specified, the password will not be exported.
+    Only validates if the encypted password in the file matches the specified password. 
+    Using this parameter will not export the password to the file.
+    If you use this parameter you will need to specify the value as $true to validate only.
 .EXAMPLE
     PS C:\> New-CredsTxtFile -Filepath "C:\Temp\password.txt" -Password "MyPassword123"
     Exports the password "MyPassword123" to the file "C:\Temp\password.txt" in UTF8 encoding and validates the file.
@@ -20,7 +22,7 @@
     
     Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
     Version: 1.0
-    Date: 8/24/2023
+    Date: 01/16/2024
 
     This function is not really needed but a good way to create and validate a password file in a consistent manner.
 .LINK
@@ -34,12 +36,12 @@ function New-CredsTxtFile {
         [Parameter(Mandatory=$true)]
         [string]$Password,
         [Parameter(Mandatory=$false)]
-        [bool]$ValidateOnly
+        [bool]$ValidateOnly = $false
     )
     
-    if (!$ValidateOnly) {
+    if ($ValidateOnly -eq $false) {
     # Save the password
-    Write-Host "Exporting Password to $Filepath"
+    Write-Host "Exporting Password to $Filepath" -foregroundcolor green
     ConvertTo-SecureString -String $Password -AsPlainText -Force | ConvertFrom-SecureString | Out-File $Filepath -Encoding UTF8
     }
 
@@ -53,10 +55,10 @@ function New-CredsTxtFile {
 
     # Compare the password for a match
     if ($SecretContent -eq $Password) {
-        Write-Host "Password MATCHED decrypted password." - foregroundcolor green
+        Write-Host "Password MATCHED decrypted password." -foregroundcolor green
     } else {
         Write-Warning "Password DID NOT MATCH decrypted password."
     }
-}  # New-CredsTxtFile -Filepath "C:\creds\creds.txt" -Password "P@ssw0rd"
+}  # New-CredsTxtFile -Filepath "C:\creds\sample.txt" -Password "P@ssw0rd" -ValidateOnly $true
 
 
