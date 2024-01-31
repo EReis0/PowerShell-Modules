@@ -17,7 +17,7 @@
   - [Get-ModuleUpdates](#get-moduleupdates)
     - [Usage](#usage-7)
     - [Example Output](#example-output-1)
-  - [Convert-UTCTimeStamp](#convert-utctimestamp)
+  - [Convert-TimeStamp](#convert-timestamp)
     - [Usage](#usage-8)
     - [Example Output](#example-output-2)
   - [New-SecuredJSONStatic](#new-securedjsonstatic)
@@ -162,14 +162,14 @@ PublishedDate    : 9/18/2023 6:20:41 AM
 Link             : https://www.powershellgallery.com/packages/PSSharedGoods
 ```
 
-## Convert-UTCTimeStamp
+## Convert-TimeStamp
 
-Convert a UTC timestamp into a normal readable format.
+Convert timestamps from `Windows Time File` or `UNIX` into a readable format. 
 
 ### Usage
 
 ```powershell
-Convert-UTCTimeStamp -timestamp 128271382742968750
+Convert-TimeStamp -timestamp 128271382742968750
 ```
 
 ### Example Output
