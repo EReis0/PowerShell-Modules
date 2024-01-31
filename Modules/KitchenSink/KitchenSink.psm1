@@ -101,38 +101,52 @@ function Convert-HexText {
 
 <#
 .SYNOPSIS
-    Converts a UTC timestamp to a readable format.
+    Converts a Unix timestamp or a Windows File Time to a human-readable date and time.
+
 .DESCRIPTION
-    The Convert-UTCTimeStamp function converts a UTC timestamp to a readable format. 
-    It uses the Windows Time service (w32tm.exe) to convert the timestamp to a string, 
-    and then extracts the last part of the string to get the readable timestamp.
+    The Convert-Timestamp function takes a Unix timestamp (milliseconds since 1970-01-01 00:00:00 UTC) or a Windows File Time (100-nanosecond intervals since 1601-01-01 00:00:00 UTC) and converts it to a human-readable date and time in the format "MM/dd/yyyy hh:mm tt".
+
 .PARAMETER timestamp
-    The UTC timestamp to convert.
+    The Unix timestamp or Windows File Time to convert. This is a mandatory parameter.
+
 .EXAMPLE
-    PS C:\> Convert-UTCTimeStamp -timestamp 128271382742968750
-    Converts the UTC timestamp 128271382742968750 to a readable format.
+    Convert-Timestamp -timestamp 1706381481000
+    This will convert the Unix timestamp 1706381481000 to a human-readable date and time.
+
+.EXAMPLE
+    Convert-Timestamp -timestamp 133505150963768760
+    This will convert the Windows File Time 133505150963768760 to a human-readable date and time.
+
 .NOTES
-    This function requires the Windows Time service (w32tm.exe) to be installed and running on the local computer.
+    Unix timestamps are typically 13 digits long, while Windows File Times are typically 18 digits long. The function determines the type of the timestamp based on its length.
 
     Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
     Version: 1.0
-    Date: 10/2023
+    Date: 01/2024
+
 .LINK
     https://github.com/EReis0/PowerShell-Samples/
-
 #>
-Function Convert-UTCTimeStamp {
-    [CmdletBinding()]
-    param (
-        [Parameter(Position = 0, Mandatory = $true)]
-        [string]$timestamp
+function Convert-Timestamp {
+    param(
+        [Parameter(Mandatory=$true)]
+        [int64]$timestamp
     )
-    $string = (w32tm /ntte $timestamp)
-    $newstring = $string.split('-')[-1]
-    return $newstring
-} # Convert-UTCTimeStamp -timestamp 128271382742968750
 
-
+    # Unix timestamp (milliseconds) is typically 13 digits
+    # Windows File Time is typically 18 digits
+    switch ($timestamp.ToString().Length) {
+        { $_ -le 13 } {
+            $origin = New-Object -Type DateTime -ArgumentList 1970, 1, 1, 0, 0, 0, 0
+            $TS = $origin.AddMilliseconds($timestamp).ToLocalTime()
+            return $TS.ToString("MM/dd/yyyy hh:mm tt")
+        }
+        { $_ -gt 13 } {
+            $TS = [DateTime]::FromFileTime($timestamp)
+            return $TS.ToString("MM/dd/yyyy hh:mm tt")
+        }
+    }
+}
 
 
 <#
