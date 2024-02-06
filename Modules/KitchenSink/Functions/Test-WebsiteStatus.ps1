@@ -40,7 +40,7 @@ function Test-WebsiteStatus {
 
     # Test the reachability of the website using Test-NetConnection
     try {
-    $result = Test-NetConnection -ComputerName $Url -Port 80 -ErrorAction SilentlyContinue | out-null
+    $result = Test-NetConnection -ComputerName $Url -Port 80 -ErrorAction SilentlyContinue
     } catch {
             $_.Exception.Message
         return
