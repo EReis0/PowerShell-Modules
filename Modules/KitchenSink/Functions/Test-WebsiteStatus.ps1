@@ -27,8 +27,8 @@
 
 .NOTES
     Author: Codeholics - Eric Reis (https://github.com/EReis0/)
-    Date: 10/12/2023
-    Version: 1.0
+    Date: 02/06/2024
+    Version: 1.1
 #>
 function Test-WebsiteStatus {
     param(
