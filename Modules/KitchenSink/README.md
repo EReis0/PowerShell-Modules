@@ -31,6 +31,7 @@
   - [Get-GithubProject](#get-githubproject)
     - [Usage](#usage-11)
 - [Change Log](#change-log)
+  - [Updates | 2/2024](#updates--22024)
   - [Updates | 10/2023](#updates--102023)
   - [Updates | 9/2023](#updates--92023)
   - [Updates | 08/2023](#updates--082023)
@@ -264,6 +265,19 @@ Get-GithubProject -url "https://github.com/EReis0/PowerShell-Modules/archive/ref
 # Change Log
 
 <br>
+
+## Updates | 2/2024
+
+- `Convert-Timestamp`
+  - Updated logic to convert timestamps for windows (active directory). Stopped converting time to windows NT and started converting the time based on "Windows Time File". 
+  - Included logic that would convert Unix time stamps
+  - Switch added to automatically detect if windows time file or Unix timestamp is being used and convert to readable format.
+- `New-CredsTxtFile`
+  - Fixed bug where sometimes validation only was overwriting the file instead of validating only
+  - Instead of passing the password in plan text, it will prompt using get-credential instead. Username is not required.
+  - Updated Get-help comments to better explain how the -validationOnly works in the function.
+- `Test-WebsiteStatus`
+  - Fixed bug where function would return a site is offline when it was online. Now it should reflect properly.
 
 ## Updates | 10/2023
 
