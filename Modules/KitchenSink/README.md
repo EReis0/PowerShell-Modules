@@ -14,6 +14,7 @@
     - [Usage](#usage-5)
   - [New-CredsTxtFile](#new-credstxtfile)
     - [Usage](#usage-6)
+    - [Example](#example)
   - [Get-ModuleUpdates](#get-moduleupdates)
     - [Usage](#usage-7)
     - [Example Output](#example-output-1)
@@ -43,6 +44,10 @@
 
 # KitchenSink
 
+Custom functions created that has helped me along the way.
+
+<br>
+
 ## Get-AskUserYNQuestion
 
 Just a simple way to toss a system controlled yes/no question to the user.
@@ -62,6 +67,8 @@ Choices:
 Yes
 ```
 
+<br>
+
 ## Get-Folder
 
 Prompt the user to select a folder in a file browser window
@@ -71,6 +78,8 @@ Prompt the user to select a folder in a file browser window
 ```powershell
 Get-Folder
 ```
+
+<br>
 
 ## Get-CSVFilePath
 
@@ -82,15 +91,19 @@ Prompt the user to select a CSV file in a file browser to obtain a path to a csv
 Get-CSVFilePath
 ```
 
+<br>
+
 ## Convert-CSVtoHTML
 
-This function is a wrapper for [PSWriteHTML](https://www.powershellgallery.com/packages/PSWriteHTML/0.0.158). It will basically prompt the user with a file browser to select a CSV to convert into an HTML report.
+This function is a wrapper for [PSWriteHTML](https://www.powershellgallery.com/packages/PSWriteHTML/). It will basically prompt the user with a file browser to select a CSV to convert into an HTML report.
 
 ### Usage
 
 ```powershell
 Convert-CSVtoHTML
 ```
+
+<br>
 
 ## Install-CustomModule
 
@@ -106,6 +119,8 @@ Once it is completed you can use commands like `get-module` and `get-command` wi
 Install-CustomModule -ModuleName KitchenSink
 ```
 
+<br>
+
 ## Join-FunctionsToPSM
 
 Takes a folder that contains .ps1 files for all module functions and automatically builds a single PSM1 file (Not dot sourced).
@@ -117,23 +132,33 @@ Makes the process of updating and adding new functions to the module with ease a
 Join-FunctionsToPSM -RootFolder "C:\Github\ProjectSample" -FunctionDir "Functions"
 ```
 
+<br>
+
 ## New-CredsTxtFile
 
-Use this to generate a new secure credential file but also verify the file was generated correctly. You can also use this to verify the password that is in the file. 
+The `New-CredsTxtFile` is a PowerShell function that is used to create a secure password file or validate a password against an existing file.
 
 ### Usage
 
-This will create a new creds file and verify it once it's created
+To create a new password file, use the `-Filepath` parameter to specify the path where the password file will be saved. 
+The function will prompt you to enter a password which will then be saved to the specified file.
 
 ```powershell
-New-CredsTxtFile -Filepath "C:\creds\creds.txt" -Password "P@ssw0rd"
+New-CredsTxtFile -Filepath "C:\creds\creds.txt"
 ```
 
-This will not create a new creds file. It only validates the current file.
+To validate a password against an existing file, use the `-Filepath` parameter to specify the path of the password file and the `-ValidateOnly` parameter set to `$true`. The function will prompt you to enter a password which will then be compared to the password in the specified file.
 
 ```powershell
-New-CredsTxtFile -Filepath "C:\Temp\password.txt" -Password "MyPassword123" -ValidateOnly
+New-CredsTxtFile -Filepath "C:\creds\creds.txt" -ValidateOnly $true
 ```
+
+### Example
+
+- `New-CredsTxtFile -Filepath "C:\creds\creds.txt"` = New credential file created
+- `New-CredsTxtFile -Filepath "C:\creds\creds.txt" -ValidateOnly $true` = No new file created, validate the password provided to the encrypted password on the file.
+
+<br>
 
 ## Get-ModuleUpdates
 
@@ -163,6 +188,8 @@ PublishedDate    : 9/18/2023 6:20:41 AM
 Link             : https://www.powershellgallery.com/packages/PSSharedGoods
 ```
 
+<br>
+
 ## Convert-TimeStamp
 
 Convert timestamps from `Windows Time File` or `UNIX` into a readable format. 
@@ -179,6 +206,8 @@ Convert-TimeStamp -timestamp 128271382742968750
 6/23/2007 10:57:54 PM
 ```
 
+<br>
+
 ## New-SecuredJSONStatic
 
 This function will take each parameter value and encrypt it and export the key, value pairs into a JSON file to the `-FilePath` location.
@@ -187,6 +216,8 @@ It also has static parameter values that can be selected. If custom values are n
 ```powershell
 New-SecuredJSON -Filepath "D:\Code\test4.json" -Password "P@ssw0rd" -Username "MyUsername" -Email "jdoe@sample.com"
 ```
+
+<br>
 
 ## New-SecuredJSON
 
@@ -202,6 +233,8 @@ $params = @{
 
 New-SecuredJSONDynamic -Filepath "D:\Code\test4.json" -Params $params
 ```
+
+<br>
 
 ## Read-SecuredJSON
 
@@ -223,6 +256,8 @@ $Password = $data.Password
 $Data = Read-SecuredJSON -Path "D:\Code\test4.json"
 $Password = $data.Password | ConvertTo-SecureString -AsPlainText -Force
 ```
+
+<br>
 
 ## Invoke-Speech
 
@@ -250,9 +285,11 @@ Invoke-Speech -Text "Hello, world!" -Generate
 Invoke-Speech -Text "Hello, world!" -Resume
 ```
 
+<br>
+
 ## Get-GithubProject
 
-Download a GitHub project as a .zip and uncompress the files to a specific path.
+Download a GitHub project as a .zip and decompress the files to a specific path.
 
 ### Usage
 
@@ -269,7 +306,8 @@ Get-GithubProject -url "https://github.com/EReis0/PowerShell-Modules/archive/ref
 ## Updates | 2/2024
 
 - `Convert-Timestamp`
-  - Updated logic to convert timestamps for windows (active directory). Stopped converting time to windows NT and started converting the time based on "Windows Time File". 
+  - Retired function `Convert-UTCTimestamp` and recreated the vision as a new function.
+  - Added logic to convert timestamps for windows (active directory). Stopped converting time to Windows NT and started converting the time based on "Windows Time File". 
   - Included logic that would convert Unix time stamps
   - Switch added to automatically detect if windows time file or Unix timestamp is being used and convert to readable format.
 - `New-CredsTxtFile`
@@ -285,7 +323,7 @@ Get-GithubProject -url "https://github.com/EReis0/PowerShell-Modules/archive/ref
   - `New-SecuredJSON` that takes static parameters, encrypts the values and exports a secured JSON File.
   - `New-SecuredJSONDynamic` that takes Dynamic parameters, encrypts the values and exports a secured JSON File.
   - `Read-SecuredJSON` that reads the JSON file from `New-SecuredJSON` or `New-SecuredJSONDynamic` and converts values into plain text.
-  - `Get-GitHubProject` Download a GitHub project as a .zip and uncompress it to a specified directory.
+  - `Get-GitHubProject` Download a GitHub project as a .zip and decompress it to a specified directory.
 - Generated new PSM, PSD, Checksum. Updated Readme.md to include the new functions
 
 ## Updates | 9/2023
