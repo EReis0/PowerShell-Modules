@@ -18,11 +18,13 @@
   - [Get-ModuleUpdates](#get-moduleupdates)
     - [Usage](#usage-7)
     - [Example Output](#example-output-1)
-  - [Convert-TimeStamp](#convert-timestamp)
+  - [Convert-Timestamp](#convert-timestamp)
     - [Usage](#usage-8)
     - [Example Output](#example-output-2)
   - [New-SecuredJSONStatic](#new-securedjsonstatic)
+    - [Example Output](#example-output-3)
   - [New-SecuredJSON](#new-securedjson)
+    - [Example Output](#example-output-4)
   - [Read-SecuredJSON](#read-securedjson)
     - [Usage](#usage-9)
       - [Plain text values](#plain-text-values)
@@ -162,7 +164,7 @@ New-CredsTxtFile -Filepath "C:\creds\creds.txt" -ValidateOnly $true
 
 ## Get-ModuleUpdates
 
-Check your PSGallery Installed-Modules for updates. Return modules that are outdated with links.
+Check your [PSGallery](https://www.powershellgallery.com/) Installed-Modules for updates. Return modules that are outdated with links.
 
 ### Usage
 
@@ -190,7 +192,7 @@ Link             : https://www.powershellgallery.com/packages/PSSharedGoods
 
 <br>
 
-## Convert-TimeStamp
+## Convert-Timestamp
 
 Convert timestamps from `Windows Time File` or `UNIX` into a readable format. 
 
@@ -214,7 +216,19 @@ This function will take each parameter value and encrypt it and export the key, 
 It also has static parameter values that can be selected. If custom values are needed, use the [New-SecuredJSONDynamic](#new-securedjson) version. 
 
 ```powershell
-New-SecuredJSON -Filepath "D:\Code\test4.json" -Password "P@ssw0rd" -Username "MyUsername" -Email "jdoe@sample.com"
+New-SecuredJSONStatic -Filepath "D:\Code\test5.json" -Password "P@ssw0rd" -Username "MyUsername" -Email "jdoe@sample.com"
+```
+
+### Example Output
+
+Will output a JSON file like this. I replaced the encrypted value with `"<Encrypted>"`.
+
+```json
+{
+    "Username": "<Encrypted>",
+    "Email": "<Encrypted>",
+    "Password": "<Encrypted>"
+}
 ```
 
 <br>
@@ -231,7 +245,19 @@ $params = @{
     "StudentID" = "568566"
 }
 
-New-SecuredJSONDynamic -Filepath "D:\Code\test4.json" -Params $params
+New-SecuredJSON -Filepath "D:\Code\test4.json" -Params $params
+```
+
+### Example Output
+
+Will output a JSON file like this. I replaced the encrypted value with `"<Encrypted>"`.
+
+```json
+{
+    "Username": "<Encrypted>",
+    "Password": "<Encrypted>",
+    "StudentID": "<Encrypted>"
+}
 ```
 
 <br>
