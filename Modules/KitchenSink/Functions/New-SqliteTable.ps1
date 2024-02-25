@@ -69,7 +69,7 @@ function New-SqliteTable {
             }
             return $true
         })]
-        [hashtable] $Columns
+        [System.Collections.Specialized.OrderedDictionary] $Columns
     )
 
     # Load the module
