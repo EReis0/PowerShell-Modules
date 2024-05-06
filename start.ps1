@@ -1,4 +1,9 @@
 #Requires -RunAsAdministrator
+
+<# 
+    You can run this after you have already installed the module. See Modules > KitcheSink > Install-Module.ps1
+#>
+
 Import-Module -Name KitchenSink
 
 $CPSScriptRoot = "D:\Code\Repos\PowerShell-Modules"
