@@ -53,4 +53,4 @@ function New-SecuredJSON {
     # Write JSON object to file
     $JsonString | Out-File -FilePath $Filepath
     Write-Host "Exported JSON to $Filepath"
-} # New-SecuredJSON -Filepath "D:\downloads\test4.json" -Params @{"Password" = "P@$sW0rD"; "Username" = "MTestco"}
+} # New-SecuredJSON -Filepath "D:\Code\test4.json" -Params @{"Password" = "P@ssW0rD"; "Username" = "MTestco"}
