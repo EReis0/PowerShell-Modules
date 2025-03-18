@@ -960,8 +960,7 @@ function New-CredsTxtFile {
 
         # Verify password file
         $SecureString = ConvertTo-SecureString -String (Get-Content $Filepath)
-        $Pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecureString)
-        $SecretContent = [Runtime.InteropServices.Marshal]::PtrToStringAuto($Pointer)
+        $SecretContent = [System.Net.NetworkCredential]::new("", $SecureString).Password
 
         # Compare the password for a match
         if ($SecretContent -eq $Password) {
@@ -1028,7 +1027,8 @@ function New-SecuredJSON {
     # Write JSON object to file
     $JsonString | Out-File -FilePath $Filepath
     Write-Host "Exported JSON to $Filepath"
-} # New-SecuredJSON -Filepath "D:\downloads\test4.json" -Params @{"Password" = "P@$sW0rD"; "Username" = "MTestco"}
+} # New-SecuredJSON -Filepath "D:\Code\test4.json" -Params @{"Password" = "P@ssW0rD"; "Username" = "MTestco"}
+
 
 
 <#
@@ -1156,14 +1156,12 @@ function Read-SecuredJSON {
     $SecuredData = [PSCustomObject]@{}
     foreach ($property in $json.PSObject.Properties) {
         if ([string]::IsNullOrWhiteSpace($property.Value) -eq $false) {
-            $SecuredData | Add-Member -MemberType NoteProperty -Name $property.Name -Value ([Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR(($property.Value | ConvertTo-SecureString))))
+            $decryptedValue = [System.Net.NetworkCredential]::new("", ($property.Value | ConvertTo-SecureString)).Password
+            $SecuredData | Add-Member -MemberType NoteProperty -Name $property.Name -Value $decryptedValue
         }
     }
     return $SecuredData
 } # $Data = Read-SecuredJSON -Path "D:\Code\test4.json"
-
-
-
 
 
 
