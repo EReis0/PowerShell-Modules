@@ -79,8 +79,7 @@ function New-CredsTxtFile {
 
         # Verify password file
         $SecureString = ConvertTo-SecureString -String (Get-Content $Filepath)
-        $Pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecureString)
-        $SecretContent = [Runtime.InteropServices.Marshal]::PtrToStringAuto($Pointer)
+        $SecretContent = [System.Net.NetworkCredential]::new("", $SecureString).Password
 
         # Compare the password for a match
         if ($SecretContent -eq $Password) {
