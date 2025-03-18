@@ -37,11 +37,9 @@ function Read-SecuredJSON {
     $SecuredData = [PSCustomObject]@{}
     foreach ($property in $json.PSObject.Properties) {
         if ([string]::IsNullOrWhiteSpace($property.Value) -eq $false) {
-            $SecuredData | Add-Member -MemberType NoteProperty -Name $property.Name -Value ([Runtime.InteropServices.Marshal]::PtrToStringAuto([Runtime.InteropServices.Marshal]::SecureStringToBSTR(($property.Value | ConvertTo-SecureString))))
+            $decryptedValue = [System.Net.NetworkCredential]::new("", ($property.Value | ConvertTo-SecureString)).Password
+            $SecuredData | Add-Member -MemberType NoteProperty -Name $property.Name -Value $decryptedValue
         }
     }
     return $SecuredData
 } # $Data = Read-SecuredJSON -Path "D:\Code\test4.json"
-
-
-
