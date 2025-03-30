@@ -35,7 +35,8 @@ $Params = @{
     "VariablesToExport" 		= @() 
     "AliasesToExport" 		    = @() 
     "Description"               = "$ModuleName is a custom built module."
-    "ModuleVersion"             = "1.1"
+    "ModuleVersion"             = "1.2.0"
+    "PowerShellVersion"         = '5.1'
     "Copyright"                 = "(c) $(Get-Date -Format yyyy) Eric Reis. Licensed under the MIT License."
 } 
 
