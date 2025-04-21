@@ -1,41 +1,58 @@
 <#
 .SYNOPSIS
     Speaks the specified text using the default system settings.
+
 .DESCRIPTION
-    The Invoke-Speech function speaks the specified text using the default system settings. 
-    You can specify the speed, volume, and voice of the speech, and you can generate a PowerShell script that reproduces the speech settings.
+    The `Invoke-Speech` function speaks the specified text using the default system settings. 
+    You can specify the speed, volume, and voice of the speech. Additionally, you can generate a standalone PowerShell script 
+    that reproduces the speech settings or return the current speech settings as a hash table.
+
 .PARAMETER Text
     The text to speak.
+
 .PARAMETER Speed
-    The speed of the speech, in words per minute.
+    The speed of the speech, in words per minute. Higher values result in faster speech.
+
 .PARAMETER Volume
-    The volume of the speech, as a percentage of the maximum volume.
+    The volume of the speech, as a percentage of the maximum volume (0 to 100).
+
 .PARAMETER Voice
-    The name of the voice to use for the speech.
+    The name of the voice to use for the speech. Use `Get-InstalledVoices` to list available voices.
+
 .PARAMETER Generate
-    Generates a PowerShell script that reproduces the speech settings.
+    Generates a standalone PowerShell script (`My_Speech_Script.ps1`) on the desktop that reproduces the speech settings.
+    The script includes all specified parameters (e.g., speed, volume, voice, and text) and can be executed independently.
+
 .PARAMETER Resume
-    Returns a hash table of the speech settings.
+    Returns a hash table of the current speech settings, including the text, speed, volume, and voice. 
+    This is useful for debugging or saving the configuration for later use.
+
 .EXAMPLE
     Invoke-Speech -Text "Hello, world!"
 
     This example speaks the text "Hello, world!" using the default system settings.
+
 .EXAMPLE
     Invoke-Speech -Text "Hello, world!" -Speed 200 -Volume 50 -Voice "Microsoft David Desktop"
 
     This example speaks the text "Hello, world!" using the Microsoft David Desktop voice, at a speed of 200 words per minute and a volume of 50%.
+
 .EXAMPLE
     Invoke-Speech -Text "Hello, world!" -Generate
 
-    This example speaks the text "Hello, world!" and generates a PowerShell script that reproduces the speech settings.
+    This example speaks the text "Hello, world!" and generates a standalone PowerShell script (`My_Speech_Script.ps1`) on the desktop 
+    that reproduces the speech settings.
+
 .EXAMPLE
     Invoke-Speech -Text "Hello, world!" -Resume
 
-    This example speaks the text "Hello, world!" and returns a hash table of the speech settings.
+    This example speaks the text "Hello, world!" and returns a hash table of the current speech settings.
+
 .NOTES
     Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
-    Version: 1.0
-    Date: 10/2023
+    Version: 1.2
+    Date: 4/2025
+
 .LINK
     https://github.com/EReis0/PowerShell-Samples/
 #>
@@ -56,58 +73,47 @@ function Invoke-Speech {
         [switch] $Resume				
     )
     
-    Try
-    {						
+    Try {						
         Add-Type -AssemblyName System.speech
         $Global:Talk = New-Object System.Speech.Synthesis.SpeechSynthesizer
-        If ($Voice)
-        {
+        If ($Voice) {
             $Talk.SelectVoice($Voice)
         }
-    }
-    Catch 
-    {
-        Write-Error "Can not load the System Speech assembly"
-        exit
+    } Catch {
+        throw "Cannot load the System Speech assembly: $($_.Exception.Message)"
     }		
     
 
-    If ($Speed)
-    {
+    If ($Speed) {
         $Talk.Rate = $Speed
-    }	
+    }
         
-    If ($Volume)
-    {
+    If ($Volume) {
         $Talk.Volume = $Volume
-    }	
+    }
         
-    $Talk.Speak($Text)	
+    $Talk.Speak($Text)
 
-    If ($Generate)
-    {
+    If ($Generate) {
         $Script_File = "$([Environment]::GetFolderPath('Desktop'))\My_Speech_Script.ps1"
         New-Item $Script_File -type file				
         Add-Content $Script_File "#Load assembly"	
         Add-Content $Script_File 'Add-Type -AssemblyName System.speech'
         Add-Content $Script_File '$Talk = New-Object System.Speech.Synthesis.SpeechSynthesizer'
 
-        If ($Voice)
-        {
+        If ($Voice) {
             Add-Content $Script_File ""	
             Add-Content $Script_File "# Set the selectd voice"			
             Add-Content $Script_File ('$Talk.SelectVoice' + "('" + "$Voice" + "')")
         }
 
-        If ($Speed)
-        {
+        If ($Speed) {
             Add-Content $Script_File ""	
             Add-Content $Script_File "# Set the speed value"				
             Add-Content $Script_File ('$Talk.Rate = ' + '"' + "$Speed" + '"')
         }
 
-        If ($Volume)
-        {
+        If ($Volume) {
             Add-Content $Script_File ""	
             Add-Content $Script_File "# Set the volume value"			
             Add-Content $Script_File ('$Talk.Volume = ' + '"' + "$Volume" + '"')
@@ -118,8 +124,7 @@ function Invoke-Speech {
         Add-Content $Script_File ('$Talk.Speak(' + '"' + "$Text" + '")')				
     }
 
-    If ($Resume)
-    {
+    If ($Resume) {
         $ResumeOutput = @{
             "Volume" = $Talk.Volume
             "Speed" = $Talk.Rate
