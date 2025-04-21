@@ -3,15 +3,20 @@
     - [Usage](#usage)
     - [Example Output](#example-output)
   - [Get-Folder](#get-folder)
-    - [usage](#usage-1)
+    - [Usage](#usage-1)
   - [Get-CSVFilePath](#get-csvfilepath)
     - [Usage](#usage-2)
   - [Convert-CSVtoHTML](#convert-csvtohtml)
     - [Usage](#usage-3)
   - [Install-CustomModule](#install-custommodule)
+    - [Parameters](#parameters)
     - [Usage](#usage-4)
+    - [Additional Notes](#additional-notes)
   - [Join-FunctionsToPSM](#join-functionstopsm)
+    - [Features](#features)
+    - [Parameters](#parameters-1)
     - [Usage](#usage-5)
+    - [Additional Notes](#additional-notes-1)
   - [New-CredsTxtFile](#new-credstxtfile)
     - [Usage](#usage-6)
     - [Example](#example)
@@ -27,37 +32,34 @@
     - [Example Output](#example-output-4)
   - [Read-SecuredJSON](#read-securedjson)
     - [Usage](#usage-9)
-      - [Plain text values](#plain-text-values)
-      - [Convert plain text values to secure strings](#convert-plain-text-values-to-secure-strings)
+      - [Plain Text Values](#plain-text-values)
+      - [Convert Plain Text Values to Secure Strings](#convert-plain-text-values-to-secure-strings)
   - [Invoke-Speech](#invoke-speech)
     - [Usage](#usage-10)
   - [Get-GithubProject](#get-githubproject)
     - [Usage](#usage-11)
-- [Change Log](#change-log)
-  - [Updates | 2/2024](#updates--22024)
-  - [Updates | 10/2023](#updates--102023)
-  - [Updates | 9/2023](#updates--92023)
-  - [Updates | 08/2023](#updates--082023)
-  - [Automated PSM Building | 10/25/2022](#automated-psm-building--10252022)
-  - [New Functions | 10/12/2022](#new-functions--10122022)
-  - [New Repo | 10/11/2022](#new-repo--10112022)
+  - [Convert-TOTPToMFA](#convert-totptomfa)
+    - [Parameters](#parameters-2)
+    - [Usage](#usage-12)
+    - [Example Output](#example-output-5)
+    - [Notes](#notes)
 
 <br>
 
 # KitchenSink
 
-Custom functions created that has helped me along the way.
+Custom functions created that have helped me along the way.
 
 <br>
 
 ## Get-AskUserYNQuestion
 
-Just a simple way to toss a system controlled yes/no question to the user.
+Just a simple way to toss a system-controlled yes/no question to the user.
 
 ### Usage
 
 ```powershell
-Get-AskUserYNQuestion -Question 'Are you ready?
+Get-AskUserYNQuestion -Question 'Are you ready?'
 ```
 
 ### Example Output
@@ -73,9 +75,9 @@ Yes
 
 ## Get-Folder
 
-Prompt the user to select a folder in a file browser window
+Prompt the user to select a folder in a file browser window.
 
-### usage
+### Usage
 
 ```powershell
 Get-Folder
@@ -85,7 +87,7 @@ Get-Folder
 
 ## Get-CSVFilePath
 
-Prompt the user to select a CSV file in a file browser to obtain a path to a csv file
+Prompt the user to select a CSV file in a file browser to obtain a path to a `CSV` file.
 
 ### Usage
 
@@ -97,7 +99,7 @@ Get-CSVFilePath
 
 ## Convert-CSVtoHTML
 
-This function is a wrapper for [PSWriteHTML](https://www.powershellgallery.com/packages/PSWriteHTML/). It will basically prompt the user with a file browser to select a CSV to convert into an HTML report.
+This function is a wrapper for [PSWriteHTML](https://www.powershellgallery.com/packages/PSWriteHTML/). It will prompt the user with a file browser to select a CSV to convert into an HTML report.
 
 ### Usage
 
@@ -111,60 +113,106 @@ Convert-CSVtoHTML
 
 > Must be executed in PowerShell administrator mode.
 
-Installing custom modules can be a little tricky, so this function was created to assist. It takes the module and copies it to the PowerShell module directory. Then it creates a PowerShell profile if one does not already exist. Next it will check the PowerShell profile for the specific module and updates the profile if it's missing. 
+The `Install-CustomModule` function simplifies the process of installing PowerShell modules by automating the following steps:
+- Copying the module to the appropriate module directory based on the `UserLevel` parameter.
+- Adding the module to the user's PowerShell profile for automatic loading in future sessions.
+- Optionally unblocking unsigned scripts if the `-Unblock` parameter is specified.
 
-Once it is completed you can use commands like `get-module` and `get-command` without needing to import the module in a script first.
+### Parameters
+
+- **`-InputDir`**: Specifies the path of the module to install. This is a mandatory parameter and should point to the folder containing the module files.
+- **`-UserLevel`**: Specifies the level of the user for which the module should be installed. Valid values are:
+  - `'Single'`: Installs the module for the current user only.
+  - `'All'`: Installs the module for all users on the system.
+  The default value is `'All'`.
+- **`-Unblock`**: Optional switch to unblock the module script if it is not signed.
 
 ### Usage
 
 ```powershell
-Install-CustomModule -ModuleName KitchenSink
+# Install the module for all users
+Install-CustomModule -InputDir "C:\Path\To\Module" -UserLevel "All"
+
+# Install the module for the current user only
+Install-CustomModule -InputDir "C:\Path\To\Module" -UserLevel "Single"
+
+# Install the module for all users and unblock unsigned scripts
+Install-CustomModule -InputDir "C:\Path\To\Module" -UserLevel "All" -Unblock
 ```
+
+### Additional Notes
+
+- The function ensures the module is imported into the user's PowerShell profile for automatic loading in future sessions. If the profile does not exist, it will create one.
+- If submodules (additional `.psm1` files) are found within the module directory, they will also be added to the profile and imported.
+- The function validates the installation by checking if the module and its commands are successfully imported.
+- If the `-Unblock` parameter is used, the function will check the script's signature and unblock it if it is not signed.
 
 <br>
 
 ## Join-FunctionsToPSM
 
-Takes a folder that contains .ps1 files for all module functions and automatically builds a single PSM1 file (Not dot sourced).
-Makes the process of updating and adding new functions to the module with ease and fewer steps to finish.
+The `Join-FunctionsToPSM` function creates a single PowerShell module file (`.psm1`) by combining all `.ps1` files from a specified folder. It ensures that the resulting `.psm1` file is well-structured and includes all the functions from the specified folder. Each function definition in the `.psm1` file is separated by two blank lines for readability.
+
+### Features
+
+- Combines all `.ps1` files in the specified folder into a single `.psm1` file.
+- Automatically creates a backup of an existing `.psm1` file with a `.bak` extension before overwriting it.
+- Validates the existence of the root directory and functions directory.
+- Ensures the `.psm1` file is encoded in UTF-8 for compatibility.
+
+### Parameters
+
+- **`-RootDir`**: Specifies the root folder path of the module/project. This is the folder where the `.psm1` file will be created. The name of the `.psm1` file will match the name of this folder.
+- **`-FunctionsDir`**: Specifies the name of the folder within the root directory that contains the `.ps1` function files. The default value is `"Functions"`. This parameter can be a relative or absolute path.
 
 ### Usage
 
 ```powershell
-Join-FunctionsToPSM -RootFolder "C:\Github\ProjectSample" -FunctionDir "Functions"
+# Combine all .ps1 files in the "Functions" folder into a single .psm1 file
+Join-FunctionsToPSM -RootDir "C:\Github\ProjectSample" -FunctionsDir "Functions"
+
+# Combine all .ps1 files in a custom folder into a single .psm1 file
+Join-FunctionsToPSM -RootDir "D:\Projects\MyModule" -FunctionsDir "CustomFunctions"
 ```
+
+### Additional Notes
+
+- If no `.ps1` files are found in the specified functions directory, the function will throw an error.
+- If a `.psm1` file with the same name already exists, it will be backed up with a `.bak` extension. If a `.bak` file already exists, it will be replaced with the latest backup.
+- The resulting `.psm1` file will include all functions, separated by two blank lines for readability.
+- The function validates the paths provided for the root directory and functions directory to ensure they exist.
+- The `.psm1` file is written with UTF-8 encoding to ensure compatibility across systems.
 
 <br>
 
 ## New-CredsTxtFile
 
-The `New-CredsTxtFile` is a PowerShell function that is used to create a secure password file or validate a password against an existing file.
+The `New-CredsTxtFile` function is used to create a secure password file or validate a password against an existing file.
 
 ### Usage
 
-To create a new password file, use the `-Filepath` parameter to specify the path where the password file will be saved. 
-The function will prompt you to enter a password which will then be saved to the specified file.
+To create a new password file, use the `-Filepath` parameter to specify the path where the password file will be saved. The function will prompt you to enter a password, which will then be saved to the specified file.
 
 ```powershell
 New-CredsTxtFile -Filepath "C:\creds\creds.txt"
 ```
 
-To validate a password against an existing file, use the `-Filepath` parameter to specify the path of the password file and the `-ValidateOnly` parameter set to `$true`. The function will prompt you to enter a password which will then be compared to the password in the specified file.
+To validate a password against an existing file, use the `-Filepath` parameter to specify the path of the password file and the `-Validate` parameter. The function will prompt you to enter a password, which will then be compared to the password in the specified file.
 
 ```powershell
-New-CredsTxtFile -Filepath "C:\creds\creds.txt" -ValidateOnly $true
+New-CredsTxtFile -Filepath "C:\creds\creds.txt" -Validate
 ```
 
 ### Example
 
-- `New-CredsTxtFile -Filepath "C:\creds\creds.txt"` = New credential file created
-- `New-CredsTxtFile -Filepath "C:\creds\creds.txt" -ValidateOnly $true` = No new file created, validate the password provided to the encrypted password on the file.
+- `New-CredsTxtFile -Filepath "C:\creds\creds.txt"`: New credential file created.
+- `New-CredsTxtFile -Filepath "C:\creds\creds.txt" -Validate`: No new file created; validates the password provided against the encrypted password in the file.
 
 <br>
 
 ## Get-ModuleUpdates
 
-Check your [PSGallery](https://www.powershellgallery.com/) Installed-Modules for updates. Return modules that are outdated with links.
+Check your [PSGallery](https://www.powershellgallery.com/) installed modules for updates. Returns modules that are outdated with links.
 
 ### Usage
 
@@ -199,7 +247,7 @@ Convert timestamps from `Windows Time File` or `UNIX` into a readable format.
 ### Usage
 
 ```powershell
-Convert-TimeStamp -timestamp 128271382742968750
+Convert-TimeStamp -Timestamp 128271382742968750
 ```
 
 ### Example Output
@@ -212,8 +260,7 @@ Convert-TimeStamp -timestamp 128271382742968750
 
 ## New-SecuredJSONStatic
 
-This function will take each parameter value and encrypt it and export the key, value pairs into a JSON file to the `-FilePath` location.
-It also has static parameter values that can be selected. If custom values are needed, use the [New-SecuredJSONDynamic](#new-securedjson) version. 
+This function encrypts each parameter value and exports the key-value pairs into a JSON file at the `-FilePath` location. It also has static parameter values that can be selected. If custom values are needed, use the [New-SecuredJSON](#new-securedjson) version. 
 
 ```powershell
 New-SecuredJSONStatic -Filepath "D:\Code\test5.json" -Password "P@ssw0rd" -Username "MyUsername" -Email "jdoe@sample.com"
@@ -221,7 +268,7 @@ New-SecuredJSONStatic -Filepath "D:\Code\test5.json" -Password "P@ssw0rd" -Usern
 
 ### Example Output
 
-Will output a JSON file like this. I replaced the encrypted value with `"<Encrypted>"`.
+Outputs a JSON file like this (encrypted values replaced with `"<Encrypted>"`):
 
 ```json
 {
@@ -235,8 +282,7 @@ Will output a JSON file like this. I replaced the encrypted value with `"<Encryp
 
 ## New-SecuredJSON
 
-This function has dynamic parameters, in order to execute this function you need to pass it the `-FilePath` and at least one `-Params`.
-It will then encrypt the values to the parameters defined and output the results into a JSON file. 
+This function has dynamic parameters. To execute it, pass the `-FilePath` and at least one `-Params`. It encrypts the parameter values and outputs the results into a JSON file. 
 
 ```powershell
 $params = @{
@@ -250,7 +296,7 @@ New-SecuredJSON -Filepath "D:\Code\test4.json" -Params $params
 
 ### Example Output
 
-Will output a JSON file like this. I replaced the encrypted value with `"<Encrypted>"`.
+Outputs a JSON file like this (encrypted values replaced with `"<Encrypted>"`):
 
 ```json
 {
@@ -264,19 +310,18 @@ Will output a JSON file like this. I replaced the encrypted value with `"<Encryp
 
 ## Read-SecuredJSON
 
-Reads the Secured JSON file which was created with [New-SecuredJSONStatic](#new-securedjsonstatic) or [New-SecuredJSON](#new-securedjsondynamic)
-and converts the encrypted values into plan text. 
+Reads the secured JSON file created with [New-SecuredJSONStatic](#new-securedjsonstatic) or [New-SecuredJSON](#new-securedjson) and converts the encrypted values into plain text. 
 
 ### Usage
 
-#### Plain text values
+#### Plain Text Values
 
 ```powershell
 $data = Read-SecuredJSON -Path "D:\Code\test4.json"
 $Password = $data.Password
 ```
 
-#### Convert plain text values to secure strings
+#### Convert Plain Text Values to Secure Strings
 
 ```powershell
 $Data = Read-SecuredJSON -Path "D:\Code\test4.json"
@@ -287,7 +332,7 @@ $Password = $data.Password | ConvertTo-SecureString -AsPlainText -Force
 
 ## Invoke-Speech
 
-The Invoke-Speech function speaks the specified text using the default system settings. You can specify the speed, volume, and voice of the speech, and you can generate a PowerShell script that reproduces the speech settings.
+The `Invoke-Speech` function speaks the specified text using the default system settings. You can specify the speed, volume, and voice of the speech, and you can generate a PowerShell script that reproduces the speech settings.
 
 ### Usage
 
@@ -315,75 +360,47 @@ Invoke-Speech -Text "Hello, world!" -Resume
 
 ## Get-GithubProject
 
-Download a GitHub project as a .zip and decompress the files to a specific path.
+Download a GitHub project as a `.zip` and decompress the files to a specific path.
 
 ### Usage
 
 ```powershell
-Get-GithubProject -url "https://github.com/EReis0/PowerShell-Modules/archive/refs/heads/main.zip" -output "C:\Users\jdoe\Documents\"
+Get-GithubProject -Url "https://github.com/EReis0/PowerShell-Modules/archive/refs/heads/main.zip" -Output "C:\Users\jdoe\Documents\"
 ```
 
 <br>
 
-# Change Log
+## Convert-TOTPToMFA
 
-<br>
+The `Convert-TOTPToMFA` function generates a Time-based One-Time Password (TOTP) code based on the provided secret, period, number of digits, and algorithm. It is useful for generating MFA (Multi-Factor Authentication) codes.
 
-## Updates | 2/2024
+### Parameters
 
-- `Convert-Timestamp`
-  - Retired function `Convert-UTCTimestamp` and recreated the vision as a new function.
-  - Added logic to convert timestamps for windows (active directory). Stopped converting time to Windows NT and started converting the time based on "Windows Time File". 
-  - Included logic that would convert Unix time stamps
-  - Switch added to automatically detect if windows time file or Unix timestamp is being used and convert to readable format.
-- `New-CredsTxtFile`
-  - Fixed bug where sometimes validation only was overwriting the file instead of validating only
-  - Instead of passing the password in plan text, it will prompt using get-credential instead. Username is not required.
-  - Updated Get-help comments to better explain how the -validationOnly works in the function.
-- `Test-WebsiteStatus`
-  - Fixed bug where function would return a site is offline when it was online. Now it should reflect properly.
+- **`-Secret`**: The Base32 encoded TOTP secret. This parameter is mandatory.
+- **`-Period`**: The time period in seconds for the TOTP code. The default is `30` seconds.
+- **`-Digits`**: The number of digits for the TOTP code. The default is `6` digits.
+- **`-Algorithm`**: The hashing algorithm to use for generating the HMAC hash. Supported algorithms are `"SHA1"`, `"SHA256"`, and `"SHA512"`. The default is `"SHA1"`.
 
-## Updates | 10/2023
+### Usage
 
-- New Functions
-  - `New-SecuredJSON` that takes static parameters, encrypts the values and exports a secured JSON File.
-  - `New-SecuredJSONDynamic` that takes Dynamic parameters, encrypts the values and exports a secured JSON File.
-  - `Read-SecuredJSON` that reads the JSON file from `New-SecuredJSON` or `New-SecuredJSONDynamic` and converts values into plain text.
-  - `Get-GitHubProject` Download a GitHub project as a .zip and decompress it to a specified directory.
-- Generated new PSM, PSD, Checksum. Updated Readme.md to include the new functions
+```powershell
+# Generate a 6-digit TOTP code using the provided secret, a 30-second period, and the SHA1 algorithm
+$TOTPSecret = "JBSWY3DPEHPK3PXP"
+$MFA = Convert-TOTPToMFA -Secret $TOTPSecret -Period 30 -Digits 6 -Algorithm "SHA1"
+Write-Host "Generated TOTP Code: $MFA"
+```
 
-## Updates | 9/2023
+### Example Output
 
-- Created a new function `Get-ModuleUpdates` that will check PSGallery Modules for updates available.
-- Created a new function `Convert-UTCTimeStamp` that converts UTC time into a readable format.
-- Generated new PSM, PSD, Checksum. Updated Readme.md to include the new functions
+```
+Generated TOTP Code: 123456
+```
 
-## Updates | 08/2023
+### Notes
 
-- Changed function name `Join-SingleFunctionToPSM` to `Join-FunctionsToPSM`.
-- Updated `Join-FunctionsToPSM` logic to 
-  - Include get-help comments that are located above or within the function.
-  - Add 2 new lines after each function added to the psm1 file.
-- Cleaned up Get-Help comments on almost all functions.
-- Renamed Module from `BleakKitchenSink` to `KitchenSink`
-- Update to `Install-CustomModule` to also create a PowerShell profile and include the custom module. This allows you to `Get-Module` and `Get-Command` and access the custom module. Works well, just need to suppress some console messages.
-- Created `New-CredsTxtFile` to help with creating and validating secured credentials.
-
-## Automated PSM Building | 10/25/2022
-
-- Created function `Join-SingleFunctionToPSM` which will import all single file functions into a single PSM file
-- Added `Functions` folder under module root
-- Added functions `Install-CustomModule` and `Join-SingleFunctionToPSM` into `KitchenSink` Module
-- Regenerated PSM file using new function
-- Regenerated PSD to include new functions added
-
-## New Functions | 10/12/2022
-
-- Get-Folder
-
-## New Repo | 10/11/2022
-
-- Created Module "KitchenSink"
-  - Get-AskUserYNQuestion
-  - Get-CSVFilePath
-  - Convert-CSVtoHTML
+- If the generated MFA code is not valid, ensure your system clock is synchronized with an NTP server.
+  - Check synchronization status: `w32tm /query /status`
+  - Start the Windows Time service if not running: `Start-Service w32time`
+  - Resynchronize the system clock: `w32tm /resync`
+  - Verify synchronization status again: `w32tm /query /status`
+- This function is based on the TOTP algorithm described in [RFC 6238](https://tools.ietf.org/html/rfc6238).
