@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Converts a CSV file to an HTML report using PSWriteHTML.
 .DESCRIPTION
@@ -1082,41 +1082,58 @@ Function Install-CustomModuleOG {
 <#
 .SYNOPSIS
     Speaks the specified text using the default system settings.
+
 .DESCRIPTION
-    The Invoke-Speech function speaks the specified text using the default system settings. 
-    You can specify the speed, volume, and voice of the speech, and you can generate a PowerShell script that reproduces the speech settings.
+    The `Invoke-Speech` function speaks the specified text using the default system settings. 
+    You can specify the speed, volume, and voice of the speech. Additionally, you can generate a standalone PowerShell script 
+    that reproduces the speech settings or return the current speech settings as a hash table.
+
 .PARAMETER Text
     The text to speak.
+
 .PARAMETER Speed
-    The speed of the speech, in words per minute.
+    The speed of the speech, in words per minute. Higher values result in faster speech.
+
 .PARAMETER Volume
-    The volume of the speech, as a percentage of the maximum volume.
+    The volume of the speech, as a percentage of the maximum volume (0 to 100).
+
 .PARAMETER Voice
-    The name of the voice to use for the speech.
+    The name of the voice to use for the speech. Use `Get-InstalledVoices` to list available voices.
+
 .PARAMETER Generate
-    Generates a PowerShell script that reproduces the speech settings.
+    Generates a standalone PowerShell script (`My_Speech_Script.ps1`) on the desktop that reproduces the speech settings.
+    The script includes all specified parameters (e.g., speed, volume, voice, and text) and can be executed independently.
+
 .PARAMETER Resume
-    Returns a hash table of the speech settings.
+    Returns a hash table of the current speech settings, including the text, speed, volume, and voice. 
+    This is useful for debugging or saving the configuration for later use.
+
 .EXAMPLE
     Invoke-Speech -Text "Hello, world!"
 
     This example speaks the text "Hello, world!" using the default system settings.
+
 .EXAMPLE
     Invoke-Speech -Text "Hello, world!" -Speed 200 -Volume 50 -Voice "Microsoft David Desktop"
 
     This example speaks the text "Hello, world!" using the Microsoft David Desktop voice, at a speed of 200 words per minute and a volume of 50%.
+
 .EXAMPLE
     Invoke-Speech -Text "Hello, world!" -Generate
 
-    This example speaks the text "Hello, world!" and generates a PowerShell script that reproduces the speech settings.
+    This example speaks the text "Hello, world!" and generates a standalone PowerShell script (`My_Speech_Script.ps1`) on the desktop 
+    that reproduces the speech settings.
+
 .EXAMPLE
     Invoke-Speech -Text "Hello, world!" -Resume
 
-    This example speaks the text "Hello, world!" and returns a hash table of the speech settings.
+    This example speaks the text "Hello, world!" and returns a hash table of the current speech settings.
+
 .NOTES
     Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
-    Version: 1.0
-    Date: 10/2023
+    Version: 1.2
+    Date: 4/2025
+
 .LINK
     https://github.com/EReis0/PowerShell-Samples/
 #>
@@ -1137,58 +1154,47 @@ function Invoke-Speech {
         [switch] $Resume				
     )
     
-    Try
-    {						
+    Try {						
         Add-Type -AssemblyName System.speech
         $Global:Talk = New-Object System.Speech.Synthesis.SpeechSynthesizer
-        If ($Voice)
-        {
+        If ($Voice) {
             $Talk.SelectVoice($Voice)
         }
-    }
-    Catch 
-    {
-        Write-Error "Can not load the System Speech assembly"
-        exit
+    } Catch {
+        throw "Cannot load the System Speech assembly: $($_.Exception.Message)"
     }		
     
 
-    If ($Speed)
-    {
+    If ($Speed) {
         $Talk.Rate = $Speed
-    }	
+    }
         
-    If ($Volume)
-    {
+    If ($Volume) {
         $Talk.Volume = $Volume
-    }	
+    }
         
-    $Talk.Speak($Text)	
+    $Talk.Speak($Text)
 
-    If ($Generate)
-    {
+    If ($Generate) {
         $Script_File = "$([Environment]::GetFolderPath('Desktop'))\My_Speech_Script.ps1"
         New-Item $Script_File -type file				
         Add-Content $Script_File "#Load assembly"	
         Add-Content $Script_File 'Add-Type -AssemblyName System.speech'
         Add-Content $Script_File '$Talk = New-Object System.Speech.Synthesis.SpeechSynthesizer'
 
-        If ($Voice)
-        {
+        If ($Voice) {
             Add-Content $Script_File ""	
             Add-Content $Script_File "# Set the selectd voice"			
             Add-Content $Script_File ('$Talk.SelectVoice' + "('" + "$Voice" + "')")
         }
 
-        If ($Speed)
-        {
+        If ($Speed) {
             Add-Content $Script_File ""	
             Add-Content $Script_File "# Set the speed value"				
             Add-Content $Script_File ('$Talk.Rate = ' + '"' + "$Speed" + '"')
         }
 
-        If ($Volume)
-        {
+        If ($Volume) {
             Add-Content $Script_File ""	
             Add-Content $Script_File "# Set the volume value"			
             Add-Content $Script_File ('$Talk.Volume = ' + '"' + "$Volume" + '"')
@@ -1199,8 +1205,7 @@ function Invoke-Speech {
         Add-Content $Script_File ('$Talk.Speak(' + '"' + "$Text" + '")')				
     }
 
-    If ($Resume)
-    {
+    If ($Resume) {
         $ResumeOutput = @{
             "Volume" = $Talk.Volume
             "Speed" = $Talk.Rate
@@ -1218,20 +1223,42 @@ function Invoke-Speech {
 
 <#
 .SYNOPSIS
-    Creates a single PowerShell module (PSM) file from a folder of functions.
+    Combines multiple PowerShell function files into a single module file (.psm1).
+
 .DESCRIPTION
-    This function creates a single PowerShell module (PSM) file from a folder of functions. The resulting PSM file will have the same name as the root folder and will contain all of the functions in the specified folder. Each function definition will be separated by two blank lines.
-.PARAMETER RootFolder
-    Specifies the root folder path of the module/project.
+    The `Join-FunctionsToPSM` function creates a single PowerShell module file (.psm1) by combining all `.ps1` files from a specified folder. 
+    The resulting `.psm1` file will have the same name as the root folder and will include all the functions from the specified folder. 
+    Each function definition in the `.psm1` file will be separated by two blank lines for readability.
+
+    If a `.psm1` file with the same name already exists, the function creates a backup of the existing file with a `.bak` extension before overwriting it. 
+    If a `.bak` file already exists, it will be removed and replaced with the latest backup.
+
+.PARAMETER RootDir
+    Specifies the root folder path of the module/project. This is the folder where the `.psm1` file will be created.
+    The name of the `.psm1` file will match the name of this folder.
+
 .PARAMETER FunctionsDir
-    Specifies the name of the folder that contains the functions. The default value is "Functions".
+    Specifies the name of the folder within the root directory that contains the `.ps1` function files.
+    The default value is "Functions". This parameter can be a relative or absolute path.
+
 .EXAMPLE
-    Join-FunctionsToPSM -RootFolder "C:\Github\ProjectSample" -FunctionsDir "Functions"
-    This example creates a PSM file with all of the functions in the root folder. The resulting PSM file will have the same name as the root folder.
+    Join-FunctionsToPSM -RootDir "C:\Github\ProjectSample" -FunctionsDir "Functions"
+    This example creates a `.psm1` file in the `C:\Github\ProjectSample` folder by combining all `.ps1` files in the `Functions` subfolder.
+
+.EXAMPLE
+    Join-FunctionsToPSM -RootDir "C:\Modules\MyModule"
+    This example creates a `.psm1` file in the `C:\Modules\MyModule` folder by combining all `.ps1` files in the default `Functions` subfolder.
+
+.EXAMPLE
+    Join-FunctionsToPSM -RootDir "D:\Projects\MyModule" -FunctionsDir "CustomFunctions" -Verbose
+    This example creates a `.psm1` file in the `D:\Projects\MyModule` folder by combining all `.ps1` files in the `CustomFunctions` subfolder.
+    The `-Verbose` switch provides detailed output during the function's execution.
+
 .NOTES
     Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
-    Version: 1.1
-    Date: 8/24/2023
+    Version: 1.2
+    Date: 4/21/2025
+
 .LINK
     https://github.com/EReis0/PowerShell-Samples/
 #>
@@ -1239,39 +1266,68 @@ function Join-FunctionsToPSM {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)]
-        [string]$RootFolder,
+        [string]$RootDir,
 
         [Parameter(Mandatory = $false)]
         [string]$FunctionsDir = "Functions"
     )
 
-    $RootFolderName = Get-Item $RootFolder | Select-Object -ExpandProperty Name
-    $FunctionFolder = Join-Path -Path $RootFolder -ChildPath $FunctionsDir
-    $FullPSMPath = Join-Path -Path $RootFolder -ChildPath "$RootFolderName.psm1"
+    # Validate Parameter $RootDir
+    try {
+        $RootDir = Resolve-Path -Path $RootDir -ErrorAction Stop
+        $RootDirName = (Get-Item -Path $RootDir).Name
+        Write-Verbose "Resolved root directory: $RootDir"
+    } catch {
+        throw "Invalid path: $RootDir. Error: $($_.Exception.Message)"
+    }
+    
+    # Validate Parameter $FunctionsDir
+    $FunctionsDir = Join-Path -Path $RootDir -ChildPath $FunctionsDir
+    if (-not (Test-Path $FunctionsDir)) {
+        throw "Functions directory does not exist: $FunctionsDir"
+    }
+    Write-Verbose "Resolved functions directory: $FunctionsDir"
 
-    $Validation_root = Test-Path $RootFolder
-    if ($validation_root -eq $false) {
-        Write-Error "Root folder does not exist"
-        return
+    # Create PSM file path
+    $FullPSMPath = Join-Path -Path $RootDir -ChildPath "$RootDirName.psm1"
+    Write-Verbose "Output PSM file path: $FullPSMPath"
+
+    # Check if the PSM file already exists and back it up if it does
+    if (Test-Path $FullPSMPath) {
+        $BackupPath = "$FullPSMPath.bak"
+        if (Test-Path $BackupPath) {
+            Remove-Item -Path $BackupPath -Force
+            Write-Verbose "Existing backup file removed: $BackupPath"
+        }
+        Copy-Item -Path $FullPSMPath -Destination $BackupPath -Force
+        Write-Verbose "Existing PSM file backed up to: $BackupPath"
     }
 
-    $Validation_Functions = Test-Path $FunctionFolder
-    if ($validation_Functions -eq $false) {
-        Write-Error "Functions folder does not exist"
-        return
-    }
-
+    # Initialize StringBuilder to store function content
     $ResultBuilder = [System.Text.StringBuilder]::new()
 
-    foreach ($File in Get-ChildItem -Path $FunctionFolder -Recurse -Filter *.ps1 -File) {
+    # Get all .ps1 files in the functions directory
+    $Ps1Files = Get-ChildItem -Path $FunctionsDir -Recurse -Filter *.ps1 -File | Sort-Object Name
+    if (-not $Ps1Files) {
+        throw "No .ps1 files found in the functions directory: $FunctionsDir. Ensure the directory contains valid PowerShell function files."
+    }
+    
+    # Read the content of each .ps1 file and append it to the StringBuilder
+    foreach ($File in $Ps1Files) {
         $FileContent = Get-Content $File.FullName -Raw
-        $null = $ResultBuilder.AppendLine($FileContent)
-        $null = $ResultBuilder.AppendLine()
-        $null = $ResultBuilder.AppendLine()
+        $null = $ResultBuilder.AppendLine($FileContent) # Append the file content
+        $null = $ResultBuilder.AppendLine() # Add a blank line
+        $null = $ResultBuilder.AppendLine() # Add another blank line
     }
 
-    Set-Content -Value $ResultBuilder.ToString() -Path $FullPSMPath
-} # Join-FunctionsToPSM -RootFolder "D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink" -FunctionsDir "Functions"
+    # Export the functions to the PSM file
+    try {
+        Set-Content -Value $ResultBuilder.ToString() -Path $FullPSMPath -Encoding UTF8
+    } catch {
+        throw "Failed to write to file: $FullPSMPath. Error: $($_.Exception.Message)"
+    }
+    Write-Host "PSM file created successfully: $FullPSMPath" -ForegroundColor Green
+} # Join-FunctionsToPSM -RootDir "D:\Code\Repos\PowerShell-Modules\Modules\KitchenSink"
 
 
 <#
@@ -1279,30 +1335,36 @@ function Join-FunctionsToPSM {
     A function to create a password file or validate a password against a file.
 
 .DESCRIPTION
-    The New-CredsTxtFile function prompts the user for a password and saves it to a file, or validates a password against a file. 
-    If the -ValidateOnly parameter is specified, the function validates the password against the file. 
-    If the -ValidateOnly parameter is not specified, the function prompts the user for a password and saves it to the file.
+    The `New-CredsTxtFile` function prompts the user for a password and saves it to a file, or validates a password against a file. 
+    If the `-Validate` parameter is specified, the function validates the password entered by the user against the password stored in the file. 
+    If the `-Validate` parameter is not specified, the function prompts the user for a password and securely saves it to the specified file.
+
+    The password is encrypted when saved to the file and decrypted during validation. 
+    The function ensures that the file exists before validation and provides meaningful error messages for invalid or corrupted files.
 
 .PARAMETER Filepath
     The path of the file to save the password to or validate the password against.
+    This parameter is mandatory.
 
-.PARAMETER ValidateOnly
-    If specified, the function validates the password against the file. 
+.PARAMETER Validate
+    If specified, the function validates the password entered by the user against the password stored in the file.
     If not specified, the function prompts the user for a password and saves it to the file.
-
-.EXAMPLE
-    New-CredsTxtFile -Filepath "C:\creds\sample55.txt" -ValidateOnly $true
-
-    This command validates the password entered by the user against the password in the file at C:\creds\sample55.txt.
 
 .EXAMPLE
     New-CredsTxtFile -Filepath "C:\creds\sample55.txt"
 
-    This command prompts the user for a password and saves it to the file at C:\creds\sample55.txt.
+    This command prompts the user for a password and saves it to the file at `C:\creds\sample55.txt`.
+
+.EXAMPLE
+    New-CredsTxtFile -Filepath "C:\creds\sample55.txt" -Validate
+
+    This command validates the password entered by the user against the password stored in the file at `C:\creds\sample55.txt`.
+
 .NOTES
     Author: Codeholics (https://github.com/Codeholics) - Eric Reis (https://github.com/EReis0/)
-    Version: 1.2
-    Date: 02/02/2024
+    Version: 1.3
+    Date: 04/21/2025
+
 .LINK
     https://github.com/EReis0/PowerShell-Samples/
 #>
@@ -1312,34 +1374,14 @@ function New-CredsTxtFile {
         [Parameter(Mandatory=$true)]
         [string]$Filepath,
         [Parameter(Mandatory=$false)]
-        [bool]$ValidateOnly = $false
+        [switch]$Validate
     )
 
-    # If -validateonly is not specified, prompt for password and save it to file
-    if ($ValidateOnly -eq $false) {
-
-        # Prompt for password
-        $Credential = Get-Credential -Message "Enter your password" -UserName "Admin"
-
-        # If the credential prompt is cancelled, exit the function
-        if ($null -eq $Credential) {
-            Write-Warning "Credential prompt was cancelled. Exiting..."
-            return
-        } else {
-            $Password = $Credential.GetNetworkCredential().Password
-        }
-
-        # Save the password
-        Write-Host "Exporting Password to $Filepath" -foregroundcolor green
-        ConvertTo-SecureString -String $Password -AsPlainText -Force | ConvertFrom-SecureString | Out-File $Filepath -Encoding UTF8
-    # If -validateonly is specified, validate the file
-    } elseif ($ValidateOnly -eq $true) {
-
+    # If -Validate is specified, validate the file
+    if ($Validate) {
         # Verify file path exists
-        $PathValidation = Test-Path -Path $Filepath
-        if ($PathValidation -eq $false) {
-            Write-Warning "File does not exist. Please specify a valid file path."
-            return
+        if (-not (Test-Path -Path $Filepath)) {
+            throw "File does not exist: $Filepath. Please specify a valid file path."
         }
 
         # Prompt for password
@@ -1354,17 +1396,37 @@ function New-CredsTxtFile {
         }
 
         # Verify password file
-        $SecureString = ConvertTo-SecureString -String (Get-Content $Filepath)
+        try {
+            $SecureString = ConvertTo-SecureString -String (Get-Content $Filepath)
+        } catch {
+            throw "The password file is invalid or corrupted: $($_.Exception.Message)"
+        }
+
         $SecretContent = [System.Net.NetworkCredential]::new("", $SecureString).Password
 
         # Compare the password for a match
         if ($SecretContent -eq $Password) {
-            Write-Host "Password MATCHED decrypted password." -foregroundcolor green
+            Write-Host "Password MATCHED decrypted password." -ForegroundColor Green
         } else {
-            Write-Warning "Password DID NOT MATCH decrypted password."
+            Write-Warning "Password DOES NOT MATCH decrypted password."
         }
+    } else {
+        # Prompt for password
+        $Credential = Get-Credential -Message "Enter your password" -UserName "Admin"
+
+        # If the credential prompt is cancelled, exit the function
+        if ($null -eq $Credential) {
+            Write-Warning "Credential prompt was cancelled. Exiting..."
+            return
+        } else {
+            $Password = $Credential.GetNetworkCredential().Password
+        }
+
+        # Save the password
+        Write-Host "Exporting Password to $Filepath" -ForegroundColor Green
+        ConvertTo-SecureString -String $Password -AsPlainText -Force | ConvertFrom-SecureString | Out-File $Filepath -Encoding UTF8
     }
-}  # New-CredsTxtFile -Filepath "C:\creds\sample.txt" -ValidateOnly $true
+}  # New-CredsTxtFile -Filepath "C:\creds\sample.txt" -Validate
 
 
 <#
