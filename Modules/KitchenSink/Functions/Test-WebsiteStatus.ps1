@@ -40,16 +40,16 @@ function Test-WebsiteStatus {
 
     # Test the reachability of the website using Test-NetConnection
     try {
-    $result = Test-NetConnection -ComputerName $Url -Port 80 -ErrorAction SilentlyContinue
+        $result = Test-NetConnection -ComputerName $Url -Port 80
     } catch {
-            $_.Exception.Message
+        throw $_.Exception.Message
         return
     }
 
     # Check if the website is reachable
     if ($result.TcpTestSucceeded) {
         # Retrieve the content of the website using Invoke-WebRequest
-        $response = Invoke-WebRequest -Uri $Url
+        $response = Invoke-WebRequest -Uri $Url -UseBasicParsing
 
         # Check if the expected text is present on the page
         if ($ExpectedText -and $response.Content -like "*$ExpectedText*") {
@@ -73,4 +73,4 @@ function Test-WebsiteStatus {
         Online = $Online
         ExpectedTextPresent = $ExpectedTextPresent
     }
-}   # Test-WebsiteStatus -Url "codeholics.com" -ExpectedText "2022 Codeholics"
+}   # Test-WebsiteStatus -Url "codeholics.com" -ExpectedText "Codeholics"

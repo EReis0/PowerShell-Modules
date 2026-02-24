@@ -28,7 +28,7 @@ function Get-GithubProject {
         # create temp with zip extension (or Expand will complain)
         $tmp = New-TemporaryFile | Rename-Item -NewName {$_ -replace 'tmp$', 'zip' } -PassThru
         #download
-        Invoke-WebRequest -outFile $tmp $url
+        Invoke-WebRequest -outFile $tmp $url -UseBasicParsing
         #exract to same folder
         $tmp | Expand-Archive -DestinationPath $output -force
         # remove temporary file
