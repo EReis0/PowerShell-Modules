@@ -1,4 +1,4 @@
-$UIPtrogressmodulePath = "C:\Code\PowerShell\Dev\UI Progress Window\UI Progress Window.psm1"
+$UIPtrogressmodulePath = "C:\Code\PowerShell-Modules\Modules\UI Progress Window\UI Progress Window.psm1"
 Import-Module ActiveDirectory, $UIPtrogressmodulePath
 
 

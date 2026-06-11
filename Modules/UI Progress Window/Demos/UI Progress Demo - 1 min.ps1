@@ -1,4 +1,4 @@
-$CPSScriptRoot = "C:\Code\PowerShell\Dev\UI Progress Window"
+$CPSScriptRoot = "C:\Code\PowerShell-Modules\Modules\UI Progress Window"
 Import-Module "$CPSScriptRoot\UI Progress Window.psm1"
 
 # Data-driven style: update by work item progress
