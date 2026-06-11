@@ -1,12 +1,14 @@
-$CPSScriptRoot = "C:\Code\PowerShell\Dev\UI Progress Window"
-Import-Module "$CPSScriptRoot\UI Progress Window.psm1"
+$moduleRoot = Split-Path -Parent $PSScriptRoot
+$iconPath = Join-Path -Path $moduleRoot -ChildPath 'Icons\icons8-coffee-cup-26.png'
+
+Import-Module (Join-Path -Path $moduleRoot -ChildPath 'UI Progress Window.psm1') -Force
 
 # Data-driven style: update by work item progress
 Start-UIProgressWindow `
     -WindowTitle "One Minute Progress" `
     -HeaderText "Running 1-minute demo..." `
     -Topmost `
-    -IconPath "$CPSScriptRoot\icons\icons8-coffee-cup-26.png" `
+    -IconPath $iconPath `
     -Position BottomRight `
     -ScreenTarget ActiveWindow
 
