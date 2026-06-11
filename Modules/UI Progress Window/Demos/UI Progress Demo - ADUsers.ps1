@@ -7,14 +7,15 @@ $users = @('200636','200546','200564','200397')
 $UserCount = $users.Count
 $CurrentUser = 0
 
- Start-UIProgressWindow `
+$iconPath = Join-Path -Path $moduleRoot -ChildPath 'Icons\icons8-coffee-cup-26.png'
+
+Start-UIProgressWindow `
     -WindowTitle "AD Sync" `
     -HeaderText "Processing users..." `
     -Topmost `
     -Position BottomRight `
     -ScreenTarget ActiveWindow `
-    -IconPath "$CPSScriptRoot\icons\icons8-coffee-cup-26.png" `
-
+    -IconPath $iconPath
 $Data = @()
 foreach ($user in $users) {
     $CurrentUser++
