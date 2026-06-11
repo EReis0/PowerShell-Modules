@@ -1,5 +1,6 @@
-$UIPtrogressmodulePath = "C:\Code\PowerShell\Dev\UI Progress Window\UI Progress Window.psm1"
-Import-Module ActiveDirectory, $UIPtrogressmodulePath
+$moduleRoot = Split-Path -Parent $PSScriptRoot
+$uiProgressModulePath = Join-Path -Path $moduleRoot -ChildPath 'UI Progress Window.psm1'
+Import-Module ActiveDirectory, $uiProgressModulePath -Force
 
 
 $users = @('200636','200546','200564','200397')
