@@ -43,6 +43,9 @@
     - [Usage](#usage-12)
     - [Example Output](#example-output-5)
     - [Notes](#notes)
+  - [Get-NugetDownloadUri](#get-nugetdownloaduri)
+    - [Parameters](#parameters-3)
+    - [Usage](#usage-13)
 
 <br>
 
@@ -404,3 +407,33 @@ Generated TOTP Code: 123456
   - Resynchronize the system clock: `w32tm /resync`
   - Verify synchronization status again: `w32tm /query /status`
 - This function is based on the TOTP algorithm described in [RFC 6238](https://tools.ietf.org/html/rfc6238).
+
+
+<br>
+
+## Get-NugetDownloadUri
+
+Goes out to NuGet.org and fetches the "Download Package" uri. 
+
+### Parameters
+
+- **`-PackageName`**: Required. You must provide a valid NuGet package name. You can locate the package you need from [NuGet.org](https://nuget.org)
+- **`-Vesion`**: Optional. Specify a version number if you don't want the current LTS. 
+
+### Usage
+
+Returns the manual download URI from the package page:
+
+```powershell
+C:\> Get-NugetDownloadUri -PackageName "System.Data.SQLite"
+https://www.nuget.org/api/v2/package/System.Data.SQLite/2.0.3
+```
+
+Returns the manual download URI for the specified package version page.
+
+```powershell
+C:\> Get-NugetDownloadUri -PackageName "System.Data.SQLite" -Version "2.0.2"
+https://www.nuget.org/api/v2/package/System.Data.SQLite/2.0.2
+```
+
+
