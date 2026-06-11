@@ -1,4 +1,4 @@
-$CPSScriptRoot = 'D:\Code\Repos\PowerShell-Modules\Modules'
+$CPSScriptRoot = 'D:\Code\Repo\PowerShell-Modules\Modules'
 $CheckSums = 'D:\Code\Repos\PowerShell-Modules\Checksums'
 $ModuleName = 'KitchenSink'
 
