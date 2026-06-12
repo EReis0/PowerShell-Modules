@@ -27,6 +27,9 @@ Which monitor to use for placement: ActiveCursor, ActiveWindow, or Primary.
 .PARAMETER IconPath
 Optional path to an icon file to use in the title bar.
 
+.PARAMETER Theme
+Visual theme to use for the window: Dark, Light, or Transparent50.
+
 .PARAMETER StepPercent
 Minimum increment size applied each interval.
 
@@ -80,6 +83,10 @@ function Show-UIProgressWindow {
         [string]$IconPath,
 
         [Parameter()]
+        [ValidateSet("Dark", "Light", "Transparent50")]
+        [string]$Theme = "Light",
+
+        [Parameter()]
         [ValidateRange(1, 100)]
         [int]$StepPercent = 5,
 
@@ -102,7 +109,7 @@ function Show-UIProgressWindow {
         [int]$AutoCloseDelaySeconds = 2
     )
 
-    Start-UIProgressWindow -WindowTitle $WindowTitle -HeaderText $HeaderText -Topmost:$Topmost -Position $Position -OffsetX $OffsetX -OffsetY $OffsetY -ScreenTarget $ScreenTarget -IconPath $IconPath
+    Start-UIProgressWindow -WindowTitle $WindowTitle -HeaderText $HeaderText -Topmost:$Topmost -Position $Position -OffsetX $OffsetX -OffsetY $OffsetY -ScreenTarget $ScreenTarget -IconPath $IconPath -Theme $Theme
 
     $effectiveDurationSeconds = if ($PSBoundParameters.ContainsKey('DurationSeconds')) {
         $DurationSeconds
@@ -113,10 +120,16 @@ function Show-UIProgressWindow {
 
     $startTimeUtc = [DateTime]::UtcNow
 
-    while ($script:InstallProgressContext -and $script:InstallProgressContext.Window -and $script:InstallProgressContext.Window.IsVisible) {
+    while ($true) {
+        $ctx = $script:UIProgressWindowContext
+        if (-not $ctx -or -not $ctx.Window -or -not $ctx.Window.IsVisible) {
+            break
+        }
+
         $elapsedSeconds = ([DateTime]::UtcNow - $startTimeUtc).TotalSeconds
         $percentByTime = [int][Math]::Floor(([Math]::Min($elapsedSeconds, $effectiveDurationSeconds) / $effectiveDurationSeconds) * 100)
-        $nextPercent = [Math]::Min(100, [Math]::Max($percentByTime, [int]$script:InstallProgressContext.Percent + $StepPercent))
+        $currentPercent = if ($null -ne $ctx.Percent) { [int]$ctx.Percent } else { 0 }
+        $nextPercent = [Math]::Min(100, [Math]::Max($percentByTime, $currentPercent + $StepPercent))
 
         Update-UIProgressWindow -Percent $nextPercent
 
@@ -125,12 +138,12 @@ function Show-UIProgressWindow {
                 Stop-UIProgressWindow -Complete -AutoCloseDelaySeconds $AutoCloseDelaySeconds
             }
             else {
-                $ctx = $script:InstallProgressContext
+                $ctx = $script:UIProgressWindowContext
                 if ($ctx -and $ctx.CloseButton) {
                     $ctx.CloseButton.Content = "Done"
                 }
 
-                while ($script:InstallProgressContext -and $script:InstallProgressContext.Window -and $script:InstallProgressContext.Window.IsVisible) {
+                while ($script:UIProgressWindowContext -and $script:UIProgressWindowContext.Window -and $script:UIProgressWindowContext.Window.IsVisible) {
                     Start-Sleep -Milliseconds 200
                     [System.Windows.Forms.Application]::DoEvents()
                 }

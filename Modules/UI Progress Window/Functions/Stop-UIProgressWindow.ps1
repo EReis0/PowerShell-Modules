@@ -29,7 +29,7 @@ function Stop-UIProgressWindow {
         [int]$AutoCloseDelaySeconds = 0
     )
 
-    $ctx = $script:InstallProgressContext
+    $ctx = $script:UIProgressWindowContext
     if (-not $ctx -or -not $ctx.Window) {
         return
     }

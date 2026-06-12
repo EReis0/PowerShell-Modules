@@ -1,6 +1,7 @@
 - [Introduction](#introduction)
 - [Modules](#modules)
     - [KitchenSink Docs](#kitchensink-docs)
+    - [UI Progress Window](#ui-progress-window)
 - [Custom Module Resource](#custom-module-resource)
 - [Codeholics](#codeholics)
 
@@ -29,7 +30,11 @@ Development has always been a passion of mine and when I am coding, I am in my h
 
 ### KitchenSink [Docs](Modules/KitchenSink/README.md)
 
-Functions that I find cool or useful will be added to this module.
+Just a mixed tool bag of functions I created.
+
+### UI Progress Window
+
+A lightweight PowerShell module for showing a modeless WPF progress window during script execution.
 
 
 <br>

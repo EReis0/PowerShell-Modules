@@ -29,7 +29,7 @@ function Update-UIProgressWindow {
         [string]$StatusText
     )
 
-    $ctx = $script:InstallProgressContext
+    $ctx = $script:UIProgressWindowContext
     if (-not $ctx -or -not $ctx.Window -or -not $ctx.Window.IsVisible) {
         return
     }
