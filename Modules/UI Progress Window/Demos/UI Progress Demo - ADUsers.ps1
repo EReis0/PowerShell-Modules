@@ -1,5 +1,10 @@
-$moduleRoot = Split-Path -Parent $PSScriptRoot
+$moduleRoot = "C:\Code\PowerShell-Modules\Modules\UI Progress Window"
 $uiProgressModulePath = Join-Path -Path $moduleRoot -ChildPath 'UI Progress Window.psm1'
+
+if (!(Test-Path -Path $uiProgressModulePath)) {
+    throw "UI Progress Window module not found at path: $uiProgressModulePath"
+}
+
 Import-Module ActiveDirectory, $uiProgressModulePath -Force
 
 
@@ -15,7 +20,8 @@ Start-UIProgressWindow `
     -Topmost `
     -Position BottomRight `
     -ScreenTarget ActiveWindow `
-    -IconPath $iconPath
+    -IconPath $iconPath `
+    -Theme Transparent50
 $Data = @()
 foreach ($user in $users) {
     $CurrentUser++

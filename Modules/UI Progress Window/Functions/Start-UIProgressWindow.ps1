@@ -31,6 +31,9 @@ ActiveCursor, ActiveWindow, or Primary.
 .PARAMETER IconPath
 Optional path to an icon file to use in the title bar.
 
+.PARAMETER Theme
+Visual theme to use for the window: Dark, Light, or Transparent50.
+
 .EXAMPLE
 Start-UIProgressWindow -WindowTitle "AD Sync" -HeaderText "Processing users..." -Topmost
 
@@ -66,7 +69,11 @@ function Start-UIProgressWindow {
         [string]$ScreenTarget = "ActiveCursor",
 
         [Parameter()]
-        [string]$IconPath
+        [string]$IconPath,
+
+        [Parameter()]
+        [ValidateSet("Dark", "Light", "Transparent50")]
+        [string]$Theme = "Light"
     )
 
     Add-Type -AssemblyName PresentationFramework
@@ -86,7 +93,7 @@ namespace UIProgressWindow {
 "@
     }
 
-    if ($script:InstallProgressContext -and $script:InstallProgressContext.Window -and $script:InstallProgressContext.Window.IsVisible) {
+    if ($script:UIProgressWindowContext -and $script:UIProgressWindowContext.Window -and $script:UIProgressWindowContext.Window.IsVisible) {
         Stop-UIProgressWindow
     }
 
@@ -96,7 +103,7 @@ namespace UIProgressWindow {
         <TextBlock x:Name="Header" FontSize="14" FontWeight="Bold"/>
         <ProgressBar x:Name="Progress" Height="30" Margin="0,10,0,0" Minimum="0" Maximum="100"/>
         <TextBlock x:Name="Status" Margin="0,10,0,0" FontSize="12"/>
-        <Button x:Name="CloseBtn" Content="Close" Width="120" Margin="0,10,0,0" HorizontalAlignment="Left"/>
+        <Button x:Name="CloseBtn" Content="Close" Width="120" Margin="0,10,0,0" HorizontalAlignment="Right"/>
     </StackPanel>
 </Window>
 "@
@@ -113,6 +120,63 @@ namespace UIProgressWindow {
     $header.Text = $HeaderText
     $progress.Value = 0
     $status.Text = "0% Complete"
+    $brushConverter = [System.Windows.Media.BrushConverter]::new()
+
+    switch ($Theme) {
+        "Dark" {
+            $window.Opacity = 1.0
+            $window.Background = $brushConverter.ConvertFromString("#1E1E1E")
+            $header.Foreground = [System.Windows.Media.Brushes]::White
+            $status.Foreground = [System.Windows.Media.Brushes]::Gainsboro
+            $progress.Foreground = [System.Windows.Media.Brushes]::DeepSkyBlue
+            $closeBtn.Background = $brushConverter.ConvertFromString("#2D2D30")
+            $closeBtn.Foreground = [System.Windows.Media.Brushes]::White
+            $closeBtn.BorderBrush = $brushConverter.ConvertFromString("#3F3F46")
+        }
+        "Transparent50" {
+            $window.WindowStyle = [System.Windows.WindowStyle]::None
+            $window.ResizeMode = [System.Windows.ResizeMode]::NoResize
+            $window.AllowsTransparency = $true
+            $window.Opacity = 1.0
+
+            # Tighten content spacing for borderless mode and size height to content.
+            $rootPanel = [System.Windows.Controls.StackPanel]$window.Content
+            $closeBtn.Margin = [System.Windows.Thickness]::new(0, 6, 0, 0)
+            if ($rootPanel) {
+                $rootPanel.Margin = [System.Windows.Thickness]::new(20, 14, 20, 4)
+                $panelWidth = [Math]::Max(100, [double]$window.Width - $rootPanel.Margin.Left - $rootPanel.Margin.Right)
+                $rootPanel.Measure([System.Windows.Size]::new($panelWidth, [double]::PositiveInfinity))
+                $contentHeight = $rootPanel.DesiredSize.Height + $rootPanel.Margin.Top + $rootPanel.Margin.Bottom
+                $window.Height = [Math]::Ceiling($contentHeight)
+            }
+
+            # Use alpha-channel brushes so the window is transparent but content remains readable.
+            $window.Background = $brushConverter.ConvertFromString("#801E1E1E")
+            $header.Foreground = [System.Windows.Media.Brushes]::White
+            $status.Foreground = [System.Windows.Media.Brushes]::Gainsboro
+            $progress.Foreground = [System.Windows.Media.Brushes]::DeepSkyBlue
+            $closeBtn.Background = $brushConverter.ConvertFromString("#B32D2D30")
+            $closeBtn.Foreground = [System.Windows.Media.Brushes]::White
+            $closeBtn.BorderBrush = $brushConverter.ConvertFromString("#3F3F46")
+
+            # Allow dragging the window when title bar is hidden in transparent mode.
+            $window.Add_MouseLeftButtonDown({
+                if ($_.LeftButton -eq [System.Windows.Input.MouseButtonState]::Pressed) {
+                    $window.DragMove()
+                }
+            }.GetNewClosure())
+        }
+        default {
+            $window.Opacity = 1.0
+            $window.Background = [System.Windows.Media.Brushes]::White
+            $header.Foreground = [System.Windows.Media.Brushes]::Black
+            $status.Foreground = [System.Windows.Media.Brushes]::DimGray
+            $progress.Foreground = [System.Windows.Media.Brushes]::DodgerBlue
+            $closeBtn.Background = [System.Windows.Media.Brushes]::WhiteSmoke
+            $closeBtn.Foreground = [System.Windows.Media.Brushes]::Black
+            $closeBtn.BorderBrush = [System.Windows.Media.Brushes]::Silver
+        }
+    }
 
     if (-not [string]::IsNullOrWhiteSpace($IconPath) -and (Test-Path -LiteralPath $IconPath)) {
         $resolvedIconPath = (Resolve-Path -LiteralPath $IconPath).Path
@@ -170,10 +234,10 @@ namespace UIProgressWindow {
 
     $closeBtn.Add_Click({ $window.Close() }.GetNewClosure())
     $window.Add_Closed({
-        $script:InstallProgressContext = $null
+        $script:UIProgressWindowContext = $null
     })
 
-    $script:InstallProgressContext = @{
+    $script:UIProgressWindowContext = @{
         Window = $window
         Progress = $progress
         Status = $status
