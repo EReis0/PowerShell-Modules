@@ -1,7 +1,8 @@
 - [Introduction](#introduction)
 - [Modules](#modules)
     - [KitchenSink Docs](#kitchensink-docs)
-    - [UI Progress Window](#ui-progress-window)
+    - [UI Progress Window Docs](#ui-progress-window-docs)
+    - [Matrix Rain Docs](#matrix-rain-docs)
 - [Custom Module Resource](#custom-module-resource)
 - [Codeholics](#codeholics)
 
@@ -32,9 +33,13 @@ Development has always been a passion of mine and when I am coding, I am in my h
 
 Just a mixed tool bag of functions I created.
 
-### UI Progress Window
+### UI Progress Window [Docs](/Modules/UI%20Progress%20Window/readme.md)
 
 A lightweight PowerShell module for showing a modeless WPF progress window during script execution.
+
+### Matrix Rain [Docs](/Modules/Matrix%20Rain/readme.md)
+
+A PowerShell module that renders a Matrix-style animated rain effect in the console with layered depth, smooth fades, and a live status overlay.
 
 
 <br>
