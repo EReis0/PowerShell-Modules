@@ -3,24 +3,38 @@ function Write-LogError {
         [string]$Message,
         [switch]$DateTime,
         [switch]$Date,
-        [switch]$Exit
+        [switch]$Exit,
+        [Switch]$ToScreen
     )
+
+    # Use the script scope variable established in Start-Log.ps1
+    $targetPath = $script:currentLogPath
 
     if ($DateTime) {
         $Message = "$(Get-Date -f "(yyyy-MM-dd @ HH:mm)")[Error]: $Message"
     } elseif ($Date) {
         $Message = "$(Get-Date -f "(yyyy-MM-dd)")[Error]: $Message"
     } else {
+        # If no date flag is passed, we ensure the [Error] prefix exists.
+        # Note: If you already added a date above, this block won't run 
+        # but it's good to have as a fallback.
         $Message = "[Error]: $Message"
     }
 
     if ($Exit) {
-        write-host $message
-        write-host "exit"
-        #Add-Content -Path $logPath -Value "[Error]: $Message"
-        #Exit 1
+        if ($ToScreen) {
+            Write-Host $Message -ForegroundColor Red
+        }
+
+        # Use $targetPath instead of $logPath
+        Add-Content -Path $targetPath -Value $Message
+        # Exit 1
     } else {
-        write-host $message
-        #Add-Content -Path $logPath -Value "[Error]: $Message"
+        if ($ToScreen) {
+            Write-Host $Message -ForegroundColor Red
+        }
+
+        # Use $targetPath instead of $logPath
+        Add-Content -Path $targetPath -Value $Message
     }
 }

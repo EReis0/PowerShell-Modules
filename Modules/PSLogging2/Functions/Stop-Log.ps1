@@ -12,6 +12,7 @@ function Stop-Log {
         
         $endTime = Get-Date
         
+        Add-Content -Path $logPath -Value `n`r
         Add-Content -Path $logPath -Value "***************************************************************************************************"
         Add-Content -Path $logPath -Value "Finished at: $endTime"
         Add-Content -Path $logPath -Value "Total Execution Time: $($elapsed.Minutes)m $($elapsed.Seconds)s"

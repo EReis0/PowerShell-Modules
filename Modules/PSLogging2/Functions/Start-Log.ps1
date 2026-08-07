@@ -4,7 +4,7 @@ function Start-Log {
         [switch]$Standard,
         [switch]$Simple,
         [string]$Title = "Script Log",
-        [switch]$Verbose
+        [switch]$ToScreen
     )
 
     # Initialize Timer
@@ -33,11 +33,11 @@ function Start-Log {
         $parentDir = Split-Path -Path $logPath -Parent
         if (-not (Test-Path -Path $parentDir)) {
             New-Item -Path $parentDir -ItemType Directory | Out-Null
-            Write-Verbose "Created directory: $parentDir"
+            #Write-host "Created directory: $parentDir"
         }
         if (-not (Test-Path -Path $logPath)) {
             New-Item -Path $logPath -ItemType File | Out-Null
-            Write-Verbose "Created file: $logPath"
+            #Write-host "Created file: $logPath"
         }
     } catch {
         Write-Error "Failed to initialize log path at $logPath. Error: $($_.Exception.Message)"
@@ -51,11 +51,12 @@ $Title - [$DateStamp]
 ***************************************************************************************************
 "@
         Add-Content -Path $logPath -Value $header
+        Add-Content -Path $logPath -Value `n`r
     } catch {
         Write-Error "Failed to write initial headers: $($_.Exception.Message)"
     }
 
-    if ($Verbose) {
+    if ($ToScreen) {
         Write-Host "Log Created: [$($logPath)] | Date: [$($DateStamp)]" -ForegroundColor Yellow
     }
 }
