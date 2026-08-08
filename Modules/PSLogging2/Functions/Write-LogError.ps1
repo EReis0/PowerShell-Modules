@@ -3,6 +3,7 @@ function Write-LogError {
         [string]$Message,
         [switch]$DateTime,
         [switch]$Date,
+        [switch]$Time,
         [switch]$Exit,
         [Switch]$ToScreen
     )
@@ -11,14 +12,16 @@ function Write-LogError {
     $targetPath = $script:currentLogPath
 
     if ($DateTime) {
-        $Message = "$(Get-Date -f "(yyyy-MM-dd @ HH:mm)")[Error]: $Message"
+        $Message = "/-> $(Get-Date -f "(yyyy-MM-dd @ HH:mm:ss)")[Error]: $Message"
     } elseif ($Date) {
-        $Message = "$(Get-Date -f "(yyyy-MM-dd)")[Error]: $Message"
+        $Message = "/-> $(Get-Date -f "(yyyy-MM-dd)")[Error]: $Message"
+    } elseif ($Time) {
+        $Message = "/-> $(Get-Date -f "(HH:mm:ss)")[Error]: $Message"
     } else {
         # If no date flag is passed, we ensure the [Error] prefix exists.
         # Note: If you already added a date above, this block won't run 
         # but it's good to have as a fallback.
-        $Message = "[Error]: $Message"
+        $Message = "/-> [Error]: $Message"
     }
 
     if ($Exit) {

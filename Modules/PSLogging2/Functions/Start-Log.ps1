@@ -1,17 +1,19 @@
 function Start-Log {
     Param(
-        [string]$logDir = (Join-Path -Path $PSScriptRoot -ChildPath "log"),
-        [switch]$Standard,
-        [switch]$Simple,
+        [string]$LogDir = (Join-Path -Path $PSScriptRoot -ChildPath "log"),
+        [Parameter(Mandatory=$true)]
+        [ValidateSet("Standard", "Simple", "Daily")]
+        [string]$Style, # Accepts "Standard" or "Simple"
         [string]$Title = "Script Log",
-        [switch]$ToScreen
+        [switch]$ToScreen,
+        [string]$Version
     )
 
     # Initialize Timer
     $script:LogStopwatch = [System.Diagnostics.Stopwatch]::StartNew()
-    $DateStamp = Get-Date # Capture
+    $DateStamp = Get-Date
 
-    if ($Standard) {
+    if ($Style -eq "Standard") {
         # Use a single date object to construct the path string for cleaner code
         $pathParts = @(
             $DateStamp.ToString("yyyy"), 
@@ -19,11 +21,18 @@ function Start-Log {
             $DateStamp.ToString("yyyy-MM-dd_HHmmss")
         )
         $script:currentLogPath = Join-Path -Path $logDir -ChildPath "$($pathParts[0])\$($pathParts[1])\$($pathParts[2]).log"
-    } elseif ($Simple) {
+    } elseif ($Style -eq "Simple") {
         $script:currentLogPath = Join-Path -Path $logDir -ChildPath "$($DateStamp.ToString('yyyy-MM-dd_HHmmss')).log"
+    } elseif ($Style -eq "Daily") {
+            $pathParts = @(
+            $DateStamp.ToString("yyyy"), 
+            $DateStamp.ToString("yyyy-MM"),
+            $DateStamp.ToString("yyyy-MM-dd")
+        )
+        $script:currentLogPath = Join-Path -Path $logDir -ChildPath "$($pathParts[0])\$($pathParts[1])\$($pathParts[2]).log"
     } else {
-        if ($Standard -and $Simple) { throw "Invalid Selection (Must only select one ('-Simple', '-Standard'))" }
-        throw "Invalid Selection (Must choose -standard or -Simple)"
+        if ($Style -eq "Standard" -and $Style -eq "Simple" -and $Style -eq "Daily") { throw "Invalid Selection (Must choose style as standard, Simple, or Daily)" }
+        throw "Invalid Selection (Must choose style as standard, Simple, or Daily)"
     }
 
     # We use one consistent variable: currentLogPath
@@ -45,9 +54,15 @@ function Start-Log {
 
     try {
         ## Start Log Header
+        if ($null -eq $Version) {
+            $HeaderTItle = "$Title - [$DateStamp])"
+        } elseif ($null -ne $Version) {
+            $HeaderTItle = "$Title ($($Version)) - [$DateStamp]"
+        }
+        
         $header = @"
 ***************************************************************************************************
-$Title - [$DateStamp]
+$HeaderTItle
 ***************************************************************************************************
 "@
         Add-Content -Path $logPath -Value $header
@@ -57,6 +72,6 @@ $Title - [$DateStamp]
     }
 
     if ($ToScreen) {
-        Write-Host "Log Created: [$($logPath)] | Date: [$($DateStamp)]" -ForegroundColor Yellow
+        Write-Host "Log Created: [$($logPath)] | Date: [$($DateStamp)]" -ForegroundColor Cyan
     }
 }
