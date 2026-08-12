@@ -1,40 +1,65 @@
+<#
+.SYNOPSIS
+    Append an error message to the current log file.
+
+.DESCRIPTION
+    Writes an error-level message to the log initialized by `Start-Log`.
+    Optionally adds a timestamp and can exit the calling script gracefully
+    after writing the error by running `Stop-Log`.
+
+.PARAMETER Message
+    The error message text to append.
+
+.PARAMETER TimeStampFront
+    When specified, place the timestamp at the beginning of the message.
+
+.PARAMETER TimeStampBack
+    When specified, place the timestamp at the end of the message.
+
+.PARAMETER ExitGracefully
+    If specified, `Stop-Log` is executed (writes footer) and the script exits
+    with exit code 1 after the error is logged.
+
+.PARAMETER ToScreen
+    When specified, also write the formatted error to the host.
+
+.EXAMPLE
+    Write-LogError -Message 'Fatal failure' -TimeStampBack -ExitGracefully
+#>
 function Write-LogError {
     param(
-        [string]$Message,
-        [switch]$DateTime,
-        [switch]$Date,
-        [switch]$Exit,
-        [Switch]$ToScreen
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true)][string]$Message,
+        [switch]$TimeStampFront,
+        [switch]$TimeStampBack,
+        
+        [switch]$ExitGracefully,
+        [switch]$ToScreen
     )
 
-    # Use the script scope variable established in Start-Log.ps1
     $targetPath = $script:currentLogPath
 
-    if ($DateTime) {
-        $Message = "$(Get-Date -f "(yyyy-MM-dd @ HH:mm)")[Error]: $Message"
-    } elseif ($Date) {
-        $Message = "$(Get-Date -f "(yyyy-MM-dd)")[Error]: $Message"
+    $useFront = $false
+    $useBack = $false
+    if ($TimeStampFront) { $useFront = $true }
+    if ($TimeStampBack) { $useBack = $true }
+
+    if ($useFront -or $useBack) {
+        $ts = "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')]"
+        if ($useFront) { $line = "ERROR: $ts $Message" } else { $line = "ERROR: $Message $ts" }
     } else {
-        # If no date flag is passed, we ensure the [Error] prefix exists.
-        # Note: If you already added a date above, this block won't run 
-        # but it's good to have as a fallback.
-        $Message = "[Error]: $Message"
+        $line = "ERROR: $Message"
     }
 
-    if ($Exit) {
-        if ($ToScreen) {
-            Write-Host $Message -ForegroundColor Red
-        }
+    if ($ToScreen) { Write-Host $line -ForegroundColor Red }
 
-        # Use $targetPath instead of $logPath
-        Add-Content -Path $targetPath -Value $Message
-        # Exit 1
+    if ($null -ne $targetPath -and (Test-Path $targetPath)) {
+        Add-Content -Path $targetPath -Value $line -Encoding UTF8
     } else {
-        if ($ToScreen) {
-            Write-Host $Message -ForegroundColor Red
-        }
+        Write-Warning "Cannot write error to log. Path is null or file does not exist."
+    }
 
-        # Use $targetPath instead of $logPath
-        Add-Content -Path $targetPath -Value $Message
+    if ($ExitGracefully) {
+        Stop-Log -logPath $targetPath -NoExit
+        Exit 1
     }
 }

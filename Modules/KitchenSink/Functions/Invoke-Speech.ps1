@@ -95,7 +95,7 @@ function Invoke-Speech {
     $Talk.Speak($Text)
 
     If ($Generate) {
-        $Script_File = "$([Environment]::GetFolderPath('Desktop'))\My_Speech_Script.ps1"
+        #$Script_File = "$([Environment]::GetFolderPath('Desktop'))\My_Speech_Script.ps1"
         New-Item $Script_File -type file				
         Add-Content $Script_File "#Load assembly"	
         Add-Content $Script_File 'Add-Type -AssemblyName System.speech'
