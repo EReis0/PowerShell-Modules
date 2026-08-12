@@ -48,22 +48,4 @@ function Send-Log {
         return $false
     }
 }
-function Send-Log {
-    param(
-        [Parameter(Mandatory=$true)][string]$SMTPServer,
-        [Parameter(Mandatory=$true)][string]$LogPath,
-        [Parameter(Mandatory=$true)][string]$EmailFrom,
-        [Parameter(Mandatory=$true)][string]$EmailTo,
-        [Parameter(Mandatory=$true)][string]$EmailSubject
-    )
-
-    Try {
-        $sBody = Get-Content -Path $LogPath -Raw
-        $oSmtp = New-Object Net.Mail.SmtpClient($SMTPServer)
-        $oSmtp.Send($EmailFrom, $EmailTo, $EmailSubject, $sBody)
-        return $true
-    } Catch {
-        Write-Error "Failed to send log email: $($_.Exception.Message)"
-        return $false
-    }
-}
+# (Duplicate Send-Log definition removed)

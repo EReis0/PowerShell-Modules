@@ -18,9 +18,8 @@
 .PARAMETER ToScreen
     When specified, also write the formatted warning to the host.
 
-##EXAMPLE
-##    Write-LogWarning -Message 'Configuration deprecated' -TimeStampBack
-#>
+.EXAMPLE
+    Write-LogWarning -Message 'Configuration deprecated' -TimeStampBack
 function Write-LogWarning {
     param(
         [Parameter(Mandatory = $true)]

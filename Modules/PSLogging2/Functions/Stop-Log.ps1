@@ -10,20 +10,24 @@
     Optional explicit path to a log file. Defaults to the current log file
     initialized by `Start-Log`.
 
+.PARAMETER Exit
+    When specified, `Stop-Log` writes footer data and then exits the calling
+    process.
+
 .PARAMETER NoExit
-    When specified, `Stop-Log` writes footer data but does not `Exit` the
-    calling process. Useful when you want to continue execution after closing
-    the log.
+    Legacy compatibility switch. Ignored unless used together with `-Exit`, in
+    which case it suppresses exiting.
 
 .PARAMETER ToScreen
     When specified, writes a short completion message to the host.
 
 .EXAMPLE
-    Stop-Log -NoExit -ToScreen
+    Stop-Log -ToScreen
 #>
 function Stop-Log {
     param(
         [string]$logPath = $script:currentLogPath,
+        [switch]$Exit,
         [switch]$NoExit,
         [switch]$ToScreen
     )

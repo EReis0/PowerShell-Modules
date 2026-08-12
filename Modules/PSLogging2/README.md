@@ -18,7 +18,7 @@ naming styles, configurable timestamps, and simple email delivery of logs.
 Copy the `PSLogging2` folder into one of your PowerShell module paths or import directly:
 
 ```powershell
-Import-Module 'E:\Code\Repos\PowerShell-Modules\Modules\PSLogging2\PSLogging2.psm1'
+Import-Module 'PSLogging2'
 ```
 
 ## Basic Usage
