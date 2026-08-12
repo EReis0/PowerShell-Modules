@@ -68,7 +68,6 @@ function Start-Log {
         )
         $script:currentLogPath = Join-Path -Path $logDir -ChildPath "$($pathParts[0])\$($pathParts[1])\$($pathParts[2]).log"
     } else {
-        if ($Style -eq "Standard" -and $Style -eq "Simple" -and $Style -eq "Daily") { throw "Invalid Selection (Must choose style as standard, Simple, or Daily)" }
         throw "Invalid Selection (Must choose style as standard, Simple, or Daily)"
     }
 
