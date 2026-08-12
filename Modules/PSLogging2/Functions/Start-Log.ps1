@@ -91,16 +91,16 @@ function Start-Log {
     try {
         ## Start Log Header
         if ($null -eq $Version) {
-            $HeaderTItle = "$Title - [$DateStamp])"
+            $HeaderTitle = "$Title - [$DateStamp]"
         } else {
-            $HeaderTItle = "$Title ($($Version)) - [$DateStamp]"
+            $HeaderTitle = "$Title ($($Version)) - [$DateStamp]"
         }
 
         # If the file already exists and we're in Daily mode, append a concise run separator
         if (-not $fileExists) {
             $header = @"
 ***************************************************************************************************
-$HeaderTItle
+$HeaderTitle
 ***************************************************************************************************
 "@
             Add-Content -Path $logPath -Value "$header`n" -Encoding UTF8
