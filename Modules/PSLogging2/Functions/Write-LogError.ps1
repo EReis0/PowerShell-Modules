@@ -59,7 +59,7 @@ function Write-LogError {
     }
 
     if ($ExitGracefully) {
-        Stop-Log -logPath $targetPath
+        Stop-Log -logPath $targetPath -NoExit
         Exit 1
     }
 }
