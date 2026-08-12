@@ -18,9 +18,8 @@
 .PARAMETER ToScreen
     When specified, also write the formatted message to the host.
 
-#EXAMPLE
-#    Write-LogInfo -Message 'Processing item' -TimeStampFront
-#>
+.EXAMPLE
+    Write-LogInfo -Message 'Processing item' -TimeStampFront
 function Write-LogInfo {
     param (
         [Parameter(Mandatory = $true)]
