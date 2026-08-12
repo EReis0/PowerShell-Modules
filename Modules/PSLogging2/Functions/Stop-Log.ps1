@@ -49,7 +49,8 @@ function Stop-Log {
         Write-Host "Log finished: $logPath" -ForegroundColor Cyan
     }
 
-    if (-not $NoExit) {
-        Exit
+    #Exit calling script if NoExit has not been specified or is set to False
+    If(-not($NoExit) -or ($NoExit -eq $False)){
+      Exit
     }
 }
