@@ -1,5 +1,5 @@
-$moduleRoot = "C:\Code\PowerShell-Modules\Modules\UI Progress Window"
-$uiProgressModulePath = Join-Path -Path $moduleRoot -ChildPath 'UI Progress Window.psm1'
+$moduleRoot = Split-Path -Parent $PSScriptRoot
+$uiProgressModulePath = Join-Path -Path $moduleRoot -ChildPath 'UI-Progress-Window.psm1'
 
 if (!(Test-Path -Path $uiProgressModulePath)) {
     throw "UI Progress Window module not found at path: $uiProgressModulePath"
@@ -39,4 +39,3 @@ foreach ($user in $users) {
 
 Stop-UIProgressWindow -Complete -AutoCloseDelaySeconds 1
 $Data
-

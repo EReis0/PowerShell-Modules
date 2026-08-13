@@ -13,6 +13,8 @@
 
 # Introduction
 
+> This intro was written pre-ai era
+
 I haven't shared any PowerShell samples on GitHub before, but there is no better time to start than the present. 
 
 I tend to explore a lot and tinker with anything that peeks my interest. 
@@ -23,10 +25,7 @@ I do welcome feedback or suggestions that would help to improve my craft. My goa
 
 Development has always been a passion of mine and when I am coding, I am in my happy place :)
 
-
->[!note] 
->
-> "Failure is success in progress". ~ Albert Einstein*
+>[!quote] "Failure is success in progress". ~ Albert Einstein
 
 <br>
 
@@ -36,11 +35,11 @@ Development has always been a passion of mine and when I am coding, I am in my h
 
 Just a mixed tool bag of functions I created.
 
-### UI Progress Window [Docs](/Modules/UI%20Progress%20Window/readme.md)
+### UI Progress Window [Docs](/Modules/UI-Progress-Window/readme.md)
 
 A lightweight PowerShell module for showing a modeless WPF progress window during script execution.
 
-### Matrix Rain [Docs](/Modules/Matrix%20Rain/readme.md)
+### Matrix Rain [Docs](/Modules/Matrix-Rain/readme.md)
 
 A PowerShell module that renders a Matrix-style animated rain effect in the console with layered depth, smooth fades, and a live status overlay.
 
@@ -59,4 +58,8 @@ Just a few resources to help with installing, creating or maintaining custom mod
 
 # Codeholics
 
-[Codeholics](https://codeholics.com) is the current project I am working on with friends since **2013**
+Sometimes projects might be too large, and you need a team. 
+Other times, you're just having fun with friends creating something new.
+
+- [Codeholics.com](https://codeholics.com)
+- [GitHub\Codeholics](https://github.com/Codeholics)
