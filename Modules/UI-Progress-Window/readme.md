@@ -13,7 +13,7 @@ A lightweight PowerShell module for showing a modeless WPF progress window durin
 
 ## Module Structure
 
-- `UI Progress Window.psm1`
+- `UI-Progress-Window.psm1`
 - Functions/`Start-UIProgressWindow.ps1`
 - Functions/`Update-UIProgressWindow.ps1`
 - Functions/`Stop-UIProgressWindow.ps1`
@@ -24,7 +24,8 @@ A lightweight PowerShell module for showing a modeless WPF progress window durin
 ## Import
 
 ```powershell
-Import-Module "C:\Code\PowerShell-Modules\Modules\UI Progress Window\UI Progress Window.psm1" -Force
+$moduleRoot = Split-Path -Parent $PSScriptRoot
+Import-Module (Join-Path -Path $moduleRoot -ChildPath 'UI-Progress-Window.psm1') -Force
 ```
 
 ## Core Workflow (Recommended)
@@ -46,17 +47,18 @@ Stop-UIProgressWindow -Complete -AutoCloseDelaySeconds 1
 ## Functions
 
 ### Start-UIProgressWindow
+
 Creates and shows the modeless progress window.
 
 Parameters:
-- WindowTitle
-- HeaderText
-- Topmost
-- Position: Center, TopLeft, TopRight, BottomLeft, BottomRight
-- OffsetX
-- OffsetY
-- ScreenTarget: ActiveCursor, ActiveWindow, Primary
-- IconPath
+- `WindowTitle`
+- `HeaderText`
+- `Topmost`
+- `Position`: `Center`, `TopLeft`, `TopRight`, `BottomLeft`, `BottomRight`
+- `OffsetX`
+- `OffsetY`
+- `ScreenTarget`: `ActiveCursor`, `ActiveWindow`, `Primary`
+- `IconPath`
 
 Example:
 
@@ -71,11 +73,12 @@ Start-UIProgressWindow `
 ```
 
 ### Update-UIProgressWindow
+
 Updates the progress bar and status text.
 
 Parameters:
-- Percent (0-100)
-- StatusText
+- `Percent (0-100)`
+- `StatusText`
 
 Example:
 
@@ -84,11 +87,12 @@ Update-UIProgressWindow -Percent 42 -StatusText "42 of 100 users"
 ```
 
 ### Stop-UIProgressWindow
+
 Completes (optional) and closes the window.
 
 Parameters:
-- Complete
-- AutoCloseDelaySeconds
+- `Complete`
+- `AutoCloseDelaySeconds`
 
 Example:
 
@@ -97,16 +101,17 @@ Stop-UIProgressWindow -Complete -AutoCloseDelaySeconds 1
 ```
 
 ### Show-UIProgressWindow
+
 Convenience wrapper that runs a timed progress flow from 0 to 100.
 
 Parameters include:
-- WindowTitle, HeaderText
-- Position, OffsetX, OffsetY
-- ScreenTarget
-- IconPath
-- StepPercent, IntervalSeconds, DurationSeconds
-- Topmost
-- AutoClose, AutoCloseDelaySeconds
+- `WindowTitle`, `HeaderText`
+- `Position`, `OffsetX`, `OffsetY`
+- `ScreenTarget`
+- `IconPath`
+- `StepPercent`, `IntervalSeconds`, `DurationSeconds`
+- `Topmost`
+- `AutoClose`, `AutoCloseDelaySeconds`
 
 Example:
 
@@ -126,8 +131,8 @@ Show-UIProgressWindow `
 Run the included demos:
 
 ```powershell
-& "C:\Code\PowerShell-Modules\Modules\UI Progress Window\Demos\UI Progress Demo - 1 min.ps1"
-& "C:\Code\PowerShell-Modules\Modules\UI Progress Window\Demos\UI Progress Demo - ADUsers.ps1"
+& ".\UI-Progress-Window\Demos\UI Progress Demo - 1 min.ps1"
+& ".\UI-Progress-Window\Demos\UI Progress Demo - ADUsers.ps1"
 ```
 
 ## Get-Help

@@ -1,7 +1,7 @@
 $moduleRoot = Split-Path -Parent $PSScriptRoot
 $iconPath = Join-Path -Path $moduleRoot -ChildPath 'Icons\icons8-coffee-cup-26.png'
 
-Import-Module (Join-Path -Path $moduleRoot -ChildPath 'UI Progress Window.psm1') -Force
+Import-Module (Join-Path -Path $moduleRoot -ChildPath 'UI-Progress-Window.psm1') -Force
 
 # Data-driven style: update by work item progress
 Start-UIProgressWindow `
