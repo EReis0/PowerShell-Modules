@@ -3,7 +3,6 @@
     - [KitchenSink Docs](#kitchensink-docs)
     - [UI Progress Window Docs](#ui-progress-window-docs)
     - [Matrix Rain Docs](#matrix-rain-docs)
-    - [PSLogging2 Docs](#pslogging2-docs)
 - [Custom Module Resource](#custom-module-resource)
 - [Codeholics](#codeholics)
 
@@ -42,10 +41,6 @@ A lightweight PowerShell module for showing a modeless WPF progress window durin
 ### Matrix Rain [Docs](/Modules/Matrix-Rain/readme.md)
 
 A PowerShell module that renders a Matrix-style animated rain effect in the console with layered depth, smooth fades, and a live status overlay.
-
-### PSLogging2 [Docs](/Modules/PSLogging2/README.md)
-
-I have used a standard PSLogging from PowerShell Gallery for years. The module had no updates in the last 8 years! The module worked fine but lacked a few desired features which would make starting the log so much easier. So I made PSLogging2, Same goal as the original, simple and light-weight logging. 
 
 
 <br>
